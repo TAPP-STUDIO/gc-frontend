@@ -112,7 +112,7 @@ export default function Sidebar() {
                                     className={`ml-9 overflow-hidden transition-all duration-300 ease-in-out ${isExpanded(item.id) ? 'max-h-80 opacity-100 mb-4' : 'max-h-0 opacity-0'}`}
                                 >
                                     <ul className="space-y-3 mt-3">
-                                        {item.submenu.map((subItem: any) => (
+                                        {item.submenu.map((subItem) => (
                                             <li key={subItem.id}>
                                                 <Link
                                                     href={subItem.href}
