@@ -1,10 +1,8 @@
 "use client";
 
 import ChartCard from '../../components/cards/ChartCard';
-import ValueCard from '../../components/cards/ValueCard';
-import ClaimCard from '../../components/cards/ClaimCard';
 import PortfolioCounterCard from '../../components/cards/PortfolioCounterCard';
-import ClaimHistoryTable from '../../components/tables/ClaimHistoryTable';
+
 
 // Ukázková data pro graf portfolia
 const portfolioChartData = [
