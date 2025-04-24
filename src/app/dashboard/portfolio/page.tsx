@@ -3,24 +3,10 @@
 import ChartCard from '../../components/cards/ChartCard';
 import ValueCard from '../../components/cards/ValueCard';
 import ClaimCard from '../../components/cards/ClaimCard';
+import PortfolioCounterCard from '../../components/cards/PortfolioCounterCard';
+import ClaimHistoryTable from '../../components/tables/ClaimHistoryTable';
 
-// Ukázková data pro graf
-const chartData = [
-    { name: 'Jan', value: 120 },
-    { name: 'Feb', value: 180 },
-    { name: 'Mar', value: 220 },
-    { name: 'Apr', value: 270 },
-    { name: 'May', value: 350 },
-    { name: 'Jun', value: 420 },
-    { name: 'Jul', value: 510 },
-    { name: 'Aug', value: 580 },
-    { name: 'Sep', value: 640 },
-    { name: 'Oct', value: 720 },
-    { name: 'Nov', value: 780 },
-    { name: 'Dec', value: 850 }
-];
-
-// Ukázková data pro portfolio projekty
+// Ukázková data pro graf portfolia
 const portfolioChartData = [
     { name: 'Jan', value: 5000 },
     { name: 'Feb', value: 5800 },
@@ -36,91 +22,136 @@ const portfolioChartData = [
     { name: 'Dec', value: 16000 }
 ];
 
+// Ukázková data pro graf claimů
+const claimChartData = [
+    { name: 'Jan', value: 120 },
+    { name: 'Feb', value: 180 },
+    { name: 'Mar', value: 220 },
+    { name: 'Apr', value: 270 },
+    { name: 'May', value: 350 },
+    { name: 'Jun', value: 420 },
+    { name: 'Jul', value: 510 },
+    { name: 'Aug', value: 580 },
+    { name: 'Sep', value: 640 },
+    { name: 'Oct', value: 720 },
+    { name: 'Nov', value: 780 },
+    { name: 'Dec', value: 850 }
+];
+
+// Historie claimů
+const claimHistory = [
+    { project: 'GC Cards', date: '1. 1. 2025', amount: 2000 },
+    { project: 'GC Cards', date: '1. 1. 2025', amount: 2000 },
+    { project: 'GC Cards', date: '1. 1. 2025', amount: 2000 },
+    { project: 'GC Cards', date: '1. 1. 2025', amount: 2000 },
+    { project: 'GC Cards', date: '1. 1. 2025', amount: 2000 },
+    { project: 'GC Cards', date: '1. 1. 2025', amount: 2000 }
+];
+
+// Počty karet v portfoliu
+const portfolioCounters = [
+    { title: 'Počet karet', count: 35, href: '/dashboard/portfolio' },
+    { title: 'GC cards', count: 7, href: '/dashboard/portfolio/gc-cards' },
+    { title: 'BTC Bot', count: 2, href: '/dashboard/portfolio/btc-bot' },
+    { title: 'Algo Trader', count: 13, href: '/dashboard/portfolio/algo-trader' },
+    { title: 'VC NFT', count: 0, href: '/dashboard/portfolio/vc-nft' }
+];
+
 export default function PortfolioDashboard() {
     return (
         <div className="p-6">
-            <h1 className="text-3xl font-bold text-white mb-6">
+            <h1 className="text-3xl font-bold text-white mb-8">
                 Portfolio
             </h1>
 
-            <h2 className="text-2xl font-semibold text-white mb-4">
-                Přehled portfolia
-            </h2>
+            {/* Počítadlo karet v portfoliu */}
+            <PortfolioCounterCard items={portfolioCounters} />
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-                {/* Graf hodnoty portfolia */}
-                <div className="lg:col-span-2">
+            {/* První řada karet - Graf vývoje a hodnoty */}
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
+                <div className="lg:col-span-3">
+                    <div className="bg-[#151515] p-5 rounded-lg">
+                        <h2 className="text-xl font-semibold text-white mb-4">
+                            Vývoj portfolia
+                        </h2>
+                        <ChartCard
+                            data={portfolioChartData}
+                            currentValue={9800}
+                            currentMonth="Jul"
+                            minValue={4000}
+                            maxValue={18000}
+                        />
+                    </div>
+                </div>
+
+                <div className="flex flex-col space-y-4">
+                    <div className="bg-[#151515] p-5 rounded-lg">
+                        <h2 className="text-xl font-semibold text-white mb-2">
+                            Hodnota portfolia
+                        </h2>
+                        <div className="text-4xl font-bold text-[#F9D523]">10 000 $</div>
+                    </div>
+
+                    <div className="bg-[#151515] p-5 rounded-lg">
+                        <h2 className="text-xl font-semibold text-white mb-2">
+                            Celkem claimnuto
+                        </h2>
+                        <div className="text-4xl font-bold text-[#F9D523]">3 500 $</div>
+                    </div>
+
+                    <div className="bg-[#151515] p-5 rounded-lg">
+                        <h2 className="text-xl font-semibold text-white mb-2">
+                            Další claim
+                        </h2>
+                        <div className="text-xl text-white mb-2">1. 1. 2026</div>
+                        <div className="w-full bg-gray-700 rounded-full h-2">
+                            <div
+                                className="bg-[#F9D523] h-2 rounded-full"
+                                style={{ width: '75%' }}
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Druhá řada karet - Historie claimů */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <div className="bg-[#151515] p-5 rounded-lg">
+                    <h2 className="text-xl font-semibold text-white mb-4">
+                        Celkem claim
+                    </h2>
                     <ChartCard
-                        data={portfolioChartData}
-                        currentValue={9800}
+                        data={claimChartData}
+                        currentValue={224.00}
                         currentMonth="Jul"
-                        minValue={4000}
-                        maxValue={18000}
                     />
                 </div>
 
-                {/* Celková hodnota portfolia */}
-                <ValueCard
-                    title="Celková hodnota portfolia"
-                    value={47850}
-                    valueColor="text-[#F9D523]"
-                />
-            </div>
-
-            <h2 className="text-2xl font-semibold text-white mb-4">
-                Claim přehled
-            </h2>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-                {/* Claim graf */}
-                <div className="lg:col-span-2">
-                    <ChartCard
-                        data={chartData}
-                        currentValue={510}
-                        currentMonth="Jul"
-                    />
+                <div className="bg-[#151515] p-5 rounded-lg">
+                    <h2 className="text-xl font-semibold text-white mb-4">
+                        Historie claimů
+                    </h2>
+                    <div className="overflow-x-auto">
+                        <table className="w-full">
+                            <thead>
+                            <tr className="text-left text-gray-400">
+                                <th className="pb-3">Projekt</th>
+                                <th className="pb-3">Datum</th>
+                                <th className="pb-3 text-right">Claim $</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {claimHistory.map((claim, index) => (
+                                <tr key={index} className="border-t border-gray-800">
+                                    <td className="py-3 text-white">{claim.project}</td>
+                                    <td className="py-3 text-white">{claim.date}</td>
+                                    <td className="py-3 text-white text-right">{claim.amount} $</td>
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-
-                {/* Claim karta */}
-                <ClaimCard
-                    title="Další claim"
-                    nextClaimDate="15. 8. 2023"
-                    claimAmount={1500}
-                    progressPercent={75}
-                    onClaim={() => alert('Claim požadavek odeslán!')}
-                />
-            </div>
-
-            <h2 className="text-2xl font-semibold text-white mb-4">
-                Statistiky
-            </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <ValueCard
-                    title="Celkem claimnuto"
-                    value={28750}
-                    valueColor="text-[#F9D523]"
-                />
-
-                <ValueCard
-                    title="Aktuální zisk"
-                    value={3240}
-                    valueColor="text-[#F9D523]"
-                />
-
-                <ValueCard
-                    title="Zhodnocení"
-                    value={182}
-                    formatter={(v) => `${v} %`}
-                    valueColor="text-[#F9D523]"
-                />
-
-                <ValueCard
-                    title="Aktivní projekty"
-                    value={8}
-                    formatter={(v) => `${v}`}
-                    valueColor="text-[#F9D523]"
-                />
             </div>
         </div>
     );
