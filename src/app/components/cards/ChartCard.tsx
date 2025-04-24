@@ -18,7 +18,7 @@ type ChartCardProps = {
     }[];
     currentValue: number;
     currentMonth?: string;
-    yearlyLabels?: boolean;
+    //yearlyLabels?: boolean;
     minValue?: number;
     maxValue?: number;
 };
@@ -27,7 +27,7 @@ const ChartCard: React.FC<ChartCardProps> = ({
                                                  data,
                                                  currentValue,
                                                  currentMonth = 'Jul',
-                                                 yearlyLabels = true,
+                                                 //yearlyLabels = true,
                                                  minValue = 0,
                                                  maxValue = 1100
                                              }) => {
