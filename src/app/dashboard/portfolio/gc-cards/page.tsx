@@ -35,7 +35,7 @@ const totalClaimChartData = [
     { name: 'Dec', value: 360 }
 ];
 
-// Historie claimů
+/* Historie claimů
 const claimHistory = [
     { project: 'GC Cards', date: '1. 1. 2025', amount: 2000 },
     { project: 'GC Cards', date: '1. 1. 2025', amount: 2000 },
@@ -44,7 +44,7 @@ const claimHistory = [
     { project: 'GC Cards', date: '1. 1. 2025', amount: 2000 },
     { project: 'GC Cards', date: '1. 1. 2025', amount: 2000 }
 ];
-
+*/
 export default function GCCards() {
     // Funkce pro zpracování požadavku na claim
     const handleClaim = () => {
