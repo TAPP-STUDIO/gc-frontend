@@ -1,20 +1,27 @@
 @import "tailwindcss";
 
-
-
+@tailwind base;
+@tailwind components;
 @tailwind utilities;
+
+
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background-color: rgb(var(--background-rgb));
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden !important; /* Zabránit horizontálnímu scrollování */
+  max-width: 100vw !important;
+  box-sizing: border-box;
+}
+
+
 
 :root {
   --foreground-rgb: 255, 255, 255;
   --background-rgb: 21, 21, 21;
   --primary-color: #F9D523;
   --dark-bg: #151515;
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background-color: rgb(var(--background-rgb));
-  font-family: 'Inter', sans-serif;
 }
 
 /* Animované pozadí */
@@ -24,6 +31,7 @@ body {
   animation: gradientAnimation 40s ease infinite;
   position: relative;
   overflow: auto;
+  overflow-x: hidden; /* Zabránit horizontálnímu scrollování */
 }
 
 .animated-bg::after {
@@ -94,4 +102,719 @@ body {
 .btn-outline:hover {
   background-color: #F9D523;
   color: #151515;
+}
+
+/* Mobile responsive improvements */
+@media (max-width: 1024px) {
+  /* Fix mobile viewport issues */
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  /* Ensure animated background covers full area on mobile */
+  .animated-bg {
+    min-height: 100vh;
+    background-attachment: fixed;
+  }
+
+  /* Prevent horizontal scrolling on mobile */
+  .animated-bg::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(23, 48, 75, 0.2) 0%, rgba(5, 5, 5, 0.5) 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Ensure content is above the background overlay */
+  .animated-bg > * {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+/* Sidebar specific mobile improvements */
+@media (max-width: 1024px) {
+  /* Hide desktop sidebar completely on mobile */
+  aside.lg\:flex {
+    display: none !important;
+  }
+
+  /* Mobile sidebar overlay improvements */
+  .mobile-sidebar-overlay {
+    backdrop-filter: blur(4px);
+  }
+
+  /* Smooth mobile sidebar animation */
+  .mobile-sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .mobile-sidebar.open {
+    transform: translateX(0);
+  }
+}
+
+/* Improved scrollbar for mobile devices */
+@media (max-width: 768px) {
+  /* Hide scrollbars on mobile for cleaner look */
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+  }
+}
+
+/* Fix for touch devices */
+@media (hover: none) and (pointer: coarse) {
+  /* Improve touch targets */
+  button, a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Remove hover effects on touch devices */
+  .hover\:text-\[\#F9D523\]:hover {
+    color: inherit;
+  }
+
+  /* Use active states instead */
+  .hover\:text-\[\#F9D523\]:active {
+    color: #F9D523;
+  }
+}
+
+/* Sidebar collapse animation improvements */
+.sidebar-transition {
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Tooltip improvements for collapsed sidebar */
+.sidebar-tooltip {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s, visibility 0.2s;
+  transform: translateX(0.5rem);
+  max-width: 150px;
+  word-wrap: break-word;
+}
+
+.group:hover .sidebar-tooltip {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Prevent tooltips from causing horizontal scroll */
+@media (max-width: 1400px) {
+  .sidebar-tooltip {
+    display: none !important;
+  }
+}
+
+/* Ensure proper stacking contexts */
+.sidebar-overlay {
+  z-index: 40;
+}
+
+.sidebar-mobile {
+  z-index: 50;
+}
+
+/* Mobile menu button positioning */
+.mobile-menu-button {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 30;
+}
+
+@media (min-width: 1024px) {
+  .mobile-menu-button {
+    display: none;
+  }
+}
+
+/* Dashboard layout specific fixes */
+.dashboard-layout {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+.dashboard-content {
+  overflow-x: hidden;
+  min-width: 0; /* Flexbox fix pro overflow */
+}
+
+/* Ensure proper height calculation */
+.min-h-screen {
+  min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for better mobile support */
+}
+
+/* Prevent body scroll when mobile menu is open */
+.body-scroll-lock {
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* Better focus styles for accessibility */
+.focus\:outline-none:focus {
+  outline: 2px solid #F9D523;
+  outline-offset: 2px;
+}
+
+/* Smooth transitions for all interactive elements */
+.transition-colors {
+  transition-property: color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Loading state for sidebar */
+.sidebar-loading {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Responsive typography adjustments */
+@media (max-width: 640px) {
+  .text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .bg-\[\#151515\] {
+    background-color: #000000;
+  }
+  
+  .text-white {
+    color: #ffffff;
+  }
+  
+  .border-\[\#333333\] {
+    border-color: #666666;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .animated-bg {
+    animation: none;
+    background: linear-gradient(125deg, #0c0c0c 0%, #1a1a1a 100%);
+  }
+}
+
+/* ==============================
+   PORTFOLIO LAYOUT OPTIMALIZACE
+   ============================== */
+
+/* Zajistit konzistentní výšky pro karty */
+.portfolio-main-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .portfolio-main-grid {
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+  }
+}
+
+/* Pravá strana s kartami */
+.portfolio-cards-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  height: 100%;
+}
+
+@media (min-width: 640px) {
+  .portfolio-cards-stack {
+    gap: 1.5rem;
+  }
+}
+
+/* Každá karta má stejnou výšku */
+.portfolio-card {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Graf má minimum height aby se vyrovnal s kartami */
+.portfolio-chart {
+  min-height: 400px;
+}
+
+@media (min-width: 1024px) {
+  .portfolio-chart {
+    min-height: 500px;
+  }
+}
+
+/* Claim tlačítko optimalizace */
+.claim-button {
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+  min-width: 120px;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (min-width: 640px) {
+  .claim-button {
+    font-size: 1rem;
+    padding: 0.75rem 1.5rem;
+    min-width: 150px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .claim-button {
+    font-size: 1.125rem;
+    padding: 0.875rem 1.75rem;
+    min-width: 180px;
+  }
+}
+
+/* Mezery mezi sekcemi */
+.portfolio-section {
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 640px) {
+  .portfolio-section {
+    margin-bottom: 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .portfolio-section {
+    margin-bottom: 3rem;
+  }
+}
+
+/* Portfolio counters grid */
+.portfolio-counters {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .portfolio-counters {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .portfolio-counters {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+/* Spodní grafy */
+.portfolio-charts-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 1280px) {
+  .portfolio-charts-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+}
+
+/* Zajistit že karty nebudou mít velké mezery */
+.portfolio-card-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 0;
+}
+
+@media (min-width: 640px) {
+  .portfolio-card-container {
+    gap: 1.5rem;
+  }
+}
+
+/* Flex container pro stejné výšky */
+.portfolio-equal-height {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.portfolio-equal-height > * {
+  flex: 1;
+}
+
+/* Responsive spacing utility */
+.portfolio-responsive-gap {
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .portfolio-responsive-gap {
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .portfolio-responsive-gap {
+    gap: 2rem;
+  }
+}
+
+/* Specifické třídy pro layout */
+.portfolio-main-chart {
+  background: #151515;
+  border-radius: 0.5rem;
+  height: 100%;
+  min-height: 400px;
+}
+
+.portfolio-side-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  height: 100%;
+}
+
+@media (min-width: 640px) {
+  .portfolio-side-cards {
+    gap: 1.5rem;
+  }
+}
+
+/* Claim section specifické styly */
+.claim-section-responsive {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .claim-section-responsive {
+    flex-direction: row;
+    align-items: center;
+    gap: 2rem;
+  }
+}
+
+.claim-info-section {
+  flex: 1;
+}
+
+.claim-button-section {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+@media (min-width: 1024px) {
+  .claim-button-section {
+    align-items: flex-end;
+  }
+}
+
+/* Utility pro odstranění velkých mezer */
+.no-large-gaps {
+  gap: 1rem !important;
+}
+
+.no-large-gaps > * {
+  margin: 0 !important;
+}
+
+/* Responzivní CSS pro claim sekci */
+.claim-section {
+  transition: all 0.3s ease;
+  background: #151515;
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+@media (min-width: 640px) {
+  .claim-section {
+    padding: 1.5rem;
+  }
+}
+
+/* Claim button responsive behavior */
+.claim-button {
+  transition: all 0.2s ease;
+  background: #F9D523;
+  color: #151515;
+  font-weight: 700;
+  border-radius: 0.5rem;
+  min-width: 120px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+.claim-button:hover {
+  background: #e3c320;
+  transform: scale(1.05);
+}
+
+.claim-button:active {
+  transform: scale(0.95);
+}
+
+.claim-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Progress bar responsive */
+.claim-progress {
+  width: 100%;
+  height: 0.5rem;
+  background: #333333;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.claim-progress-fill {
+  height: 100%;
+  background: #F9D523;
+  transition: width 0.3s ease;
+  border-radius: 9999px;
+}
+
+/* Claim date responsive typography */
+.claim-date {
+  font-weight: 700;
+  color: white;
+  line-height: 1.2;
+  font-size: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .claim-date {
+    font-size: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .claim-date {
+    font-size: 1.875rem;
+  }
+}
+
+/* Claim history table responsive */
+.claim-history-card {
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.claim-history-card:hover {
+  border-color: #F9D523;
+}
+
+/* Responsive table headers */
+.claim-table-header {
+  display: none;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #333333;
+}
+
+@media (min-width: 640px) {
+  .claim-table-header {
+    display: grid;
+  }
+}
+
+/* Responsive pagination */
+.claim-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 1rem;
+}
+
+@media (min-width: 640px) {
+  .claim-pagination {
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+  }
+}
+
+.claim-pagination-button {
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid #F9D523;
+  color: #F9D523;
+  background: transparent;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+
+@media (min-width: 640px) {
+  .claim-pagination-button {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1rem;
+  }
+}
+
+.claim-pagination-button:hover:not(:disabled) {
+  background: #F9D523;
+  color: #151515;
+  transform: scale(1.05);
+}
+
+.claim-pagination-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.claim-pagination-button.active {
+  background: #F9D523;
+  color: #151515;
+  transform: scale(1.1);
+}
+
+/* Loading state */
+.claim-loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.claim-loading-spinner {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid #151515;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive breakpoints helper */
+@media (max-width: 639px) {
+  .portfolio-mobile-stack > * {
+    margin-bottom: 1rem;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .portfolio-tablet-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .portfolio-desktop-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .claim-button,
+  .claim-progress-fill,
+  .claim-pagination-button {
+    transition: none;
+  }
+  
+  .claim-button:hover,
+  .claim-pagination-button:hover {
+    transform: none;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .claim-section {
+    border: 2px solid #F9D523;
+  }
+  
+  .claim-button {
+    border: 2px solid #151515;
+  }
+  
+  .claim-progress {
+    border: 1px solid #F9D523;
+  }
+}
+
+/* Focus styles for keyboard navigation */
+.claim-button:focus,
+.claim-pagination-button:focus {
+  outline: 2px solid #F9D523;
+  outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+  .claim-button,
+  .claim-pagination {
+    display: none;
+  }
+  
+  .claim-section {
+    border: 1px solid #000;
+    background: #fff;
+    color: #000;
+  }
 }

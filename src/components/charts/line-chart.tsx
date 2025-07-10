@@ -11,6 +11,7 @@ interface LineChartProps {
   maxValue?: number;
   timeframe?: string;
   onTimeframeChange?: (value: string) => void;
+  className?: string;
 }
 
 export const LineChart: React.FC<LineChartProps> = ({
@@ -21,7 +22,8 @@ export const LineChart: React.FC<LineChartProps> = ({
   minValue = 0,
   maxValue = 1100,
   timeframe = "monthly",
-  onTimeframeChange
+  onTimeframeChange,
+  className = ""
 }) => {
   const currentIndex = data.findIndex(item => item.name === currentMonth);
   const chartHeight = 280;
@@ -41,15 +43,15 @@ export const LineChart: React.FC<LineChartProps> = ({
   };
 
   return (
-    <div className="bg-[#151515] rounded-lg p-6">
+    <div className={`bg-[#151515] rounded-lg p-4 sm:p-6 h-full flex flex-col ${className}`}>
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h3 className="text-xl font-semibold text-white">{title}</h3>
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 gap-4 flex-shrink-0">
+        <h3 className="text-lg sm:text-xl font-semibold text-white">{title}</h3>
         <div className="relative">
           <select 
             value={timeframe}
             onChange={(e) => onTimeframeChange?.(e.target.value)}
-            className="bg-transparent border border-[#F9D523] text-[#F9D523] rounded-full px-4 py-1 text-sm appearance-none cursor-pointer pr-8"
+            className="bg-transparent border border-[#F9D523] text-[#F9D523] rounded-full px-3 sm:px-4 py-1 text-sm appearance-none cursor-pointer pr-8 min-w-[100px]"
           >
             <option value="monthly">monthly</option>
             <option value="yearly">yearly</option>
@@ -63,10 +65,10 @@ export const LineChart: React.FC<LineChartProps> = ({
         </div>
       </div>
 
-      {/* Chart Area */}
-      <div className="relative" style={{ height: '320px' }}>
+      {/* Chart Area - flexibilní výška */}
+      <div className="relative flex-1 min-h-0">
         {/* Y-axis labels */}
-        <div className="absolute left-0 top-0 h-full flex flex-col justify-between text-sm text-[#666666] py-4">
+        <div className="absolute left-0 top-0 h-full flex flex-col justify-between text-xs sm:text-sm text-[#666666] py-4">
           <span>${maxValue}</span>
           <span>${Math.round(maxValue * 0.75)}</span>
           <span>${Math.round(maxValue * 0.5)}</span>
@@ -75,9 +77,9 @@ export const LineChart: React.FC<LineChartProps> = ({
         </div>
 
         {/* Chart container */}
-        <div className="ml-12 mr-4 h-full relative">
+        <div className="ml-8 sm:ml-12 mr-4 h-full relative pb-8">
           {/* Grid lines */}
-          <div className="absolute inset-0">
+          <div className="absolute inset-0 pb-8">
             {[0, 25, 50, 75, 100].map((percent) => (
               <div
                 key={percent}
@@ -89,16 +91,16 @@ export const LineChart: React.FC<LineChartProps> = ({
 
           {/* SVG Chart */}
           <svg 
-            className="absolute inset-0 w-full h-full"
+            className="absolute inset-0 w-full h-full pb-8"
             preserveAspectRatio="none"
             viewBox={`0 0 ${chartWidth} ${chartHeight}`}
           >
-            {/* Line */}
+            {/* Main line - tenčí */}
             <path
               d={createPath()}
               fill="none"
               stroke="#F9D523"
-              strokeWidth="3"
+              strokeWidth="1.5"
               vectorEffect="non-scaling-stroke"
             />
             
@@ -109,12 +111,12 @@ export const LineChart: React.FC<LineChartProps> = ({
                 cy={chartHeight - ((data[currentIndex].value - minValue) / (maxValue - minValue)) * chartHeight}
                 r="4"
                 fill="#F9D523"
-                stroke="#000"
+                stroke="#151515"
                 strokeWidth="2"
               />
             )}
             
-            {/* Vertical line at current month */}
+            {/* Vertical line at current month - tenčí */}
             {currentIndex !== -1 && (
               <line
                 x1={(currentIndex / (data.length - 1)) * chartWidth}
@@ -122,9 +124,9 @@ export const LineChart: React.FC<LineChartProps> = ({
                 x2={(currentIndex / (data.length - 1)) * chartWidth}
                 y2={chartHeight}
                 stroke="#F9D523"
-                strokeWidth="1"
-                strokeDasharray="4 4"
-                opacity="0.6"
+                strokeWidth="0.5"
+                strokeDasharray="2 2"
+                opacity="0.8"
               />
             )}
           </svg>
@@ -132,7 +134,7 @@ export const LineChart: React.FC<LineChartProps> = ({
           {/* Current value badge */}
           {currentIndex !== -1 && (
             <div 
-              className="absolute bg-[#F9D523] text-[#151515] px-3 py-1 rounded font-bold text-lg transform -translate-x-1/2 -translate-y-8"
+              className="absolute bg-[#F9D523] text-[#151515] px-2 sm:px-3 py-1 rounded font-bold text-sm sm:text-lg transform -translate-x-1/2 -translate-y-8"
               style={{
                 left: `${(currentIndex / (data.length - 1)) * 100}%`,
                 top: `${((maxValue - data[currentIndex].value) / (maxValue - minValue)) * 100}%`
@@ -142,10 +144,19 @@ export const LineChart: React.FC<LineChartProps> = ({
             </div>
           )}
 
-          {/* X-axis labels */}
-          <div className="absolute -bottom-8 left-0 right-0 flex justify-between text-sm text-[#666666]">
+          {/* X-axis labels - uvnitř kontejneru na spodku */}
+          <div className="absolute bottom-0 left-0 right-0 flex justify-between text-xs sm:text-sm text-[#666666] px-1">
             {data.map((point, index) => (
-              <span key={index} className="text-center">
+              <span 
+                key={index} 
+                className="text-center select-none"
+                style={{
+                  minWidth: '30px',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap'
+                }}
+              >
                 {point.name}
               </span>
             ))}

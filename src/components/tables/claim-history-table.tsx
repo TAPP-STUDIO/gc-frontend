@@ -39,28 +39,48 @@ export const ClaimHistoryTable: React.FC<ClaimHistoryTableProps> = ({
   };
 
   return (
-    <div className={`bg-[#151515] rounded-lg p-6 ${className}`}>
-      <h3 className="text-xl font-semibold text-white mb-6">{title}</h3>
+    <div className={`bg-[#151515] rounded-lg p-4 sm:p-6 ${className}`}>
+      <h3 className="text-lg sm:text-xl font-semibold text-white mb-4 sm:mb-6">{title}</h3>
       
-      {/* Table */}
+      {/* Mobile: Card layout, Desktop: Table layout */}
       <div className="overflow-hidden">
-        {/* Header */}
-        <div className="grid grid-cols-3 gap-4 pb-4 border-b border-[#333333]">
-          <div className="text-[#666666] font-medium">Projekt</div>
-          <div className="text-[#666666] font-medium">Datum</div>
-          <div className="text-[#666666] font-medium text-right">Claim $</div>
+        {/* Desktop Table Header - hidden on mobile */}
+        <div className="hidden sm:grid sm:grid-cols-3 gap-4 pb-4 border-b border-[#333333]">
+          <div className="text-[#666666] font-medium text-sm lg:text-base">Projekt</div>
+          <div className="text-[#666666] font-medium text-sm lg:text-base">Datum</div>
+          <div className="text-[#666666] font-medium text-sm lg:text-base text-right">Claim $</div>
         </div>
         
-        {/* Rows */}
-        <div className="space-y-0">
+        {/* Mobile: Card layout */}
+        <div className="sm:hidden space-y-3">
           {paginatedData.map((item) => (
             <div 
               key={item.id}
-              className="grid grid-cols-3 gap-4 py-4 border-b border-[#2a2a2a] last:border-b-0 hover:bg-[#1a1a1a] transition-colors"
+              className="bg-[#1a1a1a] rounded-lg p-4 border border-[#2a2a2a] hover:border-[#F9D523] transition-colors"
             >
-              <div className="text-white font-medium">{item.project}</div>
-              <div className="text-white">{item.date}</div>
-              <div className="text-white text-right font-medium">{item.amount.toLocaleString()} $</div>
+              <div className="flex justify-between items-start mb-2">
+                <div className="font-medium text-white text-sm">{item.project}</div>
+                <div className="text-[#F9D523] font-bold text-sm">
+                  {item.amount.toLocaleString()} $
+                </div>
+              </div>
+              <div className="text-[#666666] text-xs">{item.date}</div>
+            </div>
+          ))}
+        </div>
+        
+        {/* Desktop: Table layout */}
+        <div className="hidden sm:block space-y-0">
+          {paginatedData.map((item) => (
+            <div 
+              key={item.id}
+              className="grid grid-cols-3 gap-4 py-3 sm:py-4 border-b border-[#2a2a2a] last:border-b-0 hover:bg-[#1a1a1a] transition-colors"
+            >
+              <div className="text-white font-medium text-sm lg:text-base">{item.project}</div>
+              <div className="text-white text-sm lg:text-base">{item.date}</div>
+              <div className="text-white text-right font-medium text-sm lg:text-base">
+                {item.amount.toLocaleString()} $
+              </div>
             </div>
           ))}
         </div>
@@ -68,13 +88,13 @@ export const ClaimHistoryTable: React.FC<ClaimHistoryTableProps> = ({
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-center items-center space-x-2 mt-6">
+        <div className="flex justify-center items-center space-x-1 sm:space-x-2 mt-4 sm:mt-6">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
             disabled={currentPage === 1}
-            className="w-8 h-8 p-0 border border-[#F9D523] text-[#F9D523] hover:bg-[#F9D523] hover:text-[#151515]"
+            className="w-8 h-8 sm:w-10 sm:h-10 p-0 border border-[#F9D523] text-[#F9D523] hover:bg-[#F9D523] hover:text-[#151515] text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
           >
             ←
           </Button>
@@ -85,10 +105,10 @@ export const ClaimHistoryTable: React.FC<ClaimHistoryTableProps> = ({
               variant={page === currentPage ? "primary" : "ghost"}
               size="sm"
               onClick={() => setCurrentPage(page)}
-              className={`w-8 h-8 p-0 border ${
+              className={`w-8 h-8 sm:w-10 sm:h-10 p-0 border text-sm sm:text-base transition-all duration-200 ${
                 page === currentPage 
-                  ? 'bg-[#F9D523] text-[#151515] border-[#F9D523]' 
-                  : 'border-[#F9D523] text-[#F9D523] hover:bg-[#F9D523] hover:text-[#151515]'
+                  ? 'bg-[#F9D523] text-[#151515] border-[#F9D523] scale-110' 
+                  : 'border-[#F9D523] text-[#F9D523] hover:bg-[#F9D523] hover:text-[#151515] hover:scale-105'
               }`}
             >
               {page}
@@ -100,12 +120,20 @@ export const ClaimHistoryTable: React.FC<ClaimHistoryTableProps> = ({
             size="sm"
             onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
             disabled={currentPage === totalPages}
-            className="w-8 h-8 p-0 border border-[#F9D523] text-[#F9D523] hover:bg-[#F9D523] hover:text-[#151515]"
+            className="w-8 h-8 sm:w-10 sm:h-10 p-0 border border-[#F9D523] text-[#F9D523] hover:bg-[#F9D523] hover:text-[#151515] text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
           >
             →
           </Button>
         </div>
       )}
+      
+      {/* Mobile: Summary info */}
+      <div className="sm:hidden mt-4 pt-4 border-t border-[#333333]">
+        <div className="flex justify-between items-center text-xs text-[#666666]">
+          <span>Celkem záznamů: {data.length}</span>
+          <span>Strana {currentPage} z {totalPages}</span>
+        </div>
+      </div>
     </div>
   );
 };

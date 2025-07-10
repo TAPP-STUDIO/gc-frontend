@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { Container, Grid, Stack } from '@/components/layout';
+import { Container, Stack } from '@/components/layout';
 import { LineChart } from '@/components/charts';
 import { ValueDisplay, ClaimSection, EnhancedValueCard } from '@/components/cards';
 import { ClaimHistoryTable } from '@/components/tables';
@@ -67,32 +67,32 @@ export default function PortfolioDashboard() {
   };
 
   return (
-    <Container fluid className="py-6">
-      <Stack spacing="xl">
+    <Container fluid className="py-4 sm:py-6">
+      <Stack spacing="lg">
         {/* Hlavní nadpis */}
-        <h1 className="text-3xl font-bold text-white">
+        <h1 className="text-2xl sm:text-3xl font-bold text-white">
           Moje portfolio
         </h1>
 
         {/* Portfolio counters */}
-        <Grid cols={5} gap="md">
-        {portfolioItems.map((item, index) => (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-6">
+          {portfolioItems.map((item, index) => (
             <ValueDisplay
-            key={index}
-            title={item.title}
-            value={item.count}
-            formatter={(v) => String(v)}
-            showButton={true}              
-            onShowClick={() => console.log(`Zobrazit: ${item.title}`)}
-            className=""                     
+              key={index}
+              title={item.title}
+              value={item.count}
+              formatter={(v) => String(v)}
+              showButton={true}
+              onShowClick={() => console.log(`Zobrazit: ${item.title}`)}
+              className="min-h-0"
             />
-        ))}
-        </Grid>
+          ))}
+        </div>
 
-        {/* Graf a hodnoty portfolia */}
-        <Grid cols={4} gap="lg">
+        {/* Graf a hodnoty portfolia - stejná výška */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-stretch">
           {/* Graf vývoje portfolia */}
-          <div className="col-span-3">
+          <div className="lg:col-span-8 h-full">
             <LineChart
               title="Vývoj portfolia"
               data={portfolioChartData}
@@ -102,63 +102,76 @@ export default function PortfolioDashboard() {
               maxValue={18000}
               timeframe="monthly"
               onTimeframeChange={handleTimeframeChange}
+              className="h-full min-h-[500px]"
             />
           </div>
 
           {/* Hodnoty na pravé straně */}
-          <Stack spacing="md">
-            <EnhancedValueCard
-              title="Hodnota portfolia"
-              value={10000}
-              trend={{
-                value: 12.5,
-                direction: 'up',
-                period: 'měsíc'
-              }}
-            />
+          <div className="lg:col-span-4 flex flex-col gap-4 sm:gap-6 h-full">
+            <div className="flex-1">
+              <EnhancedValueCard
+                title="Hodnota portfolia"
+                value={10000}
+                trend={{
+                  value: 12.5,
+                  direction: 'up',
+                  period: 'měsíc'
+                }}
+                className="h-full"
+              />
+            </div>
 
-            <EnhancedValueCard
-              title="Celkem claimnuto"
-              value={3500}
-              trend={{
-                value: 8.2,
-                direction: 'up',
-                period: 'měsíc'
-              }}
-            />
+            <div className="flex-1">
+              <EnhancedValueCard
+                title="Celkem claimnuto"
+                value={3500}
+                trend={{
+                  value: 8.2,
+                  direction: 'up',
+                  period: 'měsíc'
+                }}
+                className="h-full"
+              />
+            </div>
 
-            <ClaimSection
-              title="Další claim"
-              date="1. 1. 2026"
-              amount={2500}
-              progress={75}
-              onClaim={handleClaim}
-              className="min-h-[140px]"
-            />
-          </Stack>
-        </Grid>
+            <div className="flex-1">
+              <ClaimSection
+                title="Další claim"
+                date="1. 1. 2026"
+                amount={2500}
+                progress={75}
+                onClaim={handleClaim}
+                className="h-full"
+              />
+            </div>
+          </div>
+        </div>
 
         {/* Grafy claimů a historie */}
-        <Grid cols={2} gap="lg">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
           {/* Graf celkových claimů */}
-          <LineChart
-            title="Celkem claim"
-            data={claimChartData}
-            currentValue={224}
-            currentMonth="Jul"
-            minValue={0}
-            maxValue={1000}
-            timeframe="monthly"
-            onTimeframeChange={handleTimeframeChange}
-          />
+          <div className="w-full">
+            <LineChart
+              title="Celkem claim"
+              data={claimChartData}
+              currentValue={224}
+              currentMonth="Jul"
+              minValue={0}
+              maxValue={1000}
+              timeframe="monthly"
+              onTimeframeChange={handleTimeframeChange}
+            />
+          </div>
 
           {/* Historie claimů */}
-          <ClaimHistoryTable
-            title="Historie claimů"
-            data={claimHistory}
-            pageSize={6}
-          />
-        </Grid>
+          <div className="w-full">
+            <ClaimHistoryTable
+              title="Historie claimů"
+              data={claimHistory}
+              pageSize={6}
+            />
+          </div>
+        </div>
       </Stack>
     </Container>
   );
