@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { Container, Stack } from '@/components/layout';
+import { Container, Stack, PageHeader } from '@/components/layout';
 import { LineChart } from '@/components/charts';
 import { EnhancedValueCard } from '@/components/cards';
 import { ProjectCard } from '@/components/cards/project-card';
@@ -38,10 +38,12 @@ export default function ProjectsPage() {
   return (
     <Container fluid className="py-4 sm:py-6">
       <Stack spacing="lg">
-        {/* Hlavní nadpis */}
-        <h1 className="text-2xl sm:text-3xl font-bold text-white">
-          Projekty
-        </h1>
+        {/* Jednotný page header s navigací zpět */}
+        <PageHeader 
+          title="Projekty"
+          backTo="/dashboard/portfolio"
+          backLabel="Portfolio"
+        />
 
         {/* Graf a hodnoty - stejná výška */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-stretch">
@@ -80,20 +82,7 @@ export default function ProjectsPage() {
                 title="Hodnota portfolio + akcie"
                 value={130000}
                 trend={{
-                  value: 15.2,
-                  direction: 'up',
-                  period: 'měsíc'
-                }}
-                className="h-full"
-              />
-            </div>
-
-            <div className="flex-1">
-              <EnhancedValueCard
-                title="Celkem vyplaceno"
-                value={3500}
-                trend={{
-                  value: 8.7,
+                  value: 8.2,
                   direction: 'up',
                   period: 'měsíc'
                 }}
@@ -103,22 +92,39 @@ export default function ProjectsPage() {
           </div>
         </div>
 
-        {/* Sekce s projekty */}
-        <div className="space-y-6">
-          <h2 className="text-xl sm:text-2xl font-bold text-white">
-            Portfolio
-          </h2>
+        {/* Grid s project kartami - OPRAVENÝ INTERFACE */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+          <ProjectCard
+            title="GC Cards"
+            description="Investiční karty s garantovaným výnosem a možností tradingu na sekundárním trhu."
+            color="pink"
+            onPortfolioClick={() => handlePortfolioClick('GC Cards')}
+            onBuyClick={() => handleBuyClick('GC Cards')}
+          />
           
-          {/* Projektové karty */}
-          <div className="space-y-6">
-            <ProjectCard
-              title="GC Cards"
-              description="GC CARDS PŘEDSTAVUJÍ KLÍČOVÉ NFT V NAŠEM PORTFOLIU, KTERÉ SVÝM DRŽITELŮM OTEVÍRAJÍ EXKLUZIVNÍ PŘÍSTUP DO SOUKROMÉ KOMUNITY"
-              color="pink"
-              onPortfolioClick={() => handlePortfolioClick('GC Cards')}
-              onBuyClick={() => handleBuyClick('GC Cards')}
-            />
-          </div>
+          <ProjectCard
+            title="BTC Bot"
+            description="Automatizovaný trading bot pro Bitcoin s pokročilými algoritmy a risk managementem."
+            color="blue"
+            onPortfolioClick={() => handlePortfolioClick('BTC Bot')}
+            onBuyClick={() => handleBuyClick('BTC Bot')}
+          />
+          
+          <ProjectCard
+            title="Algo Trader"
+            description="Algoritmické obchodování s využitím AI a machine learning pro maximalizaci zisku."
+            color="green"
+            onPortfolioClick={() => handlePortfolioClick('Algo Trader')}
+            onBuyClick={() => handleBuyClick('Algo Trader')}
+          />
+          
+          <ProjectCard
+            title="VC NFT"
+            description="Exkluzivní NFT kolekce s utility funkcemi a přístupem k speciálním investičním příležitostem."
+            color="yellow"
+            onPortfolioClick={() => handlePortfolioClick('VC NFT')}
+            onBuyClick={() => handleBuyClick('VC NFT')}
+          />
         </div>
       </Stack>
     </Container>

@@ -43,8 +43,8 @@ export default function DashboardLayout({
               {/* TopBar - v normálním flow */}
               <TopBar />
               
-              {/* Responsive padding */}
-              <div className="p-3 sm:p-4 md:p-5 lg:p-6 xl:p-8">
+              {/* OPRAVENÝ RESPONSIVE PADDING - méně agresivní */}
+              <div className="px-4 sm:px-6 lg:px-8 pt-2 pb-6">
                 {/* Content wrapper for max-width on large screens */}
                 <div className="max-w-full mx-auto">
                   {children}

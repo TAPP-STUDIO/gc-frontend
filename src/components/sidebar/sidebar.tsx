@@ -15,7 +15,7 @@ interface SidebarProps {
   onToggleCollapse?: () => void;
 }
 
-export default function Sidebar({ isCollapsed = false, onToggleCollapse }: SidebarProps) {
+export default function Sidebar({ isCollapsed = false,  }: SidebarProps) {
   const pathname = usePathname();
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
   const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([]);
@@ -81,7 +81,7 @@ export default function Sidebar({ isCollapsed = false, onToggleCollapse }: Sideb
   };
 
   const isExpanded = (itemId: string) => {
-    return !!expandedItems[itemId];
+    return !expandedItems[itemId];
   };
 
   const handleMobileMenuToggle = () => {
@@ -107,7 +107,9 @@ export default function Sidebar({ isCollapsed = false, onToggleCollapse }: Sideb
           <div className="flex flex-col h-full px-4">
             {/* Header with close button */}
             <div className="flex items-center justify-between pt-6 pb-6">
-              <Logo />
+              <div className="flex items-start">
+                <Logo />
+              </div>
               <button
                 onClick={closeMobileMenu}
                 className="p-2 text-white hover:text-[#F9D523] transition-colors"
@@ -166,13 +168,7 @@ export default function Sidebar({ isCollapsed = false, onToggleCollapse }: Sideb
                               isExpanded(item.id) ? 'rotate-180' : ''
                             }`}
                           >
-                            <path
-                              d="M1 1L5 5L9 1"
-                              stroke="currentColor"
-                              strokeWidth="1.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
+                            <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                           </svg>
                         </button>
                       ) : (
@@ -202,12 +198,12 @@ export default function Sidebar({ isCollapsed = false, onToggleCollapse }: Sideb
                       )}
                     </div>
 
-                    {/* Portfolio submenu */}
+                    {/* Subitems pro portfolio */}
                     {item.id === 'portfolio' && portfolioItems.length > 0 && (
                       <div
-                        className={`ml-9 overflow-hidden transition-all duration-300 ease-in-out ${
-                          isExpanded(item.id) 
-                            ? 'opacity-100 mb-4' 
+                        className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                          isExpanded(item.id)
+                            ? `max-h-[${portfolioItems.length * 40}px] opacity-100 mb-4` 
                             : 'max-h-0 opacity-0'
                         }`}
                         style={{
@@ -238,9 +234,9 @@ export default function Sidebar({ isCollapsed = false, onToggleCollapse }: Sideb
               </ul>
             </nav>
 
-            {/* Footer pro mobil */}
+            {/* Footer sekce pro mobile */}
             <div className="mt-auto pb-4 border-t border-[#333333] pt-4">
-              <div className="space-y-3">
+              <div className="space-y-3 mb-4">
                 {/* Podpora */}
                 <a
                   href="/support"
@@ -317,8 +313,8 @@ export default function Sidebar({ isCollapsed = false, onToggleCollapse }: Sideb
         }`}
       >
         <div className={`flex flex-col h-full ${isCollapsed ? 'px-2' : 'px-4'}`}>
-          {/* Header - bez tlačítka */}
-          <div className="flex items-center justify-center pt-6 pb-10">
+          {/* Header - logo zarovnané vlevo */}
+          <div className={`flex items-start pt-6 pb-10 ${isCollapsed ? 'justify-center' : 'justify-start'}`}>
             <div className={`transition-all duration-300 ${isCollapsed ? 'scale-75' : 'scale-100'}`}>
               <Logo />
             </div>
@@ -371,20 +367,14 @@ export default function Sidebar({ isCollapsed = false, onToggleCollapse }: Sideb
                             isExpanded(item.id) ? 'rotate-180' : ''
                           }`}
                         >
-                          <path
-                            d="M1 1L5 5L9 1"
-                            stroke="currentColor"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
+                          <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
                       </button>
                     ) : (
                       // Normální link
                       <Link
                         href={item.href}
-                        className={`${isCollapsed ? 'flex justify-center w-full p-3 rounded-lg' : 'flex-grow flex items-center'} ${
+                        className={`${isCollapsed ? 'p-3 rounded-lg' : 'flex-grow flex items-center'} ${
                           isActive(item.href) ? 'text-[#F9D523]' : 'text-white'
                         } hover:text-[#F9D523] transition-colors relative`}
                         title={isCollapsed ? item.name : undefined}
@@ -407,7 +397,7 @@ export default function Sidebar({ isCollapsed = false, onToggleCollapse }: Sideb
                         
                         {/* Tooltip pro collapsed stav */}
                         {isCollapsed && (
-                          <div className="absolute left-full ml-2 px-2 py-1 bg-[#333333] text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 max-w-[150px]">
+                          <div className="sidebar-tooltip absolute left-full ml-2 top-1/2 transform -translate-y-1/2 bg-[#1a1a1a] text-white text-sm py-1 px-2 rounded shadow-lg z-50 whitespace-nowrap">
                             {item.name}
                           </div>
                         )}
@@ -415,11 +405,11 @@ export default function Sidebar({ isCollapsed = false, onToggleCollapse }: Sideb
                     )}
                   </div>
 
-                  {/* Portfolio submenu - pouze když není collapsed */}
-                  {!isCollapsed && item.id === 'portfolio' && portfolioItems.length > 0 && (
+                  {/* Subitems pro portfolio - pouze pro nekolapsovaný stav */}
+                  {item.id === 'portfolio' && portfolioItems.length > 0 && !isCollapsed && (
                     <div
-                      className={`ml-9 overflow-hidden transition-all duration-300 ease-in-out ${
-                        isExpanded(item.id) 
+                      className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                        isExpanded(item.id)
                           ? `max-h-[${portfolioItems.length * 40}px] opacity-100 mb-4` 
                           : 'max-h-0 opacity-0'
                       }`}
@@ -480,7 +470,7 @@ export default function Sidebar({ isCollapsed = false, onToggleCollapse }: Sideb
                 
                 {/* Tooltip pro collapsed stav */}
                 {isCollapsed && (
-                  <div className="absolute left-full ml-2 px-2 py-1 bg-[#333333] text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 max-w-[150px]">
+                  <div className="sidebar-tooltip absolute left-full ml-2 top-1/2 transform -translate-y-1/2 bg-[#1a1a1a] text-white text-sm py-1 px-2 rounded shadow-lg z-50 whitespace-nowrap">
                     Podpora
                   </div>
                 )}
@@ -514,42 +504,12 @@ export default function Sidebar({ isCollapsed = false, onToggleCollapse }: Sideb
                 
                 {/* Tooltip pro collapsed stav */}
                 {isCollapsed && (
-                  <div className="absolute left-full ml-2 px-2 py-1 bg-[#333333] text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
+                  <div className="sidebar-tooltip absolute left-full ml-2 top-1/2 transform -translate-y-1/2 bg-[#1a1a1a] text-white text-sm py-1 px-2 rounded shadow-lg z-50 whitespace-nowrap">
                     Dokumentace
                   </div>
                 )}
               </a>
             </div>
-
-            {/* Collapse toggle button na spodku */}
-            {onToggleCollapse && (
-              <div className="flex justify-center">
-                <button
-                  onClick={onToggleCollapse}
-                  className="p-2 text-[#666666] hover:text-[#F9D523] transition-colors rounded-lg hover:bg-[#1a1a1a] group relative"
-                  aria-label={isCollapsed ? "Rozbalit sidebar" : "Sbalit sidebar"}
-                >
-                  <svg 
-                    width="18" 
-                    height="18" 
-                    viewBox="0 0 24 24" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    strokeWidth="2"
-                    className={`transition-transform ${isCollapsed ? 'rotate-180' : ''}`}
-                  >
-                    <polyline points="15,18 9,12 15,6"></polyline>
-                  </svg>
-                  
-                  {/* Tooltip */}
-                  {isCollapsed && (
-                    <div className="absolute left-full ml-2 px-2 py-1 bg-[#333333] text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 max-w-[150px]">
-                      Rozbalit
-                    </div>
-                  )}
-                </button>
-              </div>
-            )}
           </div>
         </div>
       </aside>

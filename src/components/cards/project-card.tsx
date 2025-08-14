@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 interface ProjectCardProps {
@@ -45,7 +44,8 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   onBuyClick,
   className = ""
 }) => {
-  const colors = colorClasses[color];
+  // Bezpečné načtení colors objektu s fallbackem
+  const colors = colorClasses[color] || colorClasses.blue;
 
   return (
     <div className={`bg-[#151515] rounded-2xl p-6 sm:p-8 hover:bg-[#1a1a1a] transition-all duration-300 group ${className}`}>
@@ -94,35 +94,27 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
                   </div>
                 </div>
 
-                {/* Center logo */}
-                <div className="flex justify-center">
-                  <div className={`text-6xl sm:text-7xl font-bold ${colors.logo}`}>
-                    G
+                {/* Center logo/icon */}
+                <div className="flex justify-center items-center">
+                  <div className={`w-12 h-12 rounded-full border-3 ${colors.border} flex items-center justify-center`}>
+                    <div className={`w-6 h-6 rounded-full ${colors.accent}`} />
                   </div>
                 </div>
 
-                {/* Bottom section */}
-                <div className="space-y-2">
-                  <div className="flex justify-between items-end">
-                    <div className={`w-6 h-6 rounded-full border-2 ${colors.border} flex items-center justify-center`}>
-                      <div className={`w-2 h-2 rounded-full ${colors.accent}`} />
-                    </div>
-                    <div className={`w-6 h-6 rounded-full border-2 ${colors.border} flex items-center justify-center`}>
-                      <div className={`w-2 h-2 rounded-full ${colors.accent}`} />
-                    </div>
+                {/* Bottom info */}
+                <div className="text-center">
+                  <div className={`text-lg font-bold ${colors.accent}`}>
+                    {title}
                   </div>
-                  <div className="text-center">
-                    <div className={`text-xs font-medium ${colors.accent} uppercase tracking-wider`}>
-                      LIFETIME CARD
-                    </div>
+                  <div className="text-xs text-white/60">
+                    Investment Card
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Shadow/background cards */}
-            <div className={`absolute inset-0 w-48 h-72 sm:w-56 sm:h-80 bg-gradient-to-br ${colors.card} ${colors.border} border-2 rounded-2xl -z-10 transform rotate-6 opacity-50`} />
-            <div className={`absolute inset-0 w-48 h-72 sm:w-56 sm:h-80 bg-gradient-to-br ${colors.card} ${colors.border} border-2 rounded-2xl -z-20 transform rotate-3 opacity-25`} />
+            {/* Shadow card */}
+            <div className={`absolute inset-0 w-48 h-72 sm:w-56 sm:h-80 bg-gradient-to-br ${colors.card} ${colors.border} border-2 rounded-2xl transform rotate-6 -z-10 opacity-30`}></div>
           </div>
         </div>
       </div>
