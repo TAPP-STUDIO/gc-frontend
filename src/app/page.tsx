@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import { 
   Star, 
   Shield, 
@@ -17,7 +16,6 @@ import {
   Mail,
   Phone,
   MessageCircle,
-  Briefcase,
   Cpu,
   Bot,
   Gamepad2,
@@ -209,8 +207,8 @@ export default function LandingPage() {
                           { icon: <TrendingUp className="w-4 h-4" />, label: "Sell", color: "bg-green-500" },
                           { icon: <Zap className="w-4 h-4" />, label: "Send", color: "bg-blue-500" },
                           { icon: <Bot className="w-4 h-4" />, label: "Swap", color: "bg-purple-500" }
-                        ].map((item, idx) => (
-                          <div key={idx} className="bg-gray-800 rounded-xl p-3 text-center">
+                        ].map((item, index) => (
+                          <div key={index} className="bg-gray-800 rounded-xl p-3 text-center">
                             <div className={`w-8 h-8 ${item.color} rounded-full mx-auto mb-2 flex items-center justify-center`}>
                               {item.icon}
                             </div>
@@ -548,11 +546,11 @@ export default function LandingPage() {
                     <div>
                       <h3 className="text-3xl font-bold text-white mb-4">Jakub Gavlík, founder</h3>
                       <p className="text-gray-300 leading-relaxed text-lg">
-                        I've spent more than ten years navigating the world of investment and enterprise. 
+                        I&apos;ve spent more than ten years navigating the world of investment and enterprise. 
                         My many successes in that time have given me the experience and contacts necessary 
                         to take Gavlik Capital NFT from idea to reality. Today, backed by a team of seasoned 
                         professionals, I oversee a dynamic investment portfolio comprising assets in cryptocurrency, 
-                        stocks, and real estate. In addition to heading Gavlik Capital NFT, I'm also co-CEO of 
+                        stocks, and real estate. In addition to heading Gavlik Capital NFT, I&apos;m also co-CEO of 
                         Apartmania Holding a.s., whose 2022 market capitalization was calculated at approximately 
                         USD 55 million.
                       </p>
@@ -560,7 +558,7 @@ export default function LandingPage() {
 
                     <div className="p-6 bg-white/5 backdrop-blur rounded-xl border border-white/10">
                       <blockquote className="text-xl italic text-white mb-4">
-                        "The two most important ingredients of success? Simplicity and common sense."
+                        &ldquo;The two most important ingredients of success? Simplicity and common sense.&rdquo;
                       </blockquote>
                     </div>
 
@@ -742,9 +740,13 @@ export default function LandingPage() {
                   Secure and smart NFT investment crypto portfolio platform for the future of decentralized finance.
                 </p>
                 <div className="flex gap-4">
-                  {[<Mail className="w-5 h-5" />, <Phone className="w-5 h-5" />, <MessageCircle className="w-5 h-5" />].map((icon, idx) => (
-                    <div key={idx} className="social-icon cursor-pointer">
-                      {icon}
+                  {[
+                    { icon: <Mail key="mail" className="w-5 h-5" />, id: 'mail' },
+                    { icon: <Phone key="phone" className="w-5 h-5" />, id: 'phone' },
+                    { icon: <MessageCircle key="message" className="w-5 h-5" />, id: 'message' }
+                  ].map((item) => (
+                    <div key={item.id} className="social-icon cursor-pointer">
+                      {item.icon}
                     </div>
                   ))}
                 </div>
