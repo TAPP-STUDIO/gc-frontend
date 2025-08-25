@@ -354,12 +354,20 @@ export default function Home() {
           {/* Development Fallback */}
           <div className="pt-6 border-t border-[#333333]">
             <p className="text-[#666666] text-sm mb-4">Development Mode:</p>
-            <Link
-              href="/dashboard"
-              className="inline-block bg-transparent border border-[#F9D523] text-[#F9D523] hover:bg-[#F9D523] hover:text-[#151515] font-medium py-2 px-4 rounded-lg transition-all duration-300"
-            >
-              Přejít přímo na Dashboard
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Link
+                href="/dashboard"
+                className="flex-1 bg-transparent border border-[#F9D523] text-[#F9D523] hover:bg-[#F9D523] hover:text-[#151515] font-medium py-2 px-4 rounded-lg transition-all duration-300 text-center"
+              >
+                User Dashboard
+              </Link>
+              <Link
+                href="/admin"
+                className="flex-1 bg-transparent border border-red-500 text-red-500 hover:bg-red-500 hover:text-white font-medium py-2 px-4 rounded-lg transition-all duration-300 text-center"
+              >
+                🔑 Admin Panel
+              </Link>
+            </div>
           </div>
         </div>
       </div>
