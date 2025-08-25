@@ -5,6 +5,7 @@ import { Container, Stack, PageHeader } from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { BarChart3, RefreshCw, TrendingUp } from 'lucide-react';
 
 interface CryptoPosition {
   id: string;
@@ -224,8 +225,9 @@ export default function AdminPortfolioPage() {
       <div className="space-y-6">
         {/* Admin Page Header */}
         <div className="mb-4">
-          <h1 className="text-2xl sm:text-3xl font-bold text-white">
-            📊 Crypto Portfolio Management
+          <h1 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-2">
+            <BarChart3 className="w-6 h-6 text-[#F9D523]" />
+            Crypto Portfolio Management
           </h1>
           <p className="text-[#666666] mt-2">
             Správa crypto portfolia - zadávání pozic, sledování výkonu a real-time ceny
@@ -269,8 +271,10 @@ export default function AdminPortfolioPage() {
             <Button
               variant="outline"
               onClick={refreshPrices}
+              className="flex items-center gap-2"
             >
-              🔄 Aktualizovat ceny
+              <RefreshCw className="w-4 h-4" />
+              <span>Aktualizovat ceny</span>
             </Button>
           </div>
           
@@ -449,9 +453,14 @@ export default function AdminPortfolioPage() {
         {/* Footer Note */}
         <div className="bg-[#1a1a1a] border border-[#333333] rounded-lg p-4">
           <div className="text-[#666666] text-sm">
-            <strong>📈 Admin Info:</strong> Ceny se aktualizují automaticky přes CoinGecko API. 
-            Tato stránka slouží pro zadávání a správu crypto pozic uživatelů. 
-            Změny se projeví na uživatelském dashboardu v real-time.
+            <div className="flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-green-500" />
+              <span><strong>Admin Info:</strong> Ceny se aktualizují automaticky přes CoinGecko API.</span>
+            </div>
+            <div className="mt-1">
+              Tato stránka slouží pro zadávání a správu crypto pozic uživatelů.
+              Změny se projeví na uživatelském dashboardu v real-time.
+            </div>
           </div>
         </div>
       </div>

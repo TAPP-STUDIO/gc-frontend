@@ -20,7 +20,8 @@ import {
   Bot,
   Gamepad2,
   CreditCard,
-  Bitcoin
+  Bitcoin,
+  Heart
 } from 'lucide-react';
 
 export default function LandingPage() {
@@ -788,7 +789,11 @@ export default function LandingPage() {
                 © 2025 Gavlik Capital. All rights reserved.
               </p>
               <div className="flex items-center gap-6 text-gray-400 text-sm">
-                <span>Made with ❤️ for the crypto community</span>
+                <div className="flex items-center gap-1">
+                  <span>Made with</span>
+                  <Heart className="w-4 h-4 text-red-500" />
+                  <span>for the crypto community</span>
+                </div>
               </div>
             </div>
           </div>
