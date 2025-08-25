@@ -1,375 +1,797 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { 
-  connectMetaMask, 
-  connectCoinbaseWallet,
-  checkExistingConnection,
-  formatAddress,
-  getChainName,
-  isWalletInstalled,
-  listenToAccountChanges,
-  listenToNetworkChanges,
-  cleanupListeners,
-  WALLET_URLS
-} from '@/lib/wallet-utils';
-import { WalletConnection } from '@/types/web3';
+  Star, 
+  Shield, 
+  Zap, 
+  Target, 
+  Lock, 
+  TrendingUp, 
+  Users, 
+  Award,
+  Calendar,
+  MapPin,
+  Mail,
+  Phone,
+  MessageCircle,
+  Briefcase,
+  Cpu,
+  Bot,
+  Gamepad2,
+  CreditCard,
+  Bitcoin
+} from 'lucide-react';
 
-interface WalletOption {
-  name: string;
-  logo: React.ReactNode;
-  description: string;
-  action: () => Promise<void>;
-  installed: boolean;
-}
-
-// MetaMask Logo Component
-const MetaMaskLogo = ({ size = 32 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
-    <path d="M30.04 6.4L18.24 15.2L20.48 9.6L30.04 6.4Z" fill="#E17726"/>
-    <path d="M1.96 6.4L11.44 9.64L9.52 15.2L1.96 6.4Z" fill="#E27625"/>
-    <path d="M25.6 23.16L22.88 27.16L29.24 28.92L31.08 23.28L25.6 23.16Z" fill="#E27625"/>
-    <path d="M0.96 23.28L2.8 28.92L9.12 27.16L6.4 23.16L0.96 23.28Z" fill="#E27625"/>
-    <path d="M8.8 13.88L7.08 16.68L13.36 16.96L13.12 10.12L8.8 13.88Z" fill="#E27625"/>
-    <path d="M23.2 13.88L18.8 9.96L18.64 16.96L24.92 16.68L23.2 13.88Z" fill="#E27625"/>
-    <path d="M9.12 27.16L12.52 25.52L9.6 23.32L9.12 27.16Z" fill="#D5BFB2"/>
-    <path d="M19.48 25.52L22.88 27.16L22.4 23.32L19.48 25.52Z" fill="#D5BFB2"/>
-    <path d="M22.88 27.16L19.48 25.52L19.76 28.04L19.72 28.84L22.88 27.16Z" fill="#233447"/>
-    <path d="M9.12 27.16L12.28 28.84L12.24 28.04L12.52 25.52L9.12 27.16Z" fill="#233447"/>
-    <path d="M12.36 21.16L9.52 20.32L11.52 19.4L12.36 21.16Z" fill="#CC6228"/>
-    <path d="M19.64 21.16L20.48 19.4L22.52 20.32L19.64 21.16Z" fill="#CC6228"/>
-    <path d="M9.12 27.16L9.64 23.16L6.4 23.28L9.12 27.16Z" fill="#E27625"/>
-    <path d="M22.36 23.16L22.88 27.16L25.6 23.28L22.36 23.16Z" fill="#E27625"/>
-    <path d="M24.92 16.68L18.64 16.96L19.68 21.16L20.52 19.4L22.56 20.32L24.92 16.68Z" fill="#E27625"/>
-    <path d="M9.52 20.32L11.56 19.4L12.4 21.16L13.36 16.96L7.08 16.68L9.52 20.32Z" fill="#E27625"/>
-  </svg>
-);
-
-// Coinbase Wallet Logo Component
-const CoinbaseLogo = ({ size = 32 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
-    <circle cx="16" cy="16" r="16" fill="#0052FF"/>
-    <path d="M16 4C22.627 4 28 9.373 28 16C28 22.627 22.627 28 16 28C9.373 28 4 22.627 4 16C4 9.373 9.373 4 16 4ZM16 11.2C13.348 11.2 11.2 13.348 11.2 16C11.2 18.652 13.348 20.8 16 20.8C18.652 20.8 20.8 18.652 20.8 16C20.8 13.348 18.652 11.2 16 11.2Z" fill="white"/>
-  </svg>
-);
-
-// WalletConnect Logo Component
-const WalletConnectLogo = ({ size = 32 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
-    <circle cx="16" cy="16" r="16" fill="#3B99FC"/>
-    <path d="M9.6 12.8C13.067 9.333 18.933 9.333 22.4 12.8L22.933 13.333C23.067 13.467 23.067 13.667 22.933 13.8L21.6 15.133C21.533 15.2 21.4 15.2 21.333 15.133L20.533 14.333C18.267 12.067 14.533 12.067 12.267 14.333L11.4 15.2C11.333 15.267 11.2 15.267 11.133 15.2L9.8 13.867C9.667 13.733 9.667 13.533 9.8 13.4L9.6 12.8ZM25.467 15.8L26.667 17C26.8 17.133 26.8 17.333 26.667 17.467L20.8 23.333C20.667 23.467 20.467 23.467 20.333 23.333L16.133 19.133C16.067 19.067 15.933 19.067 15.867 19.133L11.667 23.333C11.533 23.467 11.333 23.467 11.2 23.333L5.333 17.467C5.2 17.333 5.2 17.133 5.333 17L6.533 15.8C6.667 15.667 6.867 15.667 7 15.8L11.2 20C11.267 20.067 11.4 20.067 11.467 20L15.667 15.8C15.8 15.667 16 15.667 16.133 15.8L20.333 20C20.4 20.067 20.533 20.067 20.6 20L24.8 15.8C24.933 15.667 25.133 15.667 25.267 15.8H25.467Z" fill="white"/>
-  </svg>
-);
-
-export default function Home() {
-  const [isConnecting, setIsConnecting] = useState(false);
-  const [connectedWallet, setConnectedWallet] = useState<WalletConnection | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
+export default function LandingPage() {
   const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Check existing connection on mount
-  useEffect(() => {
-    const checkConnection = async () => {
-      const connection = await checkExistingConnection();
-      if (connection) {
-        setConnectedWallet(connection);
-      }
-    };
+  const handleEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    
+    // Mock email signup
+    setTimeout(() => {
+      setIsLoading(false);
+      alert('Díky za registraci! Brzy se ozveme s beta přístupem.');
+      setEmail('');
+    }, 2000);
+  };
 
-    checkConnection();
+  const handleGetStarted = () => {
+    router.push('/dashboard');
+  };
 
-    // Setup listeners for account and network changes
-    listenToAccountChanges((accounts) => {
-      if (accounts.length === 0) {
-        setConnectedWallet(null);
-      } else {
-        // Refresh connection info
-        checkConnection();
-      }
-    });
-
-    listenToNetworkChanges(() => {
-      // Refresh connection info when network changes
-      checkConnection();
-    });
-
-    // Cleanup listeners on unmount
-    return () => {
-      cleanupListeners();
-    };
-  }, []);
-
-  // Wallet connection handlers
-  const handleMetaMaskConnect = async () => {
-    try {
-      const connection = await connectMetaMask();
-      setConnectedWallet(connection);
-      setTimeout(() => router.push('/dashboard'), 2000);
-    } catch (connectionError: unknown) {
-      const error = connectionError as Error;
-      throw new Error(error.message);
+  const roadmapData = [
+    {
+      phase: "01",
+      title: "NFT DESIGN",
+      description: "The project was conceived and designed by Ahmed Younes, who as executive producer at Dubai TV has created a number of captivating programmes, election campaigns, and advertisements for television stations in Egypt, Dubai, the UAE, and Europe. His most recent project was EXPO 2020.",
+      icon: <Target className="w-6 h-6" />
+    },
+    {
+      phase: "02", 
+      title: "SMART CONTRACT",
+      description: "The software developers behind the many successes of Apartmania Holding a.s. have engineered a unique smart contract exclusively for Gavlik Capital NFT.",
+      icon: <Shield className="w-6 h-6" />
+    },
+    {
+      phase: "03",
+      title: "OPENSEA LAUNCH", 
+      description: "Gavlik Capital NFT will debut in June 2022 on OpenSea, the world's largest NFT marketplace.",
+      icon: <TrendingUp className="w-6 h-6" />
+    },
+    {
+      phase: "04",
+      title: "REWARD STABILITY",
+      description: "Each owner of a GC NFT CARD will earn a regular quarterly profit share in the form of a reward paid to their MetaMask wallet. The goal for 2023 is stabilization of the regular rewards and continued growth of the portfolio.",
+      icon: <Award className="w-6 h-6" />
+    },
+    {
+      phase: "05",
+      title: "BTC BOT NFT",
+      description: "Gavlik Capital will soon be launching a new project in its ecosystem. The BTC BOT will generate regular monthly rewards and put a portion of the profits in bitcoin.",
+      icon: <Bitcoin className="w-6 h-6" />
+    },
+    {
+      phase: "06",
+      title: "PHYSICAL MERCH AND LIVE EVENTS",
+      description: "The video animation in the MetaMask wallet is only the beginning. We are also preparing physical silver and gold cards that will serve as tickets to Gavlik Capital live events. More info coming soon..",
+      icon: <Calendar className="w-6 h-6" />
+    },
+    {
+      phase: "07",
+      title: "GAMING / METAVERSE NFT",
+      description: "The specialists in the Gavlik Capital ecosystem have yet another exciting project in the pipeline, this time focusing on gaming and the metaverse.",
+      icon: <Gamepad2 className="w-6 h-6" />
     }
-  };
-
-  const handleCoinbaseConnect = async () => {
-    try {
-      const connection = await connectCoinbaseWallet();
-      setConnectedWallet(connection);
-      setTimeout(() => router.push('/dashboard'), 2000);
-    } catch (connectionError: unknown) {
-      const error = connectionError as Error;
-      throw new Error(error.message);
-    }
-  };
-
-  const handleWalletConnectConnect = async () => {
-    // WalletConnect would require additional setup
-    throw new Error('WalletConnect integration vyžaduje dodatečnou instalaci balíčků');
-  };
-
-  // Wallet options configuration
-  const walletOptions: WalletOption[] = [
-    {
-      name: 'MetaMask',
-      logo: <MetaMaskLogo size={32} />,
-      description: 'Nejpopulárnější browser wallet',
-      action: handleMetaMaskConnect,
-      installed: isWalletInstalled('MetaMask'),
-    },
-    {
-      name: 'Coinbase Wallet',
-      logo: <CoinbaseLogo size={32} />,
-      description: 'Oficiální Coinbase wallet',
-      action: handleCoinbaseConnect,
-      installed: isWalletInstalled('Coinbase Wallet'),
-    },
-    {
-      name: 'WalletConnect',
-      logo: <WalletConnectLogo size={32} />,
-      description: 'Připojte libovolnou mobile wallet',
-      action: handleWalletConnectConnect,
-      installed: true, // WalletConnect doesn't require installation
-    },
   ];
 
-  // Generic wallet connection handler
-  const handleWalletConnect = async (wallet: WalletOption) => {
-    if (!wallet.installed && wallet.name !== 'WalletConnect') {
-      window.open(WALLET_URLS[wallet.name as keyof typeof WALLET_URLS], '_blank');
-      return;
-    }
-
-    setIsConnecting(true);
-    setError(null);
-    setSelectedWallet(wallet.name);
-
-    try {
-      await wallet.action();
-    } catch (connectionError: unknown) {
-      const error = connectionError as Error;
-      console.error(`${wallet.name} connection error:`, error);
-      setError(error.message || 'Připojení se nezdařilo');
-    } finally {
-      setIsConnecting(false);
-      setSelectedWallet(null);
-    }
-  };
-
-  const disconnect = () => {
-    setConnectedWallet(null);
-    setError(null);
-  };
-
-  // Connected State UI
-  if (connectedWallet) {
-    return (
-      <div className="min-h-screen bg-[#0a0a0a] animated-bg flex items-center justify-center">
-        <div className="text-center max-w-lg mx-auto px-6">
-          <div className="bg-[#151515] rounded-2xl p-8 border border-[#333333] shadow-2xl">
-            {/* Success Icon */}
-            <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-                <polyline points="20,6 9,17 4,12"></polyline>
-              </svg>
-            </div>
-            
-            <h1 className="text-2xl font-bold text-white mb-4">
-              Wallet úspěšně připojen!
-            </h1>
-            
-            {/* Connection Details */}
-            <div className="space-y-3 mb-6 bg-[#1a1a1a] rounded-lg p-4">
-              <div className="flex justify-between text-sm">
-                <span className="text-[#666666]">Adresa:</span>
-                <span className="text-[#F9D523] font-mono">{formatAddress(connectedWallet.address)}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-[#666666]">Síť:</span>
-                <span className="text-white">{getChainName(connectedWallet.chainId)}</span>
-              </div>
-              {connectedWallet.balance && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-[#666666]">Zůstatek:</span>
-                  <span className="text-white">{connectedWallet.balance}</span>
-                </div>
-              )}
-            </div>
-            
-            {/* Action Buttons */}
-            <div className="flex flex-col gap-3">
-              <button
-                onClick={() => router.push('/dashboard')}
-                className="w-full bg-[#F9D523] hover:bg-[#e3c320] text-[#151515] font-bold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105"
-              >
-                Přejít na Dashboard
-              </button>
-              
-              <button
-                onClick={disconnect}
-                className="w-full bg-transparent border border-[#333333] text-[#666666] hover:border-[#F9D523] hover:text-[#F9D523] py-2 px-4 rounded-lg transition-all duration-300"
-              >
-                Odpojit wallet
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Main Landing Page UI
   return (
-    <div className="min-h-screen bg-[#0a0a0a] animated-bg flex items-center justify-center">
-      <div className="text-center max-w-lg mx-auto px-6">
-        <div className="bg-[#151515] rounded-2xl p-8 border border-[#333333] shadow-2xl">
-          {/* Logo */}
-          <div className="mb-8">
-            <Image
-              src="/logos/logo.svg"
-              alt="Gavlik Capital Logo"
-              width={120}
-              height={72}
-              className="mx-auto"
-              priority
-            />
-          </div>
-
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-            Gavlik Capital Portfolio
-          </h1>
-          
-          <p className="text-[#666666] mb-8 text-lg">
-            Připojte svou crypto walletku pro přístup k dashboardu
-          </p>
-
-          {/* Error Message */}
-          {error && (
-            <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 mb-6">
-              <div className="flex items-center space-x-2">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-red-400">
-                  <circle cx="12" cy="12" r="10"/>
-                  <line x1="15" y1="9" x2="9" y2="15"/>
-                  <line x1="9" y1="9" x2="15" y2="15"/>
-                </svg>
-                <p className="text-red-400 text-sm">{error}</p>
+    <div className="min-h-screen bg-[#151515] overflow-x-hidden">
+      {/* Navigation */}
+      <nav className="fixed top-0 w-full z-50 bg-black/20 backdrop-blur-lg border-b border-white/10">
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center space-x-2 animate-fade-in-left">
+              <div className="w-8 h-8 bg-[#F9D523] rounded-lg flex items-center justify-center">
+                <span className="text-black font-bold text-sm">GC</span>
               </div>
+              <span className="text-white font-bold text-xl">Gavlik Capital</span>
             </div>
-          )}
-
-          {/* Wallet Options - S ORIGINÁLNÍMI LOGY */}
-          <div className="space-y-3 mb-6">
-            {walletOptions.map((wallet) => (
+            
+            <div className="hidden md:flex items-center space-x-8 animate-fade-in-right">
+              <a href="#products" className="text-gray-300 hover:text-[#F9D523] transition-colors">Products</a>
+              <a href="#roadmap" className="text-gray-300 hover:text-[#F9D523] transition-colors">Roadmap</a>
+              <a href="#founder" className="text-gray-300 hover:text-[#F9D523] transition-colors">Founder</a>
+              <a href="#vip-club" className="text-gray-300 hover:text-[#F9D523] transition-colors">VIP Club</a>
+              <a href="#faq" className="text-gray-300 hover:text-[#F9D523] transition-colors">FAQ</a>
               <button
-                key={wallet.name}
-                onClick={() => handleWalletConnect(wallet)}
-                disabled={isConnecting}
-                className={`w-full relative bg-[#1a1a1a] hover:bg-[#222222] disabled:bg-[#0f0f0f] border border-[#333333] hover:border-[#F9D523] disabled:border-[#222222] text-white disabled:text-[#666666] p-4 rounded-xl transition-all duration-300 flex items-center space-x-4 ${
-                  selectedWallet === wallet.name ? 'border-[#F9D523] bg-[#F9D523]/10' : ''
-                }`}
+                onClick={handleGetStarted}
+                className="bg-[#F9D523] hover:bg-[#e3c320] text-black font-bold px-6 py-2 rounded-full transition-all duration-300 transform hover:scale-105"
               >
-                {/* Wallet Logo - originální místo emoji */}
-                <div className="flex-shrink-0">{wallet.logo}</div>
-                
-                {/* Wallet Info */}
-                <div className="flex-1 text-left">
-                  <div className="font-medium flex items-center space-x-2">
-                    <span>{wallet.name}</span>
-                    {wallet.installed ? (
-                      <span className="text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full">
-                        Nainstalováno
-                      </span>
-                    ) : wallet.name !== 'WalletConnect' ? (
-                      <span className="text-xs bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded-full">
-                        Nainstalovat
-                      </span>
-                    ) : null}
-                  </div>
-                  <div className="text-sm text-[#666666]">{wallet.description}</div>
-                </div>
-                
-                {/* Loading Spinner */}
-                {isConnecting && selectedWallet === wallet.name ? (
-                  <div className="animate-spin w-5 h-5 border-2 border-[#F9D523] border-t-transparent rounded-full"></div>
-                ) : (
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#666666]">
-                    <polyline points="9,18 15,12 9,6"></polyline>
-                  </svg>
-                )}
+                Launch App
               </button>
-            ))}
-          </div>
-
-          {/* Connection Status */}
-          {isConnecting && (
-            <div className="flex items-center justify-center space-x-2 text-[#666666] mb-6">
-              <div className="animate-spin w-4 h-4 border-2 border-[#F9D523] border-t-transparent rounded-full"></div>
-              <span>Připojování k {selectedWallet}...</span>
             </div>
-          )}
 
-          {/* Help Section */}
-          <div className="text-center mb-6">
-            <details className="text-left">
-              <summary className="text-[#666666] text-sm cursor-pointer hover:text-[#F9D523] transition-colors">
-                💡 Nemáte crypto wallet?
-              </summary>
-              <div className="mt-4 p-4 bg-[#1a1a1a] rounded-lg">
-                <p className="text-[#666666] text-xs mb-3">
-                  Doporučujeme začít s MetaMask - je zdarma a jednoduchý na použití:
-                </p>
-                <ol className="text-[#666666] text-xs space-y-1 list-decimal list-inside">
-                  <li>Navštivte <a href="https://metamask.io" target="_blank" rel="noopener noreferrer" className="text-[#F9D523] hover:underline">metamask.io</a></li>
-                  <li>Stáhněte a nainstalujte rozšíření</li>
-                  <li>Vytvořte si novou peněženku</li>
-                  <li>Vraťte se sem a připojte se</li>
-                </ol>
-              </div>
-            </details>
+            {/* Mobile menu button */}
+            <button className="md:hidden text-white p-2">
+              <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
           </div>
+        </div>
+      </nav>
 
-          {/* Development Fallback */}
-          <div className="pt-6 border-t border-[#333333]">
-            <p className="text-[#666666] text-sm mb-4">Development Mode:</p>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Link
-                href="/dashboard"
-                className="flex-1 bg-transparent border border-[#F9D523] text-[#F9D523] hover:bg-[#F9D523] hover:text-[#151515] font-medium py-2 px-4 rounded-lg transition-all duration-300 text-center"
-              >
-                User Dashboard
-              </Link>
-              <Link
-                href="/admin"
-                className="flex-1 bg-transparent border border-red-500 text-red-500 hover:bg-red-500 hover:text-white font-medium py-2 px-4 rounded-lg transition-all duration-300 text-center"
-              >
-                🔑 Admin Panel
-              </Link>
+      {/* Hero Section - POUZE TADY ANIMOVANÉ POZADÍ */}
+      <section className="hero-animated-bg pt-32 pb-20 px-6 relative">
+        <div className="container mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="space-y-8">
+              <div className="space-y-6 animate-fade-in-left">
+                <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight">
+                  <span className="text-white">Secure and Smart</span><br />
+                  <span className="text-white">NFT Investment</span><br />
+                  <span className="text-[#F9D523]">Crypto Portfolio</span>
+                </h1>
+                
+                <p className="text-xl text-gray-300 leading-relaxed max-w-lg">
+                  GC Card owner has a free mint of the next NFT projects.
+                  Gavlik Capital provides crypto-based financial services with focus on 
+                  decentralized asset management.
+                </p>
+              </div>
+
+              {/* Email Signup */}
+              <form onSubmit={handleEmailSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md animate-fade-in-left animate-delay-200">
+                <div className="flex-1">
+                  <input
+                    type="email"
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-[#F9D523] focus:bg-white/20 transition-all backdrop-blur-sm"
+                    required
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="bg-[#F9D523] hover:bg-[#e3c320] text-black font-bold px-8 py-3 rounded-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-70 disabled:cursor-not-allowed"
+                >
+                  {isLoading ? 'Sending...' : 'Send Now'}
+                </button>
+              </form>
+            </div>
+
+            {/* Phone Mockup */}
+            <div className="relative flex justify-center lg:justify-end animate-fade-in-right animate-delay-300">
+              <div className="relative">
+                {/* Floating Elements */}
+                <div className="absolute -top-10 -left-10 w-20 h-20 bg-[#F9D523]/20 rounded-full blur-xl animate-pulse"></div>
+                <div className="absolute -bottom-10 -right-10 w-16 h-16 bg-green-500/20 rounded-full blur-xl animate-pulse delay-1000"></div>
+                
+                {/* Phone */}
+                <div className="relative w-80 h-[600px] bg-black rounded-[3rem] p-4 shadow-2xl border border-gray-800">
+                  <div className="w-full h-full bg-gradient-to-br from-gray-900 to-black rounded-[2.5rem] overflow-hidden">
+                    {/* Status Bar */}
+                    <div className="flex justify-between items-center px-6 py-3 text-white text-sm">
+                      <span>9:41</span>
+                      <div className="flex items-center gap-1">
+                        <div className="w-4 h-2 bg-white rounded-sm"></div>
+                        <div className="w-6 h-3 border border-white rounded-sm">
+                          <div className="w-4 h-full bg-white rounded-sm"></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* App Content */}
+                    <div className="px-6 py-4">
+                      <div className="flex items-center justify-between mb-6">
+                        <h2 className="text-white text-xl font-bold">My Portfolio</h2>
+                        <div className="w-8 h-8 bg-[#F9D523] rounded-full"></div>
+                      </div>
+
+                      <div className="bg-gradient-to-r from-[#F9D523] to-[#e3c320] rounded-2xl p-6 mb-6">
+                        <p className="text-black/70 text-sm">Portfolio Overview</p>
+                        <p className="text-black text-3xl font-bold">Investment Dashboard</p>
+                        <p className="text-black/70 text-sm mt-2">Manage your portfolio</p>
+                      </div>
+
+                      <div className="grid grid-cols-4 gap-4 mb-6">
+                        {[
+                          { icon: <CreditCard className="w-4 h-4" />, label: "Buy", color: "bg-[#F9D523]" },
+                          { icon: <TrendingUp className="w-4 h-4" />, label: "Sell", color: "bg-green-500" },
+                          { icon: <Zap className="w-4 h-4" />, label: "Send", color: "bg-blue-500" },
+                          { icon: <Bot className="w-4 h-4" />, label: "Swap", color: "bg-purple-500" }
+                        ].map((item, idx) => (
+                          <div key={idx} className="bg-gray-800 rounded-xl p-3 text-center">
+                            <div className={`w-8 h-8 ${item.color} rounded-full mx-auto mb-2 flex items-center justify-center`}>
+                              {item.icon}
+                            </div>
+                            <p className="text-white text-xs">{item.label}</p>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="space-y-3">
+                        <h3 className="text-white font-semibold">My Holdings</h3>
+                        <div className="bg-gray-800 rounded-xl p-4 flex justify-between items-center">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-[#F9D523] rounded-full flex items-center justify-center">
+                              <span className="text-black font-bold">GC</span>
+                            </div>
+                            <div>
+                              <p className="text-white font-medium">GC Cards</p>
+                              <p className="text-gray-400 text-sm">Investment NFTs</p>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-white font-bold">Active</p>
+                            <p className="text-green-500 text-sm">Growing</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+      </section>
+
+      {/* ZBYTEK STRÁNKY S GLASSMORPHISM POZADÍM */}
+      <div className="glassmorphism-bg">
+
+        {/* Floating Cards Section */}
+        <section className="py-20 px-6 relative overflow-hidden">
+          <div className="container mx-auto">
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
+              <div className="relative">
+                <div className="absolute top-10 left-10 w-80 h-48 bg-gradient-to-br from-[#F9D523] to-[#e3c320] rounded-2xl p-6 rotate-12 shadow-2xl backdrop-blur-sm animate-fade-in-left">
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="text-black font-bold text-xl">Crypto Custody</h3>
+                    <Shield className="w-8 h-8 text-black/60" />
+                  </div>
+                  <p className="text-black/80 text-sm mb-4">Safe and secure institutional-grade cryptocurrency storage and management</p>
+                  <div className="flex justify-between items-end">
+                    <span className="text-black/60 text-xs">Enterprise Security</span>
+                    <span className="text-black font-bold text-lg">Protected</span>
+                  </div>
+                </div>
+
+                <div className="absolute top-32 right-10 w-80 h-48 bg-gradient-to-br from-green-600 to-green-700 rounded-2xl p-6 -rotate-6 shadow-2xl backdrop-blur-sm animate-fade-in-right animate-delay-200">
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="text-white font-bold text-xl">Swap Private Digital Assets</h3>
+                    <Zap className="w-8 h-8 text-white/80" />
+                  </div>
+                  <p className="text-white/90 text-sm mb-4">Trade NFTs and crypto with complete privacy and security protocols</p>
+                  <button className="bg-white text-green-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors">
+                    Find Out More →
+                  </button>
+                </div>
+              </div>
+
+              <div className="space-y-8 animate-fade-in-right animate-delay-300">
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3">
+                    <span className="text-[#F9D523] text-sm font-bold">→ Usage Gavlik Financials ?</span>
+                  </div>
+                  
+                  <h2 className="text-4xl md:text-5xl font-bold text-white leading-tight">
+                    Professional Crypto<br />
+                    <span className="text-[#F9D523]">Investment Platform</span>
+                  </h2>
+
+                  <p className="text-xl text-gray-300 leading-relaxed">
+                    Advanced blockchain technology combined with traditional finance expertise. 
+                    Our platform offers institutional-grade security with retail-friendly interface.
+                  </p>
+                </div>
+
+                <div className="grid sm:grid-cols-2 gap-6 stagger-animation">
+                  <div className="bg-white/5 backdrop-blur rounded-2xl p-6 border border-white/10">
+                    <div className="icon-container bg-[#F9D523] mb-4">
+                      <Target className="w-6 h-6 text-black" />
+                    </div>
+                    <h3 className="text-white font-bold text-lg mb-2">Smart Investing</h3>
+                    <p className="text-gray-400 text-sm">AI-powered investment strategies with real-time market analysis</p>
+                  </div>
+
+                  <div className="bg-white/5 backdrop-blur rounded-2xl p-6 border border-white/10">
+                    <div className="icon-container bg-green-500 mb-4">
+                      <Lock className="w-6 h-6 text-white" />
+                    </div>
+                    <h3 className="text-white font-bold text-lg mb-2">Bank-Level Security</h3>
+                    <p className="text-gray-400 text-sm">Multi-signature wallets and cold storage protection</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Partners */}
+        <section className="py-16 px-6 border-y border-white/10">
+          <div className="container mx-auto">
+            <div className="flex flex-wrap justify-center items-center gap-12 opacity-60 stagger-animation">
+              {["CoinGecko", "Binance", "CoinMarketCap", "DeFiPulse", "CryptoCompare"].map((partner) => (
+                <div key={partner} className="flex items-center gap-2">
+                  <div className="w-8 h-8 bg-white rounded"></div>
+                  <span className="text-white font-bold text-lg">{partner}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Roadmap Section */}
+        <section id="roadmap" className="py-20 px-6">
+          <div className="container mx-auto">
+            <div className="text-center mb-16 animate-fade-in-up">
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Roadmap</h2>
+              <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+                Our journey from concept to the future of decentralized investment
+              </p>
+            </div>
+
+            <div className="timeline">
+              {roadmapData.map((item, index) => (
+                <div key={index} className="timeline-item">
+                  <div className="timeline-dot"></div>
+                  <div className="timeline-content">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="icon-container bg-[#F9D523] text-black">
+                        {item.icon}
+                      </div>
+                      <div>
+                        <span className="text-[#F9D523] font-bold text-lg">{item.phase}</span>
+                        <h3 className="text-white font-bold text-xl">{item.title}</h3>
+                      </div>
+                    </div>
+                    <p className="text-gray-300 leading-relaxed">{item.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Our Products - POUZE ŽLUTÉ */}
+        <section id="products" className="py-20 px-6">
+          <div className="container mx-auto">
+            <div className="text-center mb-16 animate-fade-in-up">
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Our Products</h2>
+              <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+                Innovative blockchain solutions for modern investors
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 stagger-animation">
+              {/* GC Cards */}
+              <div className="product-card">
+                <div className="absolute top-4 right-4 w-16 h-16 bg-black/10 rounded-full"></div>
+                <div className="mb-6">
+                  <div className="icon-container bg-black/20 mb-4">
+                    <CreditCard className="w-6 h-6 text-black" />
+                  </div>
+                  <h3 className="text-2xl font-bold mb-2">GC Cards</h3>
+                  <p className="text-black/80">Investment NFT cards with guaranteed returns and secondary market trading</p>
+                </div>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-black/70">Type:</span>
+                    <span className="font-bold">Investment NFT</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-black/70">Status:</span>
+                    <span className="font-bold text-green-800">Active</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* BTC Bot */}
+              <div className="product-card">
+                <div className="absolute top-4 right-4 w-16 h-16 bg-black/10 rounded-full"></div>
+                <div className="mb-6">
+                  <div className="icon-container bg-black/20 mb-4">
+                    <Bitcoin className="w-6 h-6 text-black" />
+                  </div>
+                  <h3 className="text-2xl font-bold mb-2">BTC Bot</h3>
+                  <p className="text-black/80">Automated Bitcoin trading bot with advanced algorithms and risk management</p>
+                </div>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-black/70">Type:</span>
+                    <span className="font-bold">Trading Bot</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-black/70">Status:</span>
+                    <span className="font-bold text-green-800">Running</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Algo Trader */}
+              <div className="product-card">
+                <div className="absolute top-4 right-4 w-16 h-16 bg-black/10 rounded-full"></div>
+                <div className="mb-6">
+                  <div className="icon-container bg-black/20 mb-4">
+                    <Cpu className="w-6 h-6 text-black" />
+                  </div>
+                  <h3 className="text-2xl font-bold mb-2">Algo Trader</h3>
+                  <p className="text-black/80">AI-powered algorithmic trading with machine learning optimization</p>
+                </div>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-black/70">Type:</span>
+                    <span className="font-bold">AI Trading</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-black/70">Status:</span>
+                    <span className="font-bold text-green-800">Advanced</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* VC NFT */}
+              <div className="product-card">
+                <div className="absolute top-4 right-4 w-16 h-16 bg-black/10 rounded-full"></div>
+                <div className="mb-6">
+                  <div className="icon-container bg-black/20 mb-4">
+                    <Star className="w-6 h-6 text-black" />
+                  </div>
+                  <h3 className="text-2xl font-bold mb-2">VC NFT</h3>
+                  <p className="text-black/80">Exclusive venture capital NFT collection with investment privileges</p>
+                </div>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-black/70">Type:</span>
+                    <span className="font-bold">Investment NFT</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-black/70">Rarity:</span>
+                    <span className="font-bold text-green-800">Ultra Rare</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* VIP Club Section */}
+        <section id="vip-club" className="py-20 px-6">
+          <div className="container mx-auto">
+            <div className="text-center mb-16 animate-fade-in-up">
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+                <span className="text-[#F9D523]">VIP</span> Club
+              </h2>
+              <p className="text-2xl text-white mb-4">
+                Catch them all and be a part of VIP CLUB
+              </p>
+            </div>
+
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
+              <div className="space-y-8 animate-fade-in-left">
+                <div className="space-y-6">
+                  {[
+                    { icon: <MessageCircle className="w-6 h-6" />, text: "Private chat with the founder" },
+                    { icon: <Shield className="w-6 h-6" />, text: "Exclusive information" },
+                    { icon: <MapPin className="w-6 h-6" />, text: "Business trips with the founder" },
+                    { icon: <Star className="w-6 h-6" />, text: "And more exclusive benefits" }
+                  ].map((item, index) => (
+                    <div key={index} className="flex items-center gap-4 p-4 bg-white/5 backdrop-blur rounded-xl border border-white/10 hover:border-[#F9D523] transition-colors">
+                      <div className="icon-container bg-[#F9D523] text-black">
+                        {item.icon}
+                      </div>
+                      <span className="text-white font-medium text-lg">{item.text}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="animate-fade-in-right animate-delay-200">
+                <div className="vip-cards-container">
+                  <div className="vip-card orange">
+                    <div className="text-6xl font-bold">G</div>
+                    <div className="text-white/90 text-sm mt-2">Orange Card</div>
+                  </div>
+                  <div className="vip-card gold">
+                    <div className="text-6xl font-bold text-black">G</div>
+                    <div className="text-black/80 text-sm mt-2">Gold Card</div>
+                  </div>
+                  <div className="vip-card blue">
+                    <div className="text-6xl font-bold text-white">G</div>
+                    <div className="text-white/90 text-sm mt-2">Blue Card</div>
+                  </div>
+                  <div className="vip-card yellow">
+                    <div className="text-6xl font-bold text-black">G</div>
+                    <div className="text-black/80 text-sm mt-2">Yellow Card</div>
+                  </div>
+                  <div className="vip-card purple">
+                    <div className="text-6xl font-bold text-white">G</div>
+                    <div className="text-white/90 text-sm mt-2">Purple Card</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Founder Section */}
+        <section id="founder" className="py-20 px-6">
+          <div className="container mx-auto">
+            <div className="text-center mb-16 animate-fade-in-up">
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+                <span className="text-[#F9D523]">Founder</span>
+              </h2>
+            </div>
+
+            <div className="max-w-6xl mx-auto">
+              <div className="founder-section p-8 md:p-12">
+                <div className="grid lg:grid-cols-2 gap-12 items-center">
+                  <div className="animate-fade-in-left">
+                    <div className="relative">
+                      <div className="founder-image bg-gray-800 rounded-2xl p-8 flex items-center justify-center">
+                        <Users className="w-32 h-32 text-[#F9D523]" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-8 animate-fade-in-right animate-delay-200">
+                    <div>
+                      <h3 className="text-3xl font-bold text-white mb-4">Jakub Gavlík, founder</h3>
+                      <p className="text-gray-300 leading-relaxed text-lg">
+                        I've spent more than ten years navigating the world of investment and enterprise. 
+                        My many successes in that time have given me the experience and contacts necessary 
+                        to take Gavlik Capital NFT from idea to reality. Today, backed by a team of seasoned 
+                        professionals, I oversee a dynamic investment portfolio comprising assets in cryptocurrency, 
+                        stocks, and real estate. In addition to heading Gavlik Capital NFT, I'm also co-CEO of 
+                        Apartmania Holding a.s., whose 2022 market capitalization was calculated at approximately 
+                        USD 55 million.
+                      </p>
+                    </div>
+
+                    <div className="p-6 bg-white/5 backdrop-blur rounded-xl border border-white/10">
+                      <blockquote className="text-xl italic text-white mb-4">
+                        "The two most important ingredients of success? Simplicity and common sense."
+                      </blockquote>
+                    </div>
+
+                    <div className="flex gap-4">
+                      {[
+                        { icon: <Mail className="w-5 h-5" />, label: "Email" },
+                        { icon: <Phone className="w-5 h-5" />, label: "Phone" },
+                        { icon: <MessageCircle className="w-5 h-5" />, label: "Social" }
+                      ].map((item, index) => (
+                        <div key={index} className="social-icon">
+                          {item.icon}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Trade NFTs with Crypto */}
+        <section className="py-20 px-6">
+          <div className="container mx-auto">
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
+              <div className="relative animate-fade-in-left">
+                <div className="relative w-full max-w-md mx-auto">
+                  <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-3xl p-8 shadow-2xl">
+                    <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 mb-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="icon-container bg-[#F9D523]">
+                          <Star className="w-6 h-6 text-black" />
+                        </div>
+                        <span className="text-white font-medium">Trade</span>
+                      </div>
+                      <div className="text-white text-2xl font-bold">NFT Trading</div>
+                      <div className="text-white/70 text-sm">Secure marketplace</div>
+                    </div>
+                    
+                    <div className="bg-white/20 rounded-xl p-4">
+                      <div className="text-white/70 text-sm mb-2">Payment Method</div>
+                      <div className="flex items-center gap-3">
+                        <div className="icon-container bg-orange-500 text-white">
+                          <Bitcoin className="w-5 h-5" />
+                        </div>
+                        <span className="text-white font-medium">Bitcoin</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-8 animate-fade-in-right animate-delay-200">
+                <div className="space-y-6">
+                  <h2 className="text-4xl md:text-5xl font-bold text-white leading-tight">
+                    Trade NFTs with Crypto
+                  </h2>
+                  <p className="text-xl text-gray-300">
+                    No complicated fiat code. Just simple names
+                  </p>
+                </div>
+
+                <div className="space-y-6">
+                  {[
+                    "Use our registered with phone number and their nickname",
+                    "You can choose if you would like to be found with phone number or name",
+                    "Easy to use yet top-tier privacy - we give your data back to you in reverse encrypted system !",
+                    "Secure and transparent blockchain transactions"
+                  ].map((text, index) => (
+                    <div key={index} className="flex items-start gap-4">
+                      <div className="w-8 h-8 bg-[#F9D523] rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                        <span className="text-black font-bold text-sm">✓</span>
+                      </div>
+                      <div>
+                        <p className="text-white font-medium">{text}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <button className="bg-transparent border-2 border-[#F9D523] text-[#F9D523] hover:bg-[#F9D523] hover:text-black px-8 py-4 rounded-full font-bold transition-all duration-300 transform hover:scale-105">
+                  Find Out More →
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section id="faq" className="py-20 px-6">
+          <div className="container mx-auto">
+            <div className="text-center mb-16 animate-fade-in-up">
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Frequently Asked Questions</h2>
+              <p className="text-xl text-gray-300">
+                Everything you need to know about Gavlik Capital
+              </p>
+            </div>
+
+            <div className="max-w-3xl mx-auto space-y-4 stagger-animation">
+              {[
+                {
+                  q: "What is Gavlik Capital?",
+                  a: "Gavlik Capital is a decentralized investment platform offering NFT-based financial products, automated trading bots, and crypto portfolio management tools."
+                },
+                {
+                  q: "Is it possible to use the long term?",
+                  a: "Yes, all our products are designed for long-term investment strategies with sustainable returns and compound growth mechanisms."
+                },
+                {
+                  q: "I lost my old phone. Can I still access my funds?",
+                  a: "Yes, your funds are secured by your wallet private keys. You can restore access using your recovery phrase on any device."
+                },
+                {
+                  q: "Does it can work creating a transaction?",
+                  a: "All transactions are processed on blockchain networks ensuring transparency, security, and immutability of your investments."
+                },
+                {
+                  q: "Can I be send other countries?",
+                  a: "Yes, our platform supports global users with multi-currency support and international compliance standards."
+                }
+              ].map((item, index) => (
+                <details key={index} className="bg-white/5 backdrop-blur rounded-2xl border border-white/10 group">
+                  <summary className="p-6 cursor-pointer flex justify-between items-center text-white font-medium text-lg hover:text-[#F9D523] transition-colors">
+                    <span>{item.q}</span>
+                    <span className="text-2xl group-open:rotate-45 transition-transform">+</span>
+                  </summary>
+                  <div className="px-6 pb-6">
+                    <p className="text-gray-300 leading-relaxed">{item.a}</p>
+                  </div>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Newsletter & Updates */}
+        <section className="py-20 px-6">
+          <div className="container mx-auto">
+            <div className="bg-gradient-to-r from-[#F9D523] to-[#e3c320] rounded-3xl p-12 text-center animate-fade-in-up">
+              <h2 className="text-3xl md:text-4xl font-bold text-black mb-4">
+                Stay Updated with Gavlik Capital
+              </h2>
+              <p className="text-black/80 text-lg mb-8 max-w-2xl mx-auto">
+                Get the latest news about new NFT drops, trading opportunities, and platform updates delivered to your inbox.
+              </p>
+              <form onSubmit={handleEmailSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+                <input
+                  type="email"
+                  placeholder="Your email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="flex-1 px-6 py-4 bg-white border-0 rounded-full text-black placeholder-black/60 focus:outline-none focus:ring-4 focus:ring-black/20"
+                  required
+                />
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="bg-black text-[#F9D523] font-bold px-8 py-4 rounded-full hover:bg-gray-800 transition-all duration-300 transform hover:scale-105 disabled:opacity-70"
+                >
+                  {isLoading ? 'Subscribing...' : 'Subscribe'}
+                </button>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="py-16 px-6 border-t border-white/10">
+          <div className="container mx-auto">
+            <div className="grid md:grid-cols-4 gap-12">
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2 mb-4 animate-fade-in-up">
+                  <div className="w-8 h-8 bg-[#F9D523] rounded-lg flex items-center justify-center">
+                    <span className="text-black font-bold text-sm">GC</span>
+                  </div>
+                  <span className="text-white font-bold text-xl">Gavlik Capital</span>
+                </div>
+                <p className="text-gray-400 text-sm">
+                  Secure and smart NFT investment crypto portfolio platform for the future of decentralized finance.
+                </p>
+                <div className="flex gap-4">
+                  {[<Mail className="w-5 h-5" />, <Phone className="w-5 h-5" />, <MessageCircle className="w-5 h-5" />].map((icon, idx) => (
+                    <div key={idx} className="social-icon cursor-pointer">
+                      {icon}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="animate-fade-in-up animate-delay-100">
+                <h3 className="text-white font-bold text-lg mb-4">Products</h3>
+                <div className="space-y-3 text-gray-400">
+                  <a href="#" className="block hover:text-[#F9D523] transition-colors">GC Cards NFTs</a>
+                  <a href="#" className="block hover:text-[#F9D523] transition-colors">BTC Trading Bot</a>
+                  <a href="#" className="block hover:text-[#F9D523] transition-colors">Algo Trader AI</a>
+                  <a href="#" className="block hover:text-[#F9D523] transition-colors">VC NFT Collection</a>
+                </div>
+              </div>
+
+              <div className="animate-fade-in-up animate-delay-200">
+                <h3 className="text-white font-bold text-lg mb-4">Support</h3>
+                <div className="space-y-3 text-gray-400">
+                  <a href="#" className="block hover:text-[#F9D523] transition-colors">Help Center</a>
+                  <a href="#" className="block hover:text-[#F9D523] transition-colors">Contact Us</a>
+                  <a href="#" className="block hover:text-[#F9D523] transition-colors">Community</a>
+                  <a href="#" className="block hover:text-[#F9D523] transition-colors">API Documentation</a>
+                </div>
+              </div>
+
+              <div className="animate-fade-in-up animate-delay-300">
+                <h3 className="text-white font-bold text-lg mb-4">Legal</h3>
+                <div className="space-y-3 text-gray-400">
+                  <a href="#" className="block hover:text-[#F9D523] transition-colors">Terms of Service</a>
+                  <a href="#" className="block hover:text-[#F9D523] transition-colors">Privacy Policy</a>
+                  <a href="#" className="block hover:text-[#F9D523] transition-colors">Cookie Policy</a>
+                  <a href="#" className="block hover:text-[#F9D523] transition-colors">Disclaimer</a>
+                </div>
+              </div>
+            </div>
+
+            <div className="border-t border-white/10 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+              <p className="text-gray-400 text-sm">
+                © 2025 Gavlik Capital. All rights reserved.
+              </p>
+              <div className="flex items-center gap-6 text-gray-400 text-sm">
+                <span>Made with ❤️ for the crypto community</span>
+              </div>
+            </div>
+          </div>
+        </footer>
+
       </div>
     </div>
   );

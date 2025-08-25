@@ -24,19 +24,18 @@ body {
   --dark-bg: #151515;
 }
 
-/* Animované pozadí */
-.animated-bg {
+/* Animované pozadí pouze pro hero */
+.hero-animated-bg {
   background: linear-gradient(125deg, #0c0c0c 0%, #102a2a 25%, #071a38 50%, #1a1a1a 75%, #0c0c0c 100%);
   background-size: 400% 400%;
   animation: gradientAnimation 40s ease infinite;
   position: relative;
-  overflow: auto;
-  overflow-x: hidden; /* Zabránit horizontálnímu scrollování */
+  overflow: hidden;
 }
 
-.animated-bg::after {
+.hero-animated-bg::after {
   content: "";
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -44,6 +43,14 @@ body {
   background: radial-gradient(circle at center, rgba(23, 48, 75, 0.2) 0%, rgba(5, 5, 5, 0.5) 70%);
   pointer-events: none;
   z-index: -1;
+}
+
+/* Glassmorphism pozadí pro zbytek stránky */
+.glassmorphism-bg {
+  background: linear-gradient(180deg, rgba(21, 21, 21, 0.95) 0%, rgba(21, 21, 21, 0.98) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 @keyframes gradientAnimation {
@@ -325,10 +332,338 @@ body {
     transition-duration: 0.01ms !important;
   }
   
-  .animated-bg {
+  .hero-animated-bg {
     animation: none;
     background: linear-gradient(125deg, #0c0c0c 0%, #1a1a1a 100%);
   }
+}
+
+/* ==============================
+   LANDING PAGE COMPONENTS
+   ============================== */
+
+/* Timeline/Roadmap styly */
+.timeline {
+  position: relative;
+  padding: 2rem 0;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, #F9D523, rgba(249, 213, 35, 0.3));
+  transform: translateX(-50%);
+}
+
+@media (max-width: 768px) {
+  .timeline::before {
+    left: 2rem;
+  }
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 3rem;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+.timeline-item:nth-child(even) {
+  animation-delay: 0.1s;
+}
+
+.timeline-item:nth-child(odd) {
+  animation-delay: 0.2s;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: 50%;
+  top: 2rem;
+  width: 1rem;
+  height: 1rem;
+  background: #F9D523;
+  border: 3px solid #151515;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+@media (max-width: 768px) {
+  .timeline-dot {
+    left: 2rem;
+  }
+}
+
+.timeline-content {
+  background: rgba(21, 21, 21, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(249, 213, 35, 0.2);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-left: 50%;
+  margin-right: 2rem;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .timeline-content {
+    margin-left: 4rem;
+    margin-right: 1rem;
+  }
+}
+
+.timeline-item:nth-child(even) .timeline-content {
+  margin-left: 2rem;
+  margin-right: 50%;
+}
+
+@media (max-width: 768px) {
+  .timeline-item:nth-child(even) .timeline-content {
+    margin-left: 4rem;
+    margin-right: 1rem;
+  }
+}
+
+/* VIP Club Cards */
+.vip-cards-container {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+  perspective: 1000px;
+}
+
+@media (max-width: 1024px) {
+  .vip-cards-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .vip-cards-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.vip-card {
+  background: linear-gradient(145deg, rgba(21, 21, 21, 0.9), rgba(26, 26, 26, 0.9));
+  border: 2px solid transparent;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+  transform: rotateY(-5deg) rotateX(5deg);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.vip-card:hover {
+  transform: rotateY(0deg) rotateX(0deg) scale(1.05);
+  border-color: #F9D523;
+  box-shadow: 0 20px 50px rgba(249, 213, 35, 0.2);
+}
+
+.vip-card.orange {
+  background: linear-gradient(145deg, rgba(255, 165, 0, 0.8), rgba(255, 140, 0, 0.8));
+}
+
+.vip-card.gold {
+  background: linear-gradient(145deg, rgba(255, 215, 0, 0.8), rgba(218, 165, 32, 0.8));
+}
+
+.vip-card.blue {
+  background: linear-gradient(145deg, rgba(70, 130, 180, 0.8), rgba(100, 149, 237, 0.8));
+}
+
+.vip-card.yellow {
+  background: linear-gradient(145deg, rgba(255, 255, 0, 0.8), rgba(255, 215, 0, 0.8));
+}
+
+.vip-card.purple {
+  background: linear-gradient(145deg, rgba(138, 43, 226, 0.8), rgba(147, 112, 219, 0.8));
+}
+
+/* Founder section */
+.founder-section {
+  background: linear-gradient(135deg, rgba(21, 21, 21, 0.95), rgba(26, 26, 26, 0.95));
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(249, 213, 35, 0.2);
+  border-radius: 1.5rem;
+  overflow: hidden;
+}
+
+.founder-image {
+  border-radius: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.founder-image:hover {
+  transform: scale(1.05);
+}
+
+/* Product cards žluté */
+.product-card {
+  background: linear-gradient(145deg, rgba(249, 213, 35, 0.9), rgba(227, 195, 32, 0.9));
+  color: #151515;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.product-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 50px rgba(249, 213, 35, 0.3);
+}
+
+.product-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transform: rotate(45deg);
+  transition: all 0.5s ease;
+}
+
+.product-card:hover::before {
+  animation: shimmer 1s ease-in-out;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) rotate(45deg); }
+}
+
+/* Fade in animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+.animate-fade-in-left {
+  animation: fadeInLeft 0.6s ease forwards;
+}
+
+.animate-fade-in-right {
+  animation: fadeInRight 0.6s ease forwards;
+}
+
+.animate-delay-100 {
+  animation-delay: 0.1s;
+}
+
+.animate-delay-200 {
+  animation-delay: 0.2s;
+}
+
+.animate-delay-300 {
+  animation-delay: 0.3s;
+}
+
+.animate-delay-400 {
+  animation-delay: 0.4s;
+}
+
+/* Icon containers */
+.icon-container {
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+  font-size: 1.25rem;
+  transition: all 0.3s ease;
+}
+
+.icon-container:hover {
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* Social media icons */
+.social-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+  background: #F9D523;
+  color: #151515;
+  transform: translateY(-2px);
+}
+
+/* Stagger animation for elements */
+.stagger-animation > * {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+.stagger-animation > *:nth-child(1) { animation-delay: 0.1s; }
+.stagger-animation > *:nth-child(2) { animation-delay: 0.2s; }
+.stagger-animation > *:nth-child(3) { animation-delay: 0.3s; }
+.stagger-animation > *:nth-child(4) { animation-delay: 0.4s; }
+.stagger-animation > *:nth-child(5) { animation-delay: 0.5s; }
+.stagger-animation > *:nth-child(6) { animation-delay: 0.6s; }
+.stagger-animation > *:nth-child(7) { animation-delay: 0.7s; }
+
+/* Parallax effects */
+.parallax-slow {
+  transform: translateY(var(--parallax-offset-slow, 0));
+}
+
+.parallax-fast {
+  transform: translateY(var(--parallax-offset-fast, 0));
 }
 
 /* ==============================
