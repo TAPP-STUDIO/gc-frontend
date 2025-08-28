@@ -12,49 +12,42 @@ export const Roadmap = () => {
       number: '01',
       title: 'NFT Design',
       description: 'The project was conceived and designed by Ahmed Younes, who as executive producer at Dubai TV has created a number of captivating programmes, election campaigns, and advertisements for television stations in Egypt, Dubai, the UAE, and Europe. His most recent project was EXPO 2020.',
-      side: 'left'
     },
     {
       id: 2,
       number: '02',
       title: 'Smart contract',
       description: 'The software developers behind the many successes of Apartmania Holding a.s. have engineered a unique smart contract exclusively for Gavlik Capital NFT.',
-      side: 'right'
     },
     {
       id: 3,
       number: '03',
       title: 'OpenSea Launch',
       description: 'Gavlik Capital NFT will debut in June 2022 on OpenSea, the world\'s largest NFT marketplace.',
-      side: 'left'
     },
     {
       id: 4,
       number: '04',
       title: 'Reward Stability',
       description: 'Each owner of a GC NFT CARD will earn a regular quarterly profit share in the form of a reward paid to their MetaMask wallet. The goal for 2023 is stabilization of the regular rewards and continued growth of the portfolio.',
-      side: 'right'
     },
     {
       id: 5,
       number: '05',
       title: 'BTC BOT NFT',
       description: 'Gavlik Capital will soon be launching a new project in its ecosystem. The BTC BOT will generate regular monthly rewards and put a portion of the profits in bitcoin.',
-      side: 'left'
     },
     {
       id: 6,
       number: '06',
       title: 'Physical Merch and Lives Events',
       description: 'The video animation in the MetaMask wallet is only the beginning. We are also preparing physical silver and gold cards that will serve as tickets to Gavlik Capital live events. More info coming soon..',
-      side: 'right'
     },
     {
       id: 7,
       number: '07',
       title: 'Gaming / Metaverse NFT',
       description: 'The specialists in the Gavlik Capital ecosystem have yet another exciting project in the pipeline, this time focusing on gaming and the metaverse.',
-      side: 'left'
     }
   ];
 
@@ -70,9 +63,9 @@ export const Roadmap = () => {
           priority
         />
         {/* Dark overlay for better text readability */}
-        <div className="absolute inset-0 bg-black/60"></div>
+        <div className="absolute inset-0 bg-black/70"></div>
         {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-black/40 to-black/60"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-black/50 to-black/70"></div>
       </div>
 
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
@@ -85,65 +78,120 @@ export const Roadmap = () => {
           </h2>
         </div>
 
-        {/* Timeline */}
-        <div className="relative max-w-7xl mx-auto">
-          {/* Central Timeline Line */}
-          <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-gradient-to-b from-[#F9D523] via-[#F9D523] to-transparent hidden lg:block"></div>
-
-          {/* Timeline Steps */}
-          <div className="space-y-16 lg:space-y-20">
-            {roadmapSteps.map((step, index) => (
-              <div
-                key={step.id}
-                className={`relative flex items-center ${
-                  step.side === 'left' 
-                    ? 'lg:flex-row lg:justify-start' 
-                    : 'lg:flex-row-reverse lg:justify-start'
-                } flex-col`}
-                onMouseEnter={() => setHoveredStep(step.id)}
-                onMouseLeave={() => setHoveredStep(null)}
-              >
-                {/* Content Box */}
-                <div className={`
-                  w-full lg:w-5/12 mb-8 lg:mb-0 transition-all duration-500 transform hover:scale-105
-                  ${step.side === 'left' ? 'lg:pr-16' : 'lg:pl-16'}
-                  ${hoveredStep === step.id ? (step.side === 'left' ? 'lg:translate-x-2' : 'lg:-translate-x-2') : ''}
-                `}>
-                  <div className="bg-teal-900/30 backdrop-blur-sm border border-teal-700/30 rounded-2xl p-6 lg:p-8 hover:bg-teal-900/40 hover:border-teal-600/50 transition-all duration-300">
-                    {/* Mobile Step Number */}
-                    <div className="flex items-center gap-4 mb-4 lg:hidden">
-                      <div className="w-12 h-12 bg-[#F9D523] rounded-full flex items-center justify-center flex-shrink-0">
-                        <span className="text-black font-bold text-sm">{step.number}</span>
+        {/* Timeline - Two Columns Layout */}
+        <div className="relative max-w-6xl mx-auto">
+          {/* Timeline Steps - Two Columns */}
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 relative">
+            {/* Vertical divider line between columns */}
+            <div className="hidden lg:block absolute left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#F9D523] via-[#F9D523]/50 to-transparent"></div>
+            {/* Left Column */}
+            <div className="space-y-6">
+              {roadmapSteps.slice(0, 4).map((step, index) => (
+                <div
+                  key={step.id}
+                  className="relative"
+                  onMouseEnter={() => setHoveredStep(step.id)}
+                  onMouseLeave={() => setHoveredStep(null)}
+                >
+                  {/* Mobile Layout */}
+                  <div className="lg:hidden">
+                    <div className="flex flex-col items-center gap-4 mb-4">
+                      {/* Content Card with Number Inside */}
+                      <div className="w-full bg-white/5 backdrop-blur-sm border border-white/20 rounded-2xl p-6 hover:bg-white/10 hover:border-[#F9D523]/50 transition-all duration-300 shadow-xl">
+                        {/* Number in top corner */}
+                        <div className="flex items-start gap-4 mb-4">
+                          <div className="w-12 h-12 bg-gradient-to-r from-[#B29819] to-[#F9D523] hover:from-[#A08616] hover:to-[#e3c320] rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 hover:scale-110 shadow-2xl border border-white/10">
+                            <span className="text-black font-bold text-sm">{step.number}</span>
+                          </div>
+                          <h3 className="text-xl font-bold text-white flex-1">
+                            {step.title}
+                          </h3>
+                        </div>
+                        <p className="text-white/70 text-sm leading-relaxed">
+                          {step.description}
+                        </p>
                       </div>
-                      <h3 className="text-xl md:text-2xl font-bold text-white">
-                        {step.title}
-                      </h3>
                     </div>
+                  </div>
 
-                    {/* Desktop Title */}
-                    <h3 className="hidden lg:block text-xl md:text-2xl font-bold text-white mb-4">
-                      {step.title}
-                    </h3>
-
-                    <p className="text-white/80 leading-relaxed text-sm md:text-base">
-                      {step.description}
-                    </p>
+                  {/* Desktop Layout */}
+                  <div className="hidden lg:flex items-center justify-center">
+                    {/* Content Card with number inside */}
+                    <div className="w-full transition-all duration-500 transform hover:scale-105">
+                      <div className="bg-white/5 backdrop-blur-sm border border-white/20 rounded-2xl p-6 hover:bg-white/10 hover:border-[#F9D523]/50 transition-all duration-300 shadow-xl">
+                        {/* Number and Title in header */}
+                        <div className="flex items-start gap-4 mb-4">
+                          <div className="w-14 h-14 bg-gradient-to-r from-[#B29819] to-[#F9D523] hover:from-[#A08616] hover:to-[#e3c320] rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 hover:scale-110 shadow-2xl border border-white/10">
+                            <span className="text-black font-bold text-lg">{step.number}</span>
+                          </div>
+                          <h3 className="text-xl font-bold text-white flex-1">
+                            {step.title}
+                          </h3>
+                        </div>
+                        <p className="text-white/70 leading-relaxed text-sm">
+                          {step.description}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
+              ))}
+            </div>
 
-                {/* Central Step Circle - Desktop Only */}
-                <div className="hidden lg:flex absolute left-1/2 transform -translate-x-1/2 w-16 h-16 bg-[#F9D523] rounded-full items-center justify-center z-10 border-4 border-black transition-all duration-300 hover:scale-110">
-                  <span className="text-black font-bold text-lg">{step.number}</span>
+            {/* Right Column */}
+            <div className="space-y-6">
+              {roadmapSteps.slice(4, 7).map((step, index) => (
+                <div
+                  key={step.id}
+                  className="relative"
+                  onMouseEnter={() => setHoveredStep(step.id)}
+                  onMouseLeave={() => setHoveredStep(null)}
+                >
+                  {/* Mobile Layout */}
+                  <div className="lg:hidden">
+                    <div className="flex flex-col items-center gap-4 mb-4">
+                      {/* Content Card with Number Inside */}
+                      <div className="w-full bg-white/5 backdrop-blur-sm border border-white/20 rounded-2xl p-6 hover:bg-white/10 hover:border-[#F9D523]/50 transition-all duration-300 shadow-xl">
+                        {/* Number in top corner */}
+                        <div className="flex items-start gap-4 mb-4">
+                          <div className="w-12 h-12 bg-gradient-to-r from-[#B29819] to-[#F9D523] hover:from-[#A08616] hover:to-[#e3c320] rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 hover:scale-110 shadow-2xl border border-white/10">
+                            <span className="text-black font-bold text-sm">{step.number}</span>
+                          </div>
+                          <h3 className="text-xl font-bold text-white flex-1">
+                            {step.title}
+                          </h3>
+                        </div>
+                        <p className="text-white/70 text-sm leading-relaxed">
+                          {step.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Desktop Layout */}
+                  <div className="hidden lg:flex items-center justify-center">
+                    {/* Content Card with number inside */}
+                    <div className="w-full transition-all duration-500 transform hover:scale-105">
+                      <div className="bg-white/5 backdrop-blur-sm border border-white/20 rounded-2xl p-6 hover:bg-white/10 hover:border-[#F9D523]/50 transition-all duration-300 shadow-xl">
+                        {/* Number and Title in header */}
+                        <div className="flex items-start gap-4 mb-4">
+                          <div className="w-14 h-14 bg-gradient-to-r from-[#B29819] to-[#F9D523] hover:from-[#A08616] hover:to-[#e3c320] rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 hover:scale-110 shadow-2xl border border-white/10">
+                            <span className="text-black font-bold text-lg">{step.number}</span>
+                          </div>
+                          <h3 className="text-xl font-bold text-white flex-1">
+                            {step.title}
+                          </h3>
+                        </div>
+                        <p className="text-white/70 leading-relaxed text-sm">
+                          {step.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-
-                {/* Empty space for opposite side */}
-                <div className="hidden lg:block w-5/12"></div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-
-          {/* Timeline End Dot */}
-          <div className="hidden lg:flex absolute left-1/2 transform -translate-x-1/2 bottom-0 w-4 h-4 bg-[#F9D523] rounded-full border-2 border-black mt-8"></div>
         </div>
 
         {/* Call to Action */}

@@ -59,51 +59,100 @@ export const FAQ = () => {
           </h2>
         </div>
 
-        {/* FAQ Accordion */}
-        <div className="max-w-4xl mx-auto">
-          <div className="space-y-4">
-            {faqData.map((faq) => (
-              <div
-                key={faq.id}
-                className="bg-teal-900/20 backdrop-blur-sm border border-teal-700/30 rounded-2xl overflow-hidden transition-all duration-300 hover:bg-teal-900/30 hover:border-teal-600/40"
-              >
-                <button
-                  onClick={() => toggleFaq(faq.id)}
-                  className="w-full px-6 py-6 lg:px-8 lg:py-7 text-left flex items-center justify-between group focus:outline-none"
-                >
-                  <span className="text-white text-lg md:text-xl font-semibold group-hover:text-[#F9D523] transition-colors duration-300 pr-4">
-                    {faq.question}
-                  </span>
-                  <div className="flex-shrink-0">
-                    <svg
-                      className={`w-6 h-6 text-[#F9D523] transform transition-transform duration-300 ${
-                        openFaq === faq.id ? 'rotate-180' : ''
-                      }`}
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </div>
-                </button>
-                
+        {/* FAQ Accordion - Two Columns */}
+        <div className="max-w-6xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
+            {/* Left Column */}
+            <div className="space-y-4">
+              {faqData.slice(0, 3).map((faq) => (
                 <div
-                  className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                    openFaq === faq.id ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-                  }`}
+                  key={faq.id}
+                  className="bg-teal-900/20 backdrop-blur-sm border border-teal-700/30 rounded-2xl overflow-hidden transition-all duration-300 hover:bg-teal-900/30 hover:border-teal-600/40"
                 >
-                  <div className="px-6 pb-6 lg:px-8 lg:pb-7">
-                    <div className="pt-2 border-t border-teal-700/20">
-                      <p className="text-white/80 text-base md:text-lg leading-relaxed mt-4">
-                        {faq.answer}
-                      </p>
+                  <button
+                    onClick={() => toggleFaq(faq.id)}
+                    className="w-full px-6 py-6 lg:px-8 lg:py-7 text-left flex items-center justify-between group focus:outline-none"
+                  >
+                    <span className="text-white text-lg md:text-xl font-semibold group-hover:text-[#F9D523] transition-colors duration-300 pr-4">
+                      {faq.question}
+                    </span>
+                    <div className="flex-shrink-0">
+                      <svg
+                        className={`w-6 h-6 text-[#F9D523] transform transition-transform duration-300 ${
+                          openFaq === faq.id ? 'rotate-180' : ''
+                        }`}
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </div>
+                  </button>
+                  
+                  <div
+                    className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                      openFaq === faq.id ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                    }`}
+                  >
+                    <div className="px-6 pb-6 lg:px-8 lg:pb-7">
+                      <div className="pt-2 border-t border-teal-700/20">
+                        <p className="text-white/80 text-base md:text-lg leading-relaxed mt-4">
+                          {faq.answer}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+
+            {/* Right Column */}
+            <div className="space-y-4">
+              {faqData.slice(3, 6).map((faq) => (
+                <div
+                  key={faq.id}
+                  className="bg-teal-900/20 backdrop-blur-sm border border-teal-700/30 rounded-2xl overflow-hidden transition-all duration-300 hover:bg-teal-900/30 hover:border-teal-600/40"
+                >
+                  <button
+                    onClick={() => toggleFaq(faq.id)}
+                    className="w-full px-6 py-6 lg:px-8 lg:py-7 text-left flex items-center justify-between group focus:outline-none"
+                  >
+                    <span className="text-white text-lg md:text-xl font-semibold group-hover:text-[#F9D523] transition-colors duration-300 pr-4">
+                      {faq.question}
+                    </span>
+                    <div className="flex-shrink-0">
+                      <svg
+                        className={`w-6 h-6 text-[#F9D523] transform transition-transform duration-300 ${
+                          openFaq === faq.id ? 'rotate-180' : ''
+                        }`}
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </div>
+                  </button>
+                  
+                  <div
+                    className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                      openFaq === faq.id ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                    }`}
+                  >
+                    <div className="px-6 pb-6 lg:px-8 lg:pb-7">
+                      <div className="pt-2 border-t border-teal-700/20">
+                        <p className="text-white/80 text-base md:text-lg leading-relaxed mt-4">
+                          {faq.answer}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 

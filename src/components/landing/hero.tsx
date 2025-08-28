@@ -27,15 +27,17 @@ export const Hero = () => {
 
   return (
     <section className="min-h-screen bg-black pt-20 lg:pt-24 relative overflow-hidden">
-      {/* SVG Background - 50% smaller */}
-      <div className="absolute inset-0 z-0 transform scale-50">
-        <Image
-          src="/backgrounds/hero.svg"
-          alt="Hero Background"
-          fill
-          className="object-cover"
-          priority
-        />
+      {/* SVG Background - 75% size */}
+      <div className="absolute inset-0 z-0 overflow-visible">
+        <div className="absolute inset-0 transform scale-75 origin-center">
+          <Image
+            src="/backgrounds/hero.svg"
+            alt="Hero Background"
+            fill
+            className="object-contain"
+            priority
+          />
+        </div>
       </div>
 
       {/* Dark overlay for better text readability */}
@@ -78,34 +80,12 @@ export const Hero = () => {
                 </div>
               ))}
             </div>
-
-            {/* CTA Buttons with glassmorphism - Hidden on mobile, visible on desktop */}
-            <div className="hidden lg:flex items-center gap-6 pt-4">
-              <button className="bg-gradient-to-r from-[#B29819] to-[#F9D523] hover:from-[#A08616] hover:to-[#e3c320] text-black font-bold px-10 py-4 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-2xl backdrop-blur-sm border border-white/10">
-                Get Started
-              </button>
-              <button className="bg-white/10 backdrop-blur-md border-2 border-white/30 hover:border-[#F9D523] hover:bg-white/20 text-white hover:text-[#F9D523] font-bold px-10 py-4 rounded-2xl transition-all duration-300 shadow-xl">
-                Learn More
-              </button>
-            </div>
           </div>
 
           {/* Right Side - Pure GIF */}
           <div className="flex justify-center lg:justify-end">
             <Card3DGIF />
           </div>
-        </div>
-      </div>
-
-      {/* Mobile CTA Buttons with glassmorphism */}
-      <div className="lg:hidden px-4 pb-8 relative z-20">
-        <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
-          <button className="w-full sm:w-auto bg-gradient-to-r from-[#B29819] to-[#F9D523] hover:from-[#A08616] hover:to-[#e3c320] text-black font-bold px-10 py-4 rounded-2xl transition-all duration-300 shadow-2xl backdrop-blur-sm border border-white/10">
-            Get Started
-          </button>
-          <button className="w-full sm:w-auto bg-white/10 backdrop-blur-md border-2 border-white/30 hover:border-[#F9D523] hover:bg-white/20 text-white hover:text-[#F9D523] font-bold px-10 py-4 rounded-2xl transition-all duration-300 shadow-xl">
-            Learn More
-          </button>
         </div>
       </div>
     </section>

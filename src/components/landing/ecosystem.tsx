@@ -80,7 +80,7 @@ export const Ecosystem = () => {
               <div className="relative w-full max-w-sm mx-auto mb-8">
                 <div className={`
                   relative aspect-[2/3] rounded-3xl overflow-hidden transition-all duration-500 cursor-pointer
-                  ${hoveredCard === item.id ? 'scale-105 shadow-2xl' : 'hover:scale-102'}
+                  ${hoveredCard === item.id ? 'scale-110 shadow-2xl' : 'hover:scale-105'}
                 `}>
                   <Image
                     src={item.image}

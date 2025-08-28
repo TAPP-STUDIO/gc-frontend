@@ -8,8 +8,8 @@ export default function Logo() {
                 <Image
                     src="/logos/logo.svg"
                     alt="Gavlik Capital Logo"
-                    width={70}
-                    height={42}
+                    width={85}
+                    height={51}
                     className="text-[#F9D523]"
                 />
             </div>
