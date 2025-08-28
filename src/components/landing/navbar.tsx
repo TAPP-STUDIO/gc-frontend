@@ -21,7 +21,7 @@ export const Navbar = () => {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-lg border-b border-white/10">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-black/10 backdrop-blur-xl border-b border-white/20 shadow-2xl">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
@@ -56,7 +56,7 @@ export const Navbar = () => {
             {/* Sign Up Button */}
             <Link 
               href="/dashboard"
-              className="bg-[#F9D523] hover:bg-[#e3c320] text-black font-bold px-6 py-2 rounded-full transition-all duration-300 transform hover:scale-105 text-sm ml-4"
+              className="bg-gradient-to-r from-[#B29819] to-[#F9D523] hover:from-[#A08616] hover:to-[#e3c320] text-black font-bold px-8 py-3 rounded-2xl transition-all duration-300 transform hover:scale-105 text-sm ml-4 shadow-2xl backdrop-blur-sm border border-white/10"
             >
               Sign Up
             </Link>
@@ -88,7 +88,7 @@ export const Navbar = () => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden border-t border-white/10 bg-black/40 backdrop-blur-lg">
+          <div className="lg:hidden border-t border-white/20 bg-black/20 backdrop-blur-xl shadow-2xl">
             <div className="px-2 pt-2 pb-3 space-y-1">
               {menuItems.map((item) => (
                 <div key={item.name}>
@@ -97,7 +97,7 @@ export const Navbar = () => {
                       href={item.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block px-3 py-2 text-white/80 hover:text-[#F9D523] hover:bg-white/5 rounded-md transition-colors duration-200 text-base font-medium"
+                      className="block px-3 py-2 text-white/80 hover:text-[#F9D523] hover:bg-white/10 rounded-xl transition-colors duration-200 text-base font-medium backdrop-blur-sm"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       {item.name}
@@ -105,7 +105,7 @@ export const Navbar = () => {
                   ) : (
                     <a
                       href={item.href}
-                      className="block px-3 py-2 text-white/80 hover:text-[#F9D523] hover:bg-white/5 rounded-md transition-colors duration-200 text-base font-medium"
+                      className="block px-3 py-2 text-white/80 hover:text-[#F9D523] hover:bg-white/10 rounded-xl transition-colors duration-200 text-base font-medium backdrop-blur-sm"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       {item.name}
@@ -116,7 +116,7 @@ export const Navbar = () => {
               <div className="pt-4 border-t border-white/10 mt-4">
                 <Link
                   href="/dashboard"
-                  className="block w-full bg-[#F9D523] hover:bg-[#e3c320] text-black font-bold px-4 py-3 rounded-full transition-all duration-300 text-center"
+                  className="block w-full bg-gradient-to-r from-[#B29819] to-[#F9D523] hover:from-[#A08616] hover:to-[#e3c320] text-black font-bold px-6 py-4 rounded-2xl transition-all duration-300 text-center shadow-2xl backdrop-blur-sm border border-white/10"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Sign Up

@@ -81,7 +81,7 @@ export const InfoSection = () => {
 
             {/* OpenSea Button */}
             <div className="pt-4">
-              <button className="bg-gradient-to-r from-[#F9D523] to-[#e3c320] hover:from-[#e3c320] hover:to-[#d4b01c] text-black font-bold px-8 py-4 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-lg">
+              <button className="bg-gradient-to-r from-[#B29819] to-[#F9D523] hover:from-[#A08616] hover:to-[#e3c320] text-black font-bold px-10 py-4 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-2xl backdrop-blur-sm border border-white/10 text-lg">
                 OpenSea
               </button>
             </div>

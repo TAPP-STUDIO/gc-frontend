@@ -27,8 +27,8 @@ export const Hero = () => {
 
   return (
     <section className="min-h-screen bg-black pt-20 lg:pt-24 relative overflow-hidden">
-      {/* SVG Background */}
-      <div className="absolute inset-0 z-0">
+      {/* SVG Background - 50% smaller */}
+      <div className="absolute inset-0 z-0 transform scale-50">
         <Image
           src="/backgrounds/hero.svg"
           alt="Hero Background"
@@ -58,9 +58,9 @@ export const Hero = () => {
               </p>
             </div>
 
-            {/* Verified Badge */}
+            {/* Verified Badge with improved glassmorphism */}
             <div className="flex items-start">
-              <span className="bg-gradient-to-r from-[#F9D523] to-[#e3c320] text-black px-6 py-2 rounded-md font-bold text-sm uppercase tracking-wider">
+              <span className="bg-gradient-to-r from-[#B29819] to-[#F9D523] text-black px-8 py-3 rounded-2xl font-bold text-sm uppercase tracking-wider shadow-2xl backdrop-blur-sm border border-white/20">
                 Verified
               </span>
             </div>
@@ -79,12 +79,12 @@ export const Hero = () => {
               ))}
             </div>
 
-            {/* CTA Buttons - Hidden on mobile, visible on desktop */}
+            {/* CTA Buttons with glassmorphism - Hidden on mobile, visible on desktop */}
             <div className="hidden lg:flex items-center gap-6 pt-4">
-              <button className="bg-[#F9D523] hover:bg-[#e3c320] text-black font-bold px-8 py-4 rounded-full transition-all duration-300 transform hover:scale-105">
+              <button className="bg-gradient-to-r from-[#B29819] to-[#F9D523] hover:from-[#A08616] hover:to-[#e3c320] text-black font-bold px-10 py-4 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-2xl backdrop-blur-sm border border-white/10">
                 Get Started
               </button>
-              <button className="border-2 border-white/30 hover:border-[#F9D523] text-white hover:text-[#F9D523] font-bold px-8 py-4 rounded-full transition-all duration-300">
+              <button className="bg-white/10 backdrop-blur-md border-2 border-white/30 hover:border-[#F9D523] hover:bg-white/20 text-white hover:text-[#F9D523] font-bold px-10 py-4 rounded-2xl transition-all duration-300 shadow-xl">
                 Learn More
               </button>
             </div>
@@ -97,13 +97,13 @@ export const Hero = () => {
         </div>
       </div>
 
-      {/* Mobile CTA Buttons */}
+      {/* Mobile CTA Buttons with glassmorphism */}
       <div className="lg:hidden px-4 pb-8 relative z-20">
         <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
-          <button className="w-full sm:w-auto bg-[#F9D523] hover:bg-[#e3c320] text-black font-bold px-8 py-4 rounded-full transition-all duration-300">
+          <button className="w-full sm:w-auto bg-gradient-to-r from-[#B29819] to-[#F9D523] hover:from-[#A08616] hover:to-[#e3c320] text-black font-bold px-10 py-4 rounded-2xl transition-all duration-300 shadow-2xl backdrop-blur-sm border border-white/10">
             Get Started
           </button>
-          <button className="w-full sm:w-auto border-2 border-white/30 hover:border-[#F9D523] text-white hover:text-[#F9D523] font-bold px-8 py-4 rounded-full transition-all duration-300">
+          <button className="w-full sm:w-auto bg-white/10 backdrop-blur-md border-2 border-white/30 hover:border-[#F9D523] hover:bg-white/20 text-white hover:text-[#F9D523] font-bold px-10 py-4 rounded-2xl transition-all duration-300 shadow-xl">
             Learn More
           </button>
         </div>

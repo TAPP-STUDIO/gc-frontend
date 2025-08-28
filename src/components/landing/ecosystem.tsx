@@ -104,14 +104,11 @@ export const Ecosystem = () => {
               {/* Button */}
               <div className="flex justify-center">
                 {item.button.type === 'link' ? (
-                  <button className={`
-                    px-8 py-3 rounded-full font-bold text-black transition-all duration-300 transform hover:scale-105
-                    bg-gradient-to-r ${item.color} hover:shadow-lg
-                  `}>
+                  <button className="bg-gradient-to-r from-[#B29819] to-[#F9D523] hover:from-[#A08616] hover:to-[#e3c320] text-black font-bold px-10 py-4 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-2xl backdrop-blur-sm border border-white/10">
                     {item.button.text}
                   </button>
                 ) : (
-                  <div className="px-8 py-3 rounded-full border-2 border-white/30 text-white font-bold transition-all duration-300 hover:border-white/50 bg-transparent hover:bg-white/5">
+                  <div className="px-10 py-4 rounded-2xl border-2 border-white/30 text-white font-bold transition-all duration-300 hover:border-white/50 bg-white/10 backdrop-blur-md hover:bg-white/20 shadow-xl">
                     {item.button.text}
                   </div>
                 )}
@@ -125,7 +122,7 @@ export const Ecosystem = () => {
           <p className="text-white/60 text-lg mb-8">
             Join the ecosystem and start building your crypto portfolio today
           </p>
-          <button className="bg-[#F9D523] hover:bg-[#e3c320] text-black font-bold px-8 py-4 rounded-full transition-all duration-300 transform hover:scale-105">
+          <button className="bg-gradient-to-r from-[#B29819] to-[#F9D523] hover:from-[#A08616] hover:to-[#e3c320] text-black font-bold px-10 py-5 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-2xl backdrop-blur-sm border border-white/10">
             Explore All Projects
           </button>
         </div>

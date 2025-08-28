@@ -105,12 +105,12 @@ export const Footer = () => {
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="flex-1 px-4 py-3 bg-[#0a0a0a] border border-[#333333] rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-[#F9D523] transition-colors"
+                    className="flex-1 px-4 py-3 bg-black/20 backdrop-blur-md border border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:border-[#F9D523] transition-colors shadow-xl"
                     required
                   />
                   <button
                     type="submit"
-                    className="bg-[#F9D523] hover:bg-[#e3c320] text-black font-bold px-6 py-3 rounded-lg transition-all duration-300"
+                    className="bg-gradient-to-r from-[#B29819] to-[#F9D523] hover:from-[#A08616] hover:to-[#e3c320] text-black font-bold px-8 py-3 rounded-2xl transition-all duration-300 shadow-2xl backdrop-blur-sm border border-white/10 transform hover:scale-105"
                   >
                     Subscribe
                   </button>
@@ -211,7 +211,7 @@ export const Footer = () => {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-12 h-12 bg-[#0a0a0a] border border-[#333333] rounded-full flex items-center justify-center text-white/70 hover:text-[#F9D523] hover:border-[#F9D523] transition-all duration-300 hover:scale-110"
+                    className="w-12 h-12 bg-black/20 backdrop-blur-md border border-white/20 rounded-2xl flex items-center justify-center text-white/70 hover:text-[#F9D523] hover:border-[#F9D523] transition-all duration-300 hover:scale-110 shadow-xl"
                     aria-label={social.name}
                   >
                     {social.icon}
