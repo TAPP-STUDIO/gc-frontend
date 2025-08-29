@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState/*, useEffect */} from 'react';
 import { Container, Stack, PageHeader } from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+//import { Badge } from '@/components/ui/badge';
 
 interface CryptoPosition {
   id: string;
@@ -447,7 +447,7 @@ export default function CryptoAdminPage() {
         <div className="bg-[#1a1a1a] border border-[#333333] rounded-lg p-4">
           <div className="text-[#666666] text-sm">
             <strong>Poznámka:</strong> Ceny se aktualizují automaticky přes CoinGecko API. 
-            Pro ruční aktualizaci použijte tlačítko "Aktualizovat ceny". 
+            Pro ruční aktualizaci použijte tlačítko &quot;Aktualizovat ceny&quot;. 
             Změny se ukládají v reálném čase.
           </div>
         </div>

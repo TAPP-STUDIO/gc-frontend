@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React/*, { useState } */from 'react';
 import { Container, Stack, PageHeader } from '@/components/layout';
 import { EnhancedValueCard } from '@/components/cards';
 
 export default function NFTsAdminPage() {
-  const [selectedProject, setSelectedProject] = useState<string | null>(null);
+  //const [selectedProject, setSelectedProject] = useState<string | null>(null);
 
   const nftProjects = [
     {

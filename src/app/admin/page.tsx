@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Container, Stack, PageHeader } from '@/components/layout';
+import { Container, Stack /*, PageHeader */} from '@/components/layout';
 import { EnhancedValueCard } from '@/components/cards';
 
 export default function AdminDashboard() {

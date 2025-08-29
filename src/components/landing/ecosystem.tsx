@@ -62,7 +62,7 @@ export const Ecosystem = () => {
 
         {/* Cards Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 max-w-7xl mx-auto">
-          {ecosystemItems.map((item, index) => (
+          {ecosystemItems.map((item /*, index*/) => (
             <div
               key={item.id}
               className="group relative text-center"

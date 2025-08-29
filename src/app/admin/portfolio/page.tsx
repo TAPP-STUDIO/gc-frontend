@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { Container, Stack, PageHeader } from '@/components/layout';
+import React, { useState /*, useEffect */ } from 'react';
+//import { Container, Stack, PageHeader } from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+//import { Badge } from '@/components/ui/badge';
 import { BarChart3, RefreshCw, TrendingUp } from 'lucide-react';
 
 interface CryptoPosition {

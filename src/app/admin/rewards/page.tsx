@@ -5,7 +5,7 @@ import { Container, Stack, PageHeader } from '@/components/layout';
 import { EnhancedValueCard } from '@/components/cards';
 
 export default function RewardsAdminPage() {
-  const [selectedReward, setSelectedReward] = useState<string | null>(null);
+  //const [selectedReward, setSelectedReward] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'pending' | 'scheduled' | 'history'>('pending');
 
   // Mock rewards data

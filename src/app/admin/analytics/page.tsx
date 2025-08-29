@@ -174,6 +174,7 @@ export default function AnalyticsAdminPage() {
     }
   };
 
+  /*
   const formatValue = (value: number, metric: string) => {
     switch (metric) {
       case 'revenue': return `$${value.toLocaleString()}`;
@@ -181,6 +182,7 @@ export default function AnalyticsAdminPage() {
       default: return value.toLocaleString();
     }
   };
+  */
 
   const handleExport = (type: 'csv' | 'json' | 'pdf') => {
     console.log(`Exporting analytics as ${type}`);

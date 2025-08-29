@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 
 export const Roadmap = () => {
-  const [hoveredStep, setHoveredStep] = useState<number | null>(null);
+  const [/*hoveredStep, */setHoveredStep] = useState<number | null>(null);
 
   const roadmapSteps = [
     {
