@@ -2,10 +2,13 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useAuth } from "@/contexts/AuthContext";
+import { LogOut, User, Settings, Shield, Bell, AlertTriangle, Home } from "lucide-react";
 
 export default function AdminTopBar() {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const { user, logout, isInAdminGroup } = useAuth();
 
   // Mock admin notifications
   const notifications = [
@@ -13,6 +16,11 @@ export default function AdminTopBar() {
     { id: 2, type: 'info', message: 'Nová dividenda vyplacena: 1,247 ETH', time: '15 min' },
     { id: 3, type: 'success', message: 'Smart kontrakt audit úspěšně dokončen', time: '1h' },
   ];
+
+  // Get user display name
+  const displayName = user?.firstName && user?.lastName 
+    ? `${user.firstName} ${user.lastName}`
+    : user?.email || 'Admin';
 
   return (
     <div className="bg-[#151515] border-b border-red-500/30">
@@ -63,9 +71,7 @@ export default function AdminTopBar() {
               href="/dashboard"
               className="hidden md:flex items-center space-x-2 px-3 py-1.5 bg-[#333333] hover:bg-[#444444] text-white text-sm rounded-lg transition-colors"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-              </svg>
+              <Home className="w-4 h-4" />
               <span>User Dashboard</span>
             </Link>
 
@@ -76,21 +82,7 @@ export default function AdminTopBar() {
                 className="relative p-1.5 sm:p-2 text-white hover:text-[#F9D523] transition-colors rounded-lg hover:bg-white/5"
                 aria-label="Admin Notifications"
               >
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-white"
-                >
-                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                  <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-                </svg>
+                <Bell className="w-5 h-5" />
 
                 {/* Notification badge */}
                 {notifications.length > 0 && (
@@ -132,17 +124,12 @@ export default function AdminTopBar() {
               className="px-3 py-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-400 hover:text-red-300 text-sm rounded-lg transition-colors border border-red-500/30"
               title="Emergency Actions"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
-              </svg>
+              <AlertTriangle className="w-4 h-4" />
             </button>
 
             {/* Admin Settings */}
             <button className="p-1.5 sm:p-2 text-white hover:text-[#F9D523] transition-colors rounded-lg hover:bg-white/5">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
+              <Settings className="w-5 h-5" />
             </button>
 
             {/* Admin Profile */}
@@ -155,14 +142,21 @@ export default function AdminTopBar() {
               >
                 {/* Admin Avatar */}
                 <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-red-600 rounded-full flex items-center justify-center">
-                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
+                  {user?.avatar ? (
+                    <img src={user.avatar} alt={displayName} className="w-full h-full rounded-full" />
+                  ) : (
+                    <User className="w-4 h-4 text-white" />
+                  )}
                 </div>
 
                 <div className="text-left hidden sm:block">
-                  <span className="text-sm font-medium select-none text-white block">Super Admin</span>
-                  <span className="text-xs text-red-400 select-none">admin@gavlik.capital</span>
+                  <span className="text-sm font-medium select-none text-white block">
+                    {displayName}
+                  </span>
+                  <span className="text-xs text-red-400 select-none flex items-center space-x-1">
+                    {isInAdminGroup && <Shield className="w-3 h-3" />}
+                    <span>{user?.role === 'superadmin' ? 'Super Admin' : 'Admin'}</span>
+                  </span>
                 </div>
 
                 {/* Dropdown arrow */}
@@ -186,26 +180,53 @@ export default function AdminTopBar() {
                 <div className="absolute right-0 top-full mt-1 w-56 bg-[#151515]/95 backdrop-blur-md rounded-lg shadow-xl z-50 border border-[#333333]/50">
                   <div className="py-2">
                     <div className="px-4 py-3 border-b border-[#333333]/50">
-                      <div className="text-white font-medium">Super Admin</div>
-                      <div className="text-[#666666] text-sm">admin@gavlik.capital</div>
-                      <div className="text-red-400 text-xs mt-1">Plný přístup ke všem systémům</div>
+                      <div className="text-white font-medium">{displayName}</div>
+                      <div className="text-[#666666] text-sm">{user?.email}</div>
+                      {isInAdminGroup && (
+                        <div className="flex items-center space-x-1 text-red-400 text-xs mt-1">
+                          <Shield className="w-3 h-3" />
+                          <span>gc_super_admins</span>
+                        </div>
+                      )}
                     </div>
 
-                    <button className="w-full text-left px-4 py-2 text-[#666666] hover:text-[#F9D523] hover:bg-[#1a1a1a]/50 transition-colors">
-                      Admin Nastavení
-                    </button>
+                    <Link
+                      href="/admin/profile"
+                      className="w-full text-left px-4 py-2 text-[#666666] hover:text-[#F9D523] hover:bg-[#1a1a1a]/50 transition-colors flex items-center space-x-2"
+                      onClick={() => setShowProfileMenu(false)}
+                    >
+                      <User className="w-4 h-4" />
+                      <span>Můj profil</span>
+                    </Link>
 
-                    <button className="w-full text-left px-4 py-2 text-[#666666] hover:text-[#F9D523] hover:bg-[#1a1a1a]/50 transition-colors">
-                      Security Logs
-                    </button>
+                    <Link
+                      href="/admin/settings"
+                      className="w-full text-left px-4 py-2 text-[#666666] hover:text-[#F9D523] hover:bg-[#1a1a1a]/50 transition-colors flex items-center space-x-2"
+                      onClick={() => setShowProfileMenu(false)}
+                    >
+                      <Settings className="w-4 h-4" />
+                      <span>Admin nastavení</span>
+                    </Link>
 
-                    <button className="w-full text-left px-4 py-2 text-[#666666] hover:text-[#F9D523] hover:bg-[#1a1a1a]/50 transition-colors">
-                      System Backup
-                    </button>
+                    <Link
+                      href="/admin/security"
+                      className="w-full text-left px-4 py-2 text-[#666666] hover:text-[#F9D523] hover:bg-[#1a1a1a]/50 transition-colors flex items-center space-x-2"
+                      onClick={() => setShowProfileMenu(false)}
+                    >
+                      <Shield className="w-4 h-4" />
+                      <span>Security Logs</span>
+                    </Link>
 
                     <div className="border-t border-[#333333]/50 mt-2 pt-2">
-                      <button className="w-full text-left px-4 py-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors">
-                        Odhlásit se z Admin
+                      <button 
+                        onClick={() => {
+                          setShowProfileMenu(false);
+                          logout();
+                        }}
+                        className="w-full text-left px-4 py-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors flex items-center space-x-2"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        <span>Odhlásit se</span>
                       </button>
                     </div>
                   </div>
