@@ -16,7 +16,7 @@ export default function ProtectedRoute({ children, requireAdmin = true }: Protec
   useEffect(() => {
     if (!isLoading) {
       if (!isAuthenticated) {
-        router.push('/admin/login');
+        router.push('/auth/admin-login');
       } else if (requireAdmin && !isInAdminGroup) {
         router.push('/admin/unauthorized');
       }

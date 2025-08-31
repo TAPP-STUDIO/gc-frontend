@@ -1,5 +1,6 @@
 import './globals.css';
 import type { Metadata } from 'next';
+import ClientProviders from '@/components/providers/ClientProviders';
 
 export const metadata: Metadata = {
     title: 'Gavlik Capital Portfolio',
@@ -7,14 +8,16 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-                                       children,
-                                   }: {
+    children,
+}: {
     children: React.ReactNode;
 }) {
     return (
         <html lang="cs">
         <body>
-        {children}
+            <ClientProviders>
+                {children}
+            </ClientProviders>
         </body>
         </html>
     );

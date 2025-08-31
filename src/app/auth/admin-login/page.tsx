@@ -182,12 +182,12 @@ export default function AdminLoginPage() {
 
           {/* Forgot Password Link */}
           <div className="flex items-center justify-end">
-            <a
-              href="/admin/forgot-password"
+            <Link
+              href="/auth/forgot-password"
               className="text-sm text-[#666666] hover:text-red-500 transition-colors"
             >
               Zapomněli jste heslo?
-            </a>
+            </Link>
           </div>
 
           {/* Submit Button */}

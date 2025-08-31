@@ -153,7 +153,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
     setCognitoUser(null);
     setIsInAdminGroup(false);
-    router.push('/admin/login');
+    router.push('/auth/admin-login');
   }, [router]);
 
   const refreshSession = async (): Promise<boolean> => {
