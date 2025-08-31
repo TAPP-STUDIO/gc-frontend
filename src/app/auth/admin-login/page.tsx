@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { useAuth } from '@/contexts/AuthContext';
 import Logo from '@/components/logo/logo';
-import { Eye, EyeOff, Lock, Mail, AlertCircle, Shield } from 'lucide-react';
+import { Eye, EyeOff, Lock, Mail, AlertCircle } from 'lucide-react';
 
 interface LoginFormData {
   email: string;
@@ -72,17 +72,6 @@ export default function AdminLoginPage() {
           <h2 className="text-3xl font-bold text-white mb-2">
             Admin Dashboard
           </h2>
-          <p className="text-[#666666] text-sm">
-            Přístup pouze pro členy skupiny <span className="text-red-500 font-semibold">gc_super_admins</span>
-          </p>
-        </div>
-
-        {/* Security Badge */}
-        <div className="flex items-center justify-center space-x-2 bg-red-500/10 border border-red-500/30 rounded-lg py-3 px-4">
-          <Shield className="w-5 h-5 text-red-500" />
-          <span className="text-sm text-white">
-            Zabezpečené AWS Cognito autentizací
-          </span>
         </div>
 
         {/* Login Form */}
