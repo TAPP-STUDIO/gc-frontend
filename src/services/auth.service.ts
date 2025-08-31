@@ -195,7 +195,7 @@ class AuthService {
   /**
    * Forgot password
    */
-  async forgotPassword(email: string): Promise<unknown> {
+  async forgotPassword(email: string): Promise<{ message?: string; session?: string }> {
     return new Promise((resolve, reject) => {
       const cognitoUser = new CognitoUser({
         Username: email,
@@ -203,8 +203,8 @@ class AuthService {
       });
 
       cognitoUser.forgotPassword({
-        onSuccess: (result: unknown) => {
-          resolve(result);
+        onSuccess: () => {
+          resolve({ message: 'Forgot password initiated' });
         },
         onFailure: (err: unknown) => {
           reject(err);
@@ -216,7 +216,7 @@ class AuthService {
   /**
    * Confirm new password with verification code
    */
-  async confirmPassword(email: string, code: string, newPassword: string): Promise<unknown> {
+  async confirmPassword(email: string, code: string, newPassword: string): Promise<{ message?: string }> {
     return new Promise((resolve, reject) => {
       const cognitoUser = new CognitoUser({
         Username: email,
@@ -224,8 +224,8 @@ class AuthService {
       });
 
       cognitoUser.confirmPassword(code, newPassword, {
-        onSuccess: (result: unknown) => {
-          resolve(result);
+        onSuccess: () => {
+          resolve({ message: 'Password confirmed' });
         },
         onFailure: (err: unknown) => {
           reject(err);
@@ -259,7 +259,7 @@ class AuthService {
   /**
    * Store tokens in cookies
    */
-  private storeTokens(tokens: AuthTokens): void {
+  storeTokens(tokens: AuthTokens): void {
     // Store in secure, httpOnly cookies in production
     Cookies.set(this.TOKEN_KEY, JSON.stringify(tokens), {
       expires: 7, // 7 days
@@ -292,7 +292,7 @@ class AuthService {
   /**
    * Store user data
    */
-  private storeUserData(userData: CognitoUserData): void {
+  storeUserData(userData: CognitoUserData): void {
     localStorage.setItem(this.USER_KEY, JSON.stringify(userData));
   }
 

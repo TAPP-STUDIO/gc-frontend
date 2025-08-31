@@ -5,16 +5,23 @@ import { useRouter } from 'next/navigation';
 import { authService, CognitoUserData } from '@/services/auth.service';
 import { apiService, AdminUser } from '@/services/api.service';
 
+interface LoginResult {
+  success: boolean;
+  error?: string;
+  session?: string;
+}
+
 interface AuthContextType {
   user: AdminUser | null;
   cognitoUser: CognitoUserData | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   isInAdminGroup: boolean;
-  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  login: (email: string, password: string) => Promise<LoginResult>;
   logout: () => void;
   refreshSession: () => Promise<boolean>;
   checkAdminAccess: () => Promise<boolean>;
+  error?: string;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -74,34 +81,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+  const login = async (email: string, password: string): Promise<LoginResult> => {
     try {
       setIsLoading(true);
 
-      // First authenticate with Cognito
-      const { tokens } = await authService.signIn(email, password);
-
-      // Decode user data from token
-      const userData = authService.decodeIdToken(tokens.idToken);
-      if (!userData) {
-        throw new Error('Failed to decode user token');
-      }
-
-      // Check if user is in admin group
-      if (!authService.isUserInAdminGroup(userData)) {
-        authService.signOut();
-        return {
-          success: false,
-          error: 'Access denied. You must be a member of gc_super_admins group.',
-        };
-      }
-
-      // Then verify with backend
+      // Call backend API which handles Cognito authentication
       const response = await apiService.adminLogin(email, password);
 
+      if (response.data?.message === 'Password reset required') {
+        return { success: false, error: 'Password reset required', session: response.data.session };
+      }
+
       if (response.success && response.data) {
+        // Handle password reset required case
+        if (response.data.message === 'Password reset required') {
+          return { success: false, error: 'Password reset required', session: response.data.session };
+        }
+
+        // Store tokens from backend response
+        if (response.data.tokens) {
+          authService.storeTokens(response.data.tokens);
+          const userData = authService.decodeIdToken(response.data.tokens.idToken);
+          if (userData) {
+            authService.storeUserData(userData);
+            setCognitoUser(userData);
+          }
+        }
+        
         setUser(response.data.user);
-        setCognitoUser(userData);
         setIsInAdminGroup(true);
         
         // Redirect to admin dashboard
@@ -109,7 +116,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         
         return { success: true };
       } else {
-        authService.signOut();
         return {
           success: false,
           error: response.error || 'Login failed',

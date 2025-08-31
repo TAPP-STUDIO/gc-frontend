@@ -17,6 +17,9 @@ export default function AdminLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [newPassword, setNewPassword] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [newPasswordRequiredSession, setNewPasswordRequiredSession] = useState<string | null>(null);
   const router = useRouter();
   const { login, isAuthenticated, isInAdminGroup } = useAuth();
   
@@ -39,9 +42,17 @@ export default function AdminLoginPage() {
 
     try {
       const result = await login(data.email, data.password);
-      
+      // Support NEW_PASSWORD_REQUIRED flow
       if (!result.success) {
-        setError(result.error || 'Přihlášení selhalo');
+        if (
+          result.error === 'Password reset required' ||
+          result.error === 'NEW_PASSWORD_REQUIRED'
+        ) {
+          setNewPasswordRequiredSession(result.session ?? null);
+          // Don't show error here; form will render new password UI
+        } else {
+          setError(result.error || 'Přihlášení selhalo');
+        }
       }
     } catch {
       setError('Nastala neočekávaná chyba. Zkuste to prosím znovu.');
@@ -49,6 +60,185 @@ export default function AdminLoginPage() {
       setIsSubmitting(false);
     }
   };
+
+  const handleNewPasswordSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('/api/v1/auth/admin/respond-new-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          newPassword,
+          session: newPasswordRequiredSession,
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        setError(data.message || 'Nepodařilo se nastavit nové heslo.');
+        setIsSubmitting(false);
+        return;
+      }
+
+      // On success, redirect to /admin
+      router.push('/admin');
+    } catch {
+      setError('Nastala neočekávaná chyba. Zkuste to prosím znovu.');
+      setIsSubmitting(false);
+    }
+  };
+
+  if (newPasswordRequiredSession) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center px-4 sm:px-6 lg:px-8">
+        {/* Background animation */}
+        <div className="fixed inset-0 overflow-hidden">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-red-500/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-red-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        </div>
+
+        <div className="max-w-md w-full space-y-8 relative z-10">
+          {/* Logo and Title */}
+          <div className="text-center">
+            <div className="flex justify-center mb-6">
+              <div className="flex items-center space-x-3">
+                <Logo />
+                <span className="px-3 py-1 bg-red-500 text-white text-sm font-bold rounded uppercase">
+                  ADMIN
+                </span>
+              </div>
+            </div>
+            <h2 className="text-3xl font-bold text-white mb-2">
+              Nastavení nového hesla
+            </h2>
+            <p className="text-sm text-red-400 mb-4">
+              Musíte si nastavit nové heslo, než se můžete přihlásit.
+            </p>
+          </div>
+
+          {/* New Password Form */}
+          <form onSubmit={handleNewPasswordSubmit} className="mt-8 space-y-6">
+            {error && (
+              <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 flex items-start space-x-3">
+                <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <p className="text-sm text-red-400">{error}</p>
+                </div>
+              </div>
+            )}
+            <div>
+              <label htmlFor="newPassword" className="block text-sm font-medium text-white mb-2">
+                Nové heslo
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-5 w-5 text-[#666666]" />
+                </div>
+                <input
+                  id="newPassword"
+                  type={showNewPassword ? 'text' : 'password'}
+                  autoComplete="new-password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className={`
+                    block w-full pl-10 pr-10 py-3 
+                    bg-[#151515] border rounded-lg
+                    text-white placeholder-[#666666]
+                    focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent
+                    transition-colors
+                    ${error ? 'border-red-500' : 'border-[#333333]'}
+                  `}
+                  placeholder="••••••••"
+                  minLength={8}
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                >
+                  {showNewPassword ? (
+                    <EyeOff className="h-5 w-5 text-[#666666] hover:text-white transition-colors" />
+                  ) : (
+                    <Eye className="h-5 w-5 text-[#666666] hover:text-white transition-colors" />
+                  )}
+                </button>
+              </div>
+              <p className="mt-1 text-sm text-[#666666]">
+                Heslo musí mít alespoň 8 znaků.
+              </p>
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className={`
+                w-full flex justify-center items-center space-x-2
+                py-3 px-4 rounded-lg font-medium
+                text-white bg-red-500 hover:bg-red-600
+                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500
+                transition-all duration-200
+                ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}
+              `}
+            >
+              {isSubmitting ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <span>Nastavuji nové heslo...</span>
+                </>
+              ) : (
+                <>
+                  <Lock className="w-5 h-5" />
+                  <span>Nastavit nové heslo</span>
+                </>
+              )}
+            </button>
+          </form>
+
+          {/* Footer Info */}
+          <div className="text-center space-y-2">
+            <p className="text-xs text-[#666666]">
+              Přístup je omezen pouze pro autorizované administrátory
+            </p>
+            <p className="text-xs text-[#666666]">
+              V případě problémů kontaktujte{' '}
+              <a href="mailto:support@gavlikcapital.com" className="text-red-500 hover:underline">
+                support@gavlikcapital.com
+              </a>
+            </p>
+          </div>
+
+          {/* Back to Main Site */}
+          <div className="text-center">
+            <Link
+              href="/"
+              className="inline-flex items-center space-x-2 text-sm text-[#666666] hover:text-white transition-colors"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                />
+              </svg>
+              <span>Zpět na hlavní stránku</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center px-4 sm:px-6 lg:px-8">
@@ -76,15 +266,15 @@ export default function AdminLoginPage() {
 
         {/* Login Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-6">
-          {/* Error Alert */}
-          {error && (
-            <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 flex items-start space-x-3">
-              <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-              <div className="flex-1">
-                <p className="text-sm text-red-400">{error}</p>
-              </div>
+        {/* Error Alert */}
+        {error && (
+          <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 flex items-start space-x-3">
+            <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="text-sm text-red-400">{error}</p>
             </div>
-          )}
+          </div>
+        )}
 
           <div className="space-y-4">
             {/* Email Field */}

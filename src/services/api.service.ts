@@ -37,6 +37,8 @@ export interface LoginResponse {
     refreshToken: string;
     expiresIn: number;
   };
+  message?: string; // added
+  session?: string; // added
 }
 
 class ApiService {
