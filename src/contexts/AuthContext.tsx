@@ -8,7 +8,11 @@ import { apiService, AdminUser } from '@/services/api.service';
 interface LoginResult {
   success: boolean;
   error?: string;
-  session?: string;
+  requiresNewPassword?: boolean;
+  email?: string;
+  challengeName?: string;
+  userAttributes?: any;
+  requiredAttributes?: string[];
 }
 
 interface AuthContextType {
@@ -18,6 +22,7 @@ interface AuthContextType {
   isLoading: boolean;
   isInAdminGroup: boolean;
   login: (email: string, password: string) => Promise<LoginResult>;
+  completeNewPassword: (email: string, password: string, newPassword: string) => Promise<LoginResult>;
   logout: () => void;
   refreshSession: () => Promise<boolean>;
   checkAdminAccess: () => Promise<boolean>;
@@ -87,17 +92,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       // Call backend API which handles Cognito authentication
       const response = await apiService.adminLogin(email, password);
+      
+      console.log('API Response:', response); // Debug log
 
-      if (response.data?.message === 'Password reset required') {
-        return { success: false, error: 'Password reset required', session: response.data.session };
+      // Check if it's a NEW_PASSWORD_REQUIRED challenge
+      // Check both response.data and direct response for challenge
+      if (!response.success && 
+          (response.data?.challengeName === 'NEW_PASSWORD_REQUIRED' || 
+           response.error?.includes('NEW_PASSWORD_REQUIRED') ||
+           (response as any).challengeName === 'NEW_PASSWORD_REQUIRED')) {
+        
+        console.log('NEW_PASSWORD_REQUIRED detected in AuthContext'); // Debug
+        
+        return {
+          success: false,
+          requiresNewPassword: true,
+          email: email,
+          challengeName: 'NEW_PASSWORD_REQUIRED',
+          userAttributes: response.data?.challengeParam?.userAttributes,
+          requiredAttributes: response.data?.challengeParam?.requiredAttributes,
+          error: 'NEW_PASSWORD_REQUIRED',
+        };
+      }
+
+      if (!response.success) {
+        return {
+          success: false,
+          error: response.error || 'Login failed',
+        };
       }
 
       if (response.success && response.data) {
-        // Handle password reset required case
-        if (response.data.message === 'Password reset required') {
-          return { success: false, error: 'Password reset required', session: response.data.session };
-        }
-
         // Store tokens from backend response
         if (response.data.tokens) {
           authService.storeTokens(response.data.tokens);
@@ -108,8 +133,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           }
         }
         
-        setUser(response.data.user);
-        setIsInAdminGroup(true);
+        if (response.data.user) {
+          setUser(response.data.user);
+          setIsInAdminGroup(true);
+        }
         
         // Redirect to admin dashboard
         router.push('/admin');
@@ -137,14 +164,62 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (err.code === 'UserNotConfirmedException') {
           return { success: false, error: 'Please confirm your email address' };
         }
-        if (err.message === 'New password required') {
-          return { success: false, error: 'Please contact admin to set a new password' };
-        }
         return {
           success: false,
           error: err.message || 'An unexpected error occurred',
         };
       }
+      return {
+        success: false,
+        error: 'An unexpected error occurred',
+      };
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const completeNewPassword = async (email: string, password: string, newPassword: string): Promise<LoginResult> => {
+    try {
+      setIsLoading(true);
+
+      // Call backend API to complete new password challenge
+      const response = await apiService.completeNewPassword(email, password, newPassword);
+
+      if (!response.success) {
+        return {
+          success: false,
+          error: response.error || 'Failed to set new password',
+        };
+      }
+
+      if (response.success && response.data) {
+        // Store tokens from backend response
+        if (response.data.tokens) {
+          authService.storeTokens(response.data.tokens);
+          const userData = authService.decodeIdToken(response.data.tokens.idToken);
+          if (userData) {
+            authService.storeUserData(userData);
+            setCognitoUser(userData);
+          }
+        }
+        
+        if (response.data.user) {
+          setUser(response.data.user);
+          setIsInAdminGroup(true);
+        }
+        
+        // Redirect to admin dashboard
+        router.push('/admin');
+        
+        return { success: true };
+      } else {
+        return {
+          success: false,
+          error: response.error || 'Failed to set new password',
+        };
+      }
+    } catch (error: unknown) {
+      console.error('Complete new password error:', error);
       return {
         success: false,
         error: 'An unexpected error occurred',
@@ -194,6 +269,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isLoading,
     isInAdminGroup,
     login,
+    completeNewPassword,
     logout,
     refreshSession,
     checkAdminAccess,

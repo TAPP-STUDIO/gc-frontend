@@ -38,7 +38,7 @@ class AuthService {
   /**
    * Sign in with email and password
    */
-  async signIn(email: string, password: string): Promise<{ session: CognitoUserSession; tokens: AuthTokens }> {
+  async signIn(email: string, password: string): Promise<{ session?: CognitoUserSession; tokens?: AuthTokens; newPasswordRequired?: boolean; sessionData?: any }> {
     return new Promise((resolve, reject) => {
       const authenticationDetails = new AuthenticationDetails({
         Username: email,
@@ -73,9 +73,56 @@ class AuthService {
         onFailure: (err) => {
           reject(err);
         },
-        newPasswordRequired: () => {
-          // Handle new password requirement
-          reject(new Error('New password required'));
+        newPasswordRequired: (userAttributes, requiredAttributes) => {
+          // Handle new password requirement - return data for completing challenge
+          resolve({
+            newPasswordRequired: true,
+            sessionData: {
+              userAttributes,
+              requiredAttributes,
+              cognitoUser,
+            },
+          });
+        },
+      });
+    });
+  }
+
+  /**
+   * Complete new password challenge
+   */
+  async completeNewPasswordChallenge(
+    cognitoUser: CognitoUser,
+    newPassword: string,
+    userAttributes: any
+  ): Promise<{ session: CognitoUserSession; tokens: AuthTokens }> {
+    return new Promise((resolve, reject) => {
+      // Remove fields that shouldn't be sent back
+      delete userAttributes.email_verified;
+      delete userAttributes.phone_number_verified;
+
+      cognitoUser.completeNewPasswordChallenge(newPassword, userAttributes, {
+        onSuccess: (session) => {
+          const tokens: AuthTokens = {
+            idToken: session.getIdToken().getJwtToken(),
+            accessToken: session.getAccessToken().getJwtToken(),
+            refreshToken: session.getRefreshToken().getToken(),
+            expiresIn: 3600,
+          };
+
+          // Store tokens in cookies
+          this.storeTokens(tokens);
+
+          // Decode and store user data
+          const userData = this.decodeIdToken(tokens.idToken);
+          if (userData) {
+            this.storeUserData(userData);
+          }
+
+          resolve({ session, tokens });
+        },
+        onFailure: (err) => {
+          reject(err);
         },
       });
     });

@@ -30,15 +30,22 @@ export interface AdminUser {
 }
 
 export interface LoginResponse {
-  user: AdminUser;
-  tokens: {
+  user?: AdminUser;
+  tokens?: {
     idToken: string;
     accessToken: string;
     refreshToken: string;
     expiresIn: number;
   };
-  message?: string; // added
-  session?: string; // added
+  // NEW_PASSWORD_REQUIRED challenge fields
+  challengeName?: string;
+  challengeParam?: {
+    userAttributes: any;
+    requiredAttributes: string[];
+  };
+  message?: string;
+  session?: string;
+  email?: string;
 }
 
 class ApiService {
@@ -107,11 +114,42 @@ class ApiService {
         email,
         password,
       });
+      
+      console.log('Raw API response:', response.data); // Debug
+      
+      // If it's a NEW_PASSWORD_REQUIRED challenge, handle it specially
+      if (response.data && !response.data.success && 
+          (response.data as any).challengeName === 'NEW_PASSWORD_REQUIRED') {
+        return {
+          success: false,
+          data: response.data as any,
+          error: 'NEW_PASSWORD_REQUIRED'
+        };
+      }
+      
+      return response.data;
+    } catch (error: any) {
+      console.error('API login error:', error); // Debug
+      return {
+        success: false,
+        error: error.response?.data?.error || error.message || 'Login failed',
+        data: error.response?.data, // Include challenge data if present
+      };
+    }
+  }
+
+  async completeNewPassword(email: string, password: string, newPassword: string): Promise<ApiResponse<LoginResponse>> {
+    try {
+      const response = await this.api.post<ApiResponse<LoginResponse>>('/auth/admin/complete-new-password', {
+        email,
+        password,
+        newPassword,
+      });
       return response.data;
     } catch (error: any) {
       return {
         success: false,
-        error: error.response?.data?.error || error.message || 'Login failed',
+        error: error.response?.data?.error || error.message || 'Failed to set new password',
       };
     }
   }

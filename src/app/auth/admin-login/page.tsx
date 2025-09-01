@@ -6,11 +6,37 @@ import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { useAuth } from '@/contexts/AuthContext';
 import Logo from '@/components/logo/logo';
-import { Eye, EyeOff, Lock, Mail, AlertCircle } from 'lucide-react';
+import { Eye, EyeOff, Lock, Mail, AlertCircle, Check, X } from 'lucide-react';
 
 interface LoginFormData {
   email: string;
   password: string;
+}
+
+interface PasswordStrength {
+  score: number;
+  label: string;
+  color: string;
+}
+
+function calculatePasswordStrength(password: string): PasswordStrength {
+  let score = 0;
+  
+  // Length check
+  if (password.length >= 8) score++;
+  if (password.length >= 12) score++;
+  
+  // Character type checks
+  if (/[a-z]/.test(password)) score++;
+  if (/[A-Z]/.test(password)) score++;
+  if (/[0-9]/.test(password)) score++;
+  if (/[^a-zA-Z0-9]/.test(password)) score++;
+  
+  // Map score to strength
+  if (score <= 2) return { score: 1, label: 'Slabé', color: 'bg-red-500' };
+  if (score <= 4) return { score: 2, label: 'Střední', color: 'bg-yellow-500' };
+  if (score <= 5) return { score: 3, label: 'Silné', color: 'bg-green-500' };
+  return { score: 4, label: 'Velmi silné', color: 'bg-green-600' };
 }
 
 export default function AdminLoginPage() {
@@ -18,10 +44,16 @@ export default function AdminLoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showNewPassword, setShowNewPassword] = useState(false);
-  const [newPasswordRequiredSession, setNewPasswordRequiredSession] = useState<string | null>(null);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [requiresNewPassword, setRequiresNewPassword] = useState(false);
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [passwordStrength, setPasswordStrength] = useState<PasswordStrength>({ score: 0, label: '', color: '' });
+  const [passwordsMatch, setPasswordsMatch] = useState(true);
   const router = useRouter();
-  const { login, isAuthenticated, isInAdminGroup } = useAuth();
+  const { login, completeNewPassword, isAuthenticated, isInAdminGroup } = useAuth();
   
   const {
     register,
@@ -35,26 +67,47 @@ export default function AdminLoginPage() {
       router.push('/admin');
     }
   }, [isAuthenticated, isInAdminGroup, router]);
+  
+  // Update password strength when password changes
+  useEffect(() => {
+    if (newPassword) {
+      setPasswordStrength(calculatePasswordStrength(newPassword));
+    } else {
+      setPasswordStrength({ score: 0, label: '', color: '' });
+    }
+  }, [newPassword]);
+  
+  // Check if passwords match
+  useEffect(() => {
+    if (confirmPassword) {
+      setPasswordsMatch(newPassword === confirmPassword);
+    } else {
+      setPasswordsMatch(true);
+    }
+  }, [newPassword, confirmPassword]);
 
   const onSubmit = async (data: LoginFormData) => {
     setError(null);
     setIsSubmitting(true);
+    setLoginEmail(data.email);
+    setLoginPassword(data.password);
 
     try {
       const result = await login(data.email, data.password);
-      // Support NEW_PASSWORD_REQUIRED flow
-      if (!result.success) {
-        if (
-          result.error === 'Password reset required' ||
-          result.error === 'NEW_PASSWORD_REQUIRED'
-        ) {
-          setNewPasswordRequiredSession(result.session ?? null);
-          // Don't show error here; form will render new password UI
-        } else {
-          setError(result.error || 'Přihlášení selhalo');
-        }
+      
+      console.log('Login result:', result); // Debug log
+      
+      if (result.requiresNewPassword || result.error === 'NEW_PASSWORD_REQUIRED') {
+        // User needs to set a new password
+        console.log('NEW_PASSWORD_REQUIRED detected'); // Debug log
+        setRequiresNewPassword(true);
+        setError(null);
+      } else if (!result.success) {
+        setError(result.error || 'Přihlášení selhalo');
       }
-    } catch {
+      // If successful, the AuthContext will handle the redirect
+    } catch (err) {
+      console.error('Login error:', err);
       setError('Nastala neočekávaná chyba. Zkuste to prosím znovu.');
     } finally {
       setIsSubmitting(false);
@@ -64,36 +117,49 @@ export default function AdminLoginPage() {
   const handleNewPasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    
+    // Validate passwords
+    if (!newPassword || !confirmPassword) {
+      setError('Vyplňte obě pole s heslem.');
+      return;
+    }
+    
+    if (newPassword !== confirmPassword) {
+      setError('Hesla se neshodují.');
+      return;
+    }
+    
+    if (newPassword.length < 8) {
+      setError('Heslo musí mít alespoň 8 znaků.');
+      return;
+    }
+    
+    if (passwordStrength.score < 2) {
+      setError('Heslo je příliš slabé. Použijte kombinaci velkých a malých písmen, čísel a speciálních znaků.');
+      return;
+    }
+    
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('/api/v1/auth/admin/respond-new-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          newPassword,
-          session: newPasswordRequiredSession,
-        }),
-      });
-
-      if (!response.ok) {
-        const data = await response.json();
-        setError(data.message || 'Nepodařilo se nastavit nové heslo.');
-        setIsSubmitting(false);
-        return;
+      console.log('Calling completeNewPassword with:', { email: loginEmail, password: loginPassword });
+      const result = await completeNewPassword(loginEmail, loginPassword, newPassword);
+      
+      console.log('CompleteNewPassword result:', result);
+      
+      if (!result.success) {
+        setError(result.error || 'Nepodařilo se nastavit nové heslo.');
       }
-
-      // On success, redirect to /admin
-      router.push('/admin');
-    } catch {
+      // If successful, the AuthContext will handle the redirect
+    } catch (err) {
+      console.error('Complete new password error:', err);
       setError('Nastala neočekávaná chyba. Zkuste to prosím znovu.');
+    } finally {
       setIsSubmitting(false);
     }
   };
 
-  if (newPasswordRequiredSession) {
+  if (requiresNewPassword) {
     return (
       <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center px-4 sm:px-6 lg:px-8">
         {/* Background animation */}
@@ -131,47 +197,161 @@ export default function AdminLoginPage() {
                 </div>
               </div>
             )}
-            <div>
-              <label htmlFor="newPassword" className="block text-sm font-medium text-white mb-2">
-                Nové heslo
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-[#666666]" />
+            <div className="space-y-4">
+              {/* New Password Field */}
+              <div>
+                <label htmlFor="newPassword" className="block text-sm font-medium text-white mb-2">
+                  Nové heslo
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Lock className="h-5 w-5 text-[#666666]" />
+                  </div>
+                  <input
+                    id="newPassword"
+                    type={showNewPassword ? 'text' : 'password'}
+                    autoComplete="new-password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    className={`
+                      block w-full pl-10 pr-10 py-3 
+                      bg-[#151515] border rounded-lg
+                      text-white placeholder-[#666666]
+                      focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent
+                      transition-colors
+                      ${error ? 'border-red-500' : 'border-[#333333]'}
+                    `}
+                    placeholder="••••••••"
+                    minLength={8}
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPassword(!showNewPassword)}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  >
+                    {showNewPassword ? (
+                      <EyeOff className="h-5 w-5 text-[#666666] hover:text-white transition-colors" />
+                    ) : (
+                      <Eye className="h-5 w-5 text-[#666666] hover:text-white transition-colors" />
+                    )}
+                  </button>
                 </div>
-                <input
-                  id="newPassword"
-                  type={showNewPassword ? 'text' : 'password'}
-                  autoComplete="new-password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  className={`
-                    block w-full pl-10 pr-10 py-3 
-                    bg-[#151515] border rounded-lg
-                    text-white placeholder-[#666666]
-                    focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent
-                    transition-colors
-                    ${error ? 'border-red-500' : 'border-[#333333]'}
-                  `}
-                  placeholder="••••••••"
-                  minLength={8}
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowNewPassword(!showNewPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                >
-                  {showNewPassword ? (
-                    <EyeOff className="h-5 w-5 text-[#666666] hover:text-white transition-colors" />
-                  ) : (
-                    <Eye className="h-5 w-5 text-[#666666] hover:text-white transition-colors" />
-                  )}
-                </button>
+                
+                {/* Password Strength Indicator */}
+                {newPassword && (
+                  <div className="mt-2">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs text-[#666666]">Síla hesla:</span>
+                      <span className={`text-xs font-medium ${
+                        passwordStrength.score === 1 ? 'text-red-500' :
+                        passwordStrength.score === 2 ? 'text-yellow-500' :
+                        passwordStrength.score === 3 ? 'text-green-500' :
+                        'text-green-600'
+                      }`}>
+                        {passwordStrength.label}
+                      </span>
+                    </div>
+                    <div className="h-2 bg-[#333333] rounded-full overflow-hidden">
+                      <div 
+                        className={`h-full transition-all duration-300 ${passwordStrength.color}`}
+                        style={{ width: `${(passwordStrength.score / 4) * 100}%` }}
+                      />
+                    </div>
+                  </div>
+                )}
+                
+                {/* Password Requirements */}
+                <div className="mt-2 space-y-1">
+                  <div className="flex items-center space-x-2">
+                    {newPassword.length >= 8 ? (
+                      <Check className="h-3 w-3 text-green-500" />
+                    ) : (
+                      <X className="h-3 w-3 text-[#666666]" />
+                    )}
+                    <span className={`text-xs ${newPassword.length >= 8 ? 'text-green-500' : 'text-[#666666]'}`}>
+                      Minimálně 8 znaků
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    {/[A-Z]/.test(newPassword) && /[a-z]/.test(newPassword) ? (
+                      <Check className="h-3 w-3 text-green-500" />
+                    ) : (
+                      <X className="h-3 w-3 text-[#666666]" />
+                    )}
+                    <span className={`text-xs ${/[A-Z]/.test(newPassword) && /[a-z]/.test(newPassword) ? 'text-green-500' : 'text-[#666666]'}`}>
+                      Velká a malá písmena
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    {/[0-9]/.test(newPassword) ? (
+                      <Check className="h-3 w-3 text-green-500" />
+                    ) : (
+                      <X className="h-3 w-3 text-[#666666]" />
+                    )}
+                    <span className={`text-xs ${/[0-9]/.test(newPassword) ? 'text-green-500' : 'text-[#666666]'}`}>
+                      Alespoň jedno číslo
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    {/[^a-zA-Z0-9]/.test(newPassword) ? (
+                      <Check className="h-3 w-3 text-green-500" />
+                    ) : (
+                      <X className="h-3 w-3 text-[#666666]" />
+                    )}
+                    <span className={`text-xs ${/[^a-zA-Z0-9]/.test(newPassword) ? 'text-green-500' : 'text-[#666666]'}`}>
+                      Speciální znak (!@#$%^&*)
+                    </span>
+                  </div>
+                </div>
               </div>
-              <p className="mt-1 text-sm text-[#666666]">
-                Heslo musí mít alespoň 8 znaků.
-              </p>
+
+              {/* Confirm Password Field */}
+              <div>
+                <label htmlFor="confirmPassword" className="block text-sm font-medium text-white mb-2">
+                  Potvrdit nové heslo
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Lock className="h-5 w-5 text-[#666666]" />
+                  </div>
+                  <input
+                    id="confirmPassword"
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    autoComplete="new-password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className={`
+                      block w-full pl-10 pr-10 py-3 
+                      bg-[#151515] border rounded-lg
+                      text-white placeholder-[#666666]
+                      focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent
+                      transition-colors
+                      ${!passwordsMatch && confirmPassword ? 'border-red-500' : 'border-[#333333]'}
+                    `}
+                    placeholder="••••••••"
+                    minLength={8}
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-5 w-5 text-[#666666] hover:text-white transition-colors" />
+                    ) : (
+                      <Eye className="h-5 w-5 text-[#666666] hover:text-white transition-colors" />
+                    )}
+                  </button>
+                </div>
+                {confirmPassword && !passwordsMatch && (
+                  <p className="mt-1 text-sm text-red-400">Hesla se neshodují</p>
+                )}
+                {confirmPassword && passwordsMatch && newPassword === confirmPassword && (
+                  <p className="mt-1 text-sm text-green-500">Hesla se shodují</p>
+                )}
+              </div>
             </div>
 
             <button
