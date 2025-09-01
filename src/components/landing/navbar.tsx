@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import Link from 'next/link';
 import Logo from '../logo/logo';
 import { PremiumCTA, GlassCTA } from '../ui/premium-button';
 

@@ -3,11 +3,17 @@
 import React from 'react';
 import Image from 'next/image';
 import { VerifiedBadge } from '../ui/premium-button';
+import { useScrollAnimation } from '@/hook';
 
 // Pure 3D Card GIF Component
 const Card3DGIF = () => {
+  const { elementRef, isVisible } = useScrollAnimation({ threshold: 0.2 });
+  
   return (
-    <div className="relative w-80 h-[500px] lg:w-96 lg:h-[600px]">
+    <div 
+      ref={elementRef}
+      className={`relative w-80 h-[500px] lg:w-96 lg:h-[600px] animate-scale ${isVisible ? 'visible' : ''}`}
+    >
       <Image
         src="/cards/card-rotation.gif"
         alt="3D NFT Card Rotation"
@@ -21,6 +27,8 @@ const Card3DGIF = () => {
 };
 
 export const Hero = () => {
+  const { elementRef: titleRef, isVisible: titleVisible } = useScrollAnimation({ threshold: 0.1 });
+  const { elementRef: statsRef, isVisible: statsVisible } = useScrollAnimation({ threshold: 0.3 });
   const stats = [
     { value: '3 153 750 $', label: 'Portfolio' },
     { value: '162 $', label: 'Profit per card' }
@@ -50,7 +58,10 @@ export const Hero = () => {
           {/* Left Side - Content */}
           <div className="space-y-8 lg:space-y-12">
             {/* Main Heading */}
-            <div className="space-y-4">
+            <div 
+              ref={titleRef}
+              className={`space-y-4 animate-slide-left ${titleVisible ? 'visible' : ''}`}
+            >
               <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-tight">
                 Join the lifetime
                 <br />
@@ -62,20 +73,22 @@ export const Hero = () => {
             </div>
 
             {/* Premium Verified Badge */}
-            <div className="flex items-start">
+            <div className={`flex items-start animate-fade-in ${titleVisible ? 'visible animate-stagger-1' : ''}`}>
               <VerifiedBadge size="md">
                 Verified
               </VerifiedBadge>
             </div>
 
-            
-
-            
-
             {/* Statistics */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 lg:gap-12">
+            <div 
+              ref={statsRef}
+              className={`grid grid-cols-1 sm:grid-cols-2 gap-8 lg:gap-12 animate-slide-up ${statsVisible ? 'visible' : ''}`}
+            >
               {stats.map((stat, index) => (
-                <div key={index} className="space-y-2">
+                <div 
+                  key={index} 
+                  className={`space-y-2 animate-slide-up ${statsVisible ? `visible animate-stagger-${index + 2}` : ''}`}
+                >
                   <div className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#F9D523]">
                     {stat.value}
                   </div>

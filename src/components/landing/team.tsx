@@ -2,8 +2,12 @@
 
 import React from 'react';
 import Image from 'next/image';
+import { useScrollAnimation, useStaggeredAnimation } from '@/hook';
 
 export const Team = () => {
+  const { elementRef: titleRef, isVisible: titleVisible } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: founderRef, isVisible: founderVisible } = useScrollAnimation({ threshold: 0.3 });
+  const { elementRef: teamRef, visibleItems } = useStaggeredAnimation(3, 150);
   const teamMembers = [
     {
       name: 'Jakub Gavlík',
@@ -37,20 +41,28 @@ export const Team = () => {
       
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
         {/* Header */}
-        <div className="text-center mb-16 lg:mb-20">
-          <div className="text-[#F9D523] text-lg md:text-xl font-semibold mb-4 uppercase tracking-wider">
-            OUR TEAM
+        <div 
+          ref={titleRef}
+          className={`text-center mb-16 lg:mb-20 animate-slide-up ${titleVisible ? 'visible' : ''}`}
+        >
+          <div className="space-y-4">
+            <div className="text-[#F9D523] text-lg md:text-xl font-semibold mb-4 uppercase tracking-wider">
+              OUR TEAM
+            </div>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white">
+              Meet the team
+            </h2>
           </div>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white">
-            Meet the team
-          </h2>
         </div>
 
         {/* Founder Section */}
-        <div className="max-w-7xl mx-auto mb-16 lg:mb-24">
+        <div 
+          ref={founderRef}
+          className="max-w-7xl mx-auto mb-16 lg:mb-24"
+        >
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Founder Image */}
-            <div className="flex justify-center lg:justify-start">
+            <div className={`flex justify-center lg:justify-start animate-scale ${founderVisible ? 'visible' : ''}`}>
               <div className="relative w-80 h-96 lg:w-96 lg:h-[500px]">
                 <div className="absolute inset-0 bg-gradient-to-br from-[#F9D523]/20 to-transparent rounded-3xl"></div>
                 <Image
@@ -63,7 +75,7 @@ export const Team = () => {
             </div>
 
             {/* Founder Info */}
-            <div className="space-y-6">
+            <div className={`space-y-6 animate-slide-left ${founderVisible ? 'visible animate-stagger-1' : ''}`}>
               <div className="inline-flex items-center bg-[#F9D523]/20 backdrop-blur-sm px-4 py-2 rounded-full border border-[#F9D523]/30">
                 <span className="text-[#F9D523] font-semibold text-sm uppercase tracking-wider">
                   {teamMembers[0].role}
@@ -82,7 +94,7 @@ export const Team = () => {
                 <div className="flex items-start gap-4">
                   <div className="w-2 h-2 bg-[#F9D523] rounded-full mt-3 flex-shrink-0"></div>
                   <blockquote className="text-white/90 text-lg italic font-medium">
-                    "{teamMembers[0].quote}"
+                    {teamMembers[0].quote}
                   </blockquote>
                 </div>
               </div>
@@ -91,12 +103,18 @@ export const Team = () => {
         </div>
 
         {/* Other Team Members */}
-        <div className="max-w-5xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div 
+          ref={teamRef}
+          className="max-w-6xl mx-auto animate-container"
+        >
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
             {teamMembers.slice(1).map((member, index) => (
               <div
                 key={index}
-                className="group bg-white/5 backdrop-blur-sm border border-white/20 rounded-2xl p-6 hover:bg-white/10 hover:border-[#F9D523]/50 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105"
+                className={`group bg-white/5 backdrop-blur-sm border border-white/20 rounded-2xl p-6 hover:bg-white/10 hover:border-[#F9D523]/50 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105 animate-scale ${
+                  visibleItems.has(index) ? 'visible' : ''
+                }`}
+                style={{ transitionDelay: `${index * 150}ms` }}
               >
                 {/* Member Image */}
                 <div className="relative w-24 h-24 mx-auto mb-6">

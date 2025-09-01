@@ -2,8 +2,11 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import { useScrollAnimation, useStaggeredAnimation } from '@/hook';
 
 export const Ecosystem = () => {
+  const { elementRef: titleRef, isVisible: titleVisible } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: cardsRef, visibleItems } = useStaggeredAnimation(3, 200);
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
   const ecosystemItems = [
@@ -58,22 +61,33 @@ export const Ecosystem = () => {
       <div className="absolute inset-0 bg-black/40 z-10"></div>
       
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
-        {/* Header */}
-        <div className="text-center mb-16 lg:mb-24">
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-            Ecosystem
-          </h2>
-          <p className="text-white/70 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
-            Safeguard your digital assets with state-of-the-art security measures. Track your investments in real-time to make informed decisions.
-          </p>
+        {/* Header - stejné styling jako v Hero */}
+        <div 
+          ref={titleRef}
+          className={`text-center mb-16 lg:mb-24 animate-slide-up ${titleVisible ? 'visible' : ''}`}
+        >
+          <div className="space-y-4">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+              Ecosystem
+            </h2>
+            <p className="text-lg md:text-xl text-white/70 max-w-3xl mx-auto leading-relaxed font-medium">
+              Safeguard your digital assets with state-of-the-art security measures. Track your investments in real-time to make informed decisions.
+            </p>
+          </div>
         </div>
 
         {/* Cards Grid - jen simple scale hover */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 max-w-7xl mx-auto">
-          {ecosystemItems.map((item) => (
+        <div 
+          ref={cardsRef}
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 max-w-7xl mx-auto animate-container"
+        >
+          {ecosystemItems.map((item, index) => (
             <div
               key={item.id}
-              className="group relative text-center"
+              className={`group relative text-center animate-scale ${
+                visibleItems.has(index) ? 'visible' : ''
+              }`}
+              style={{ transitionDelay: `${index * 200}ms` }}
               onMouseEnter={() => setHoveredCard(item.id)}
               onMouseLeave={() => setHoveredCard(null)}
             >

@@ -1,8 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useScrollAnimation, useStaggeredAnimation } from '@/hook';
 
 export const FAQ = () => {
+  const { elementRef: titleRef, isVisible: titleVisible } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: leftRef, visibleItems: leftVisible } = useStaggeredAnimation(3, 150);
+  const { elementRef: rightRef, visibleItems: rightVisible } = useStaggeredAnimation(3, 150);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   const faqData = [
@@ -50,7 +54,10 @@ export const FAQ = () => {
       
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
         {/* Header */}
-        <div className="text-center mb-16 lg:mb-20">
+        <div 
+          ref={titleRef}
+          className={`text-center mb-16 lg:mb-20 animate-slide-up ${titleVisible ? 'visible' : ''}`}
+        >
           <div className="text-[#F9D523] text-lg md:text-xl font-semibold mb-4 uppercase tracking-wider">
             FAQ
           </div>
@@ -63,11 +70,17 @@ export const FAQ = () => {
         <div className="max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
             {/* Left Column */}
-            <div className="space-y-4">
-              {faqData.slice(0, 3).map((faq) => (
+            <div 
+              ref={leftRef}
+              className="space-y-4 animate-container"
+            >
+              {faqData.slice(0, 3).map((faq, index) => (
                 <div
                   key={faq.id}
-                  className="bg-teal-900/20 backdrop-blur-sm border border-teal-700/30 rounded-2xl overflow-hidden transition-all duration-300 hover:bg-teal-900/30 hover:border-teal-600/40"
+                  className={`bg-teal-900/20 backdrop-blur-sm border border-teal-700/30 rounded-2xl overflow-hidden transition-all duration-300 hover:bg-teal-900/30 hover:border-teal-600/40 animate-slide-left ${
+                    leftVisible.has(index) ? 'visible' : ''
+                  }`}
+                  style={{ transitionDelay: `${index * 150}ms` }}
                 >
                   <button
                     onClick={() => toggleFaq(faq.id)}
@@ -109,11 +122,17 @@ export const FAQ = () => {
             </div>
 
             {/* Right Column */}
-            <div className="space-y-4">
-              {faqData.slice(3, 6).map((faq) => (
+            <div 
+              ref={rightRef}
+              className="space-y-4 animate-container"
+            >
+              {faqData.slice(3, 6).map((faq, index) => (
                 <div
                   key={faq.id}
-                  className="bg-teal-900/20 backdrop-blur-sm border border-teal-700/30 rounded-2xl overflow-hidden transition-all duration-300 hover:bg-teal-900/30 hover:border-teal-600/40"
+                  className={`bg-teal-900/20 backdrop-blur-sm border border-teal-700/30 rounded-2xl overflow-hidden transition-all duration-300 hover:bg-teal-900/30 hover:border-teal-600/40 animate-slide-right ${
+                    rightVisible.has(index) ? 'visible' : ''
+                  }`}
+                  style={{ transitionDelay: `${index * 150}ms` }}
                 >
                   <button
                     onClick={() => toggleFaq(faq.id)}

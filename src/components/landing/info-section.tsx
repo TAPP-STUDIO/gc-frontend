@@ -1,9 +1,13 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
+import { useScrollAnimation, useStaggeredAnimation } from '@/hook';
 
 
 export const InfoSection = () => {
+  const { elementRef: titleRef, isVisible: titleVisible } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: benefitsRef, visibleItems } = useStaggeredAnimation(4, 100);
+  const { elementRef: videoContainerRef, isVisible: videoVisible } = useScrollAnimation({ threshold: 0.3 });
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [currentTime, setCurrentTime] = useState(0);
@@ -142,17 +146,29 @@ export const InfoSection = () => {
           {/* Left Side - Content */}
           <div className="space-y-8 lg:space-y-12">
             {/* Main Heading */}
-            <div className="space-y-4">
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
+            <div 
+              ref={titleRef}
+              className={`space-y-4 animate-slide-left ${titleVisible ? 'visible' : ''}`}
+            >
+              <h2 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-tight">
                 Gavlik Capital{' '}
                 <span className="text-white/80">cards</span>
               </h2>
             </div>
 
             {/* Benefits List */}
-            <div className="space-y-6">
+            <div 
+              ref={benefitsRef}
+              className="space-y-6 animate-container"
+            >
               {benefits.map((benefit, index) => (
-                <div key={index} className="flex items-start gap-4 group">
+                <div 
+                  key={index} 
+                  className={`flex items-start gap-4 group animate-slide-up ${
+                    visibleItems.has(index) ? 'visible' : ''
+                  }`}
+                  style={{ transitionDelay: `${index * 100}ms` }}
+                >
                   <div className="flex-shrink-0 mt-1">
                     {/* Custom checkmark */}
                     <div className="w-6 h-6 rounded-full bg-[#F9D523]/20 border-2 border-[#F9D523] flex items-center justify-center group-hover:bg-[#F9D523]/30 transition-all duration-300">
@@ -178,7 +194,7 @@ export const InfoSection = () => {
             </div>
 
             {/* OpenSea Button */}
-            <div className="pt-4">
+            <div className={`pt-4 animate-fade-in ${titleVisible ? 'visible animate-stagger-4' : ''}`}>
               <button className="bg-gradient-to-r from-[#B29819] to-[#F9D523] hover:from-[#A08616] hover:to-[#e3c320] text-black font-bold px-10 py-4 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-2xl backdrop-blur-sm border border-white/10 text-lg">
                 OpenSea
               </button>
@@ -186,7 +202,10 @@ export const InfoSection = () => {
           </div>
 
           {/* Right Side - Video Player - VĚTŠÍ VELIKOST */}
-          <div className="flex justify-center lg:justify-end">
+          <div 
+            ref={videoContainerRef}
+            className={`flex justify-center lg:justify-end animate-scale ${videoVisible ? 'visible' : ''}`}
+          >
             <div className="relative w-full max-w-2xl">
               {/* Video Container */}
               <div 

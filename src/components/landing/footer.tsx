@@ -3,8 +3,10 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Logo from '../logo/logo';
+import { useScrollAnimation } from '@/hook';
 
 export const Footer = () => {
+  const { elementRef: footerRef, isVisible: footerVisible } = useScrollAnimation({ threshold: 0.1 });
   const [email, setEmail] = useState('');
 
   const handleNewsletterSubmit = (e: React.FormEvent) => {
@@ -83,7 +85,10 @@ export const Footer = () => {
       
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
         {/* Main Footer Content */}
-        <div className="py-16 lg:py-20">
+        <div 
+          ref={footerRef}
+          className={`py-16 lg:py-20 animate-fade-in ${footerVisible ? 'visible' : ''}`}
+        >
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-8">
             
             {/* Brand Section */}

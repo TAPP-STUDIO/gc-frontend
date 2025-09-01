@@ -2,8 +2,12 @@
 
 import React, {  } from 'react';
 import Image from 'next/image';
+import { useScrollAnimation, useStaggeredAnimation } from '@/hook';
 
 export const Roadmap = () => {
+  const { elementRef: titleRef, isVisible: titleVisible } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: leftRef, visibleItems: leftVisible } = useStaggeredAnimation(4, 200);
+  const { elementRef: rightRef, visibleItems: rightVisible } = useStaggeredAnimation(3, 200);
   const roadmapSteps = [
     {
       id: 1,
@@ -65,13 +69,18 @@ export const Roadmap = () => {
       </div>
 
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
-        {/* Header - Left Aligned */}
-        <div className="mb-16 lg:mb-24">
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight max-w-xl">
-            Secure, Track, and
-            <br />
-            <span className="text-white">Grow Your Crypto</span>
-          </h2>
+        {/* Header - Left Aligned jak Hero */}
+        <div 
+          ref={titleRef}
+          className={`mb-16 lg:mb-24 animate-slide-up ${titleVisible ? 'visible' : ''}`}
+        >
+          <div className="space-y-4">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-tight max-w-4xl">
+              Secure, Track, and
+              <br />
+              <span className="text-white">Grow Your Crypto</span>
+            </h2>
+          </div>
         </div>
 
         {/* Timeline - Two Columns Layout */}
@@ -81,9 +90,18 @@ export const Roadmap = () => {
             {/* Vertical divider line between columns */}
             <div className="hidden lg:block absolute left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#F9D523] via-[#F9D523]/50 to-transparent"></div>
             {/* Left Column */}
-            <div className="space-y-6">
-              {roadmapSteps.slice(0, 4).map((step) => (
-                <div key={step.id} className="relative">
+            <div 
+              ref={leftRef}
+              className="space-y-6 animate-container"
+            >
+              {roadmapSteps.slice(0, 4).map((step, index) => (
+                <div 
+                  key={step.id} 
+                  className={`relative animate-slide-left ${
+                    leftVisible.has(index) ? 'visible' : ''
+                  }`}
+                  style={{ transitionDelay: `${index * 200}ms` }}
+                >
                   {/* Mobile Layout */}
                   <div className="lg:hidden">
                     <div className="flex flex-col items-center gap-4 mb-4">
@@ -130,9 +148,18 @@ export const Roadmap = () => {
             </div>
 
             {/* Right Column */}
-            <div className="space-y-6">
-              {roadmapSteps.slice(4, 7).map((step) => (
-                <div key={step.id} className="relative">
+            <div 
+              ref={rightRef}
+              className="space-y-6 animate-container"
+            >
+              {roadmapSteps.slice(4, 7).map((step, index) => (
+                <div 
+                  key={step.id} 
+                  className={`relative animate-slide-right ${
+                    rightVisible.has(index) ? 'visible' : ''
+                  }`}
+                  style={{ transitionDelay: `${index * 200}ms` }}
+                >
                   {/* Mobile Layout */}
                   <div className="lg:hidden">
                     <div className="flex flex-col items-center gap-4 mb-4">
