@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Logo from '../logo/logo';
+import { PremiumCTA, GlassCTA } from '../ui/premium-button';
 
 export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -53,13 +54,14 @@ export const Navbar = () => {
               </React.Fragment>
             ))}
             
-            {/* Sign Up Button */}
-            <Link 
+            {/* Premium Sign Up Button */}
+            <PremiumCTA 
               href="/dashboard"
-              className="bg-white/10 backdrop-blur-md border-2 border-white/30 hover:border-[#F9D523] hover:bg-white/20 text-white hover:text-[#F9D523] font-bold px-8 py-3 rounded-2xl transition-all duration-300 transform hover:scale-105 text-sm ml-4 shadow-2xl"
+              size="sm"
+              className="ml-4"
             >
               Sign Up
-            </Link>
+            </PremiumCTA>
           </div>
 
           {/* Mobile menu button */}
@@ -114,13 +116,14 @@ export const Navbar = () => {
                 </div>
               ))}
               <div className="pt-4 border-t border-white/10 mt-4">
-                <Link
+                <GlassCTA
                   href="/dashboard"
-                  className="block w-full bg-white/10 backdrop-blur-md border-2 border-white/30 hover:border-[#F9D523] hover:bg-white/20 text-white hover:text-[#F9D523] font-bold px-6 py-4 rounded-2xl transition-all duration-300 text-center shadow-2xl"
+                  size="md"
+                  className="w-full text-center"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Sign Up
-                </Link>
+                </GlassCTA>
               </div>
             </div>
           </div>

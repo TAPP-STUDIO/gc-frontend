@@ -5,6 +5,7 @@ import Link from 'next/link';
 export default function DevLinksPage() {
   const links = [
     { title: 'Main Page', href: '/', color: 'bg-blue-500' },
+    { title: 'Buttons Demo', href: '/buttons-demo', color: 'bg-gradient-to-r from-yellow-400 to-teal-500' },
     { title: 'Dashboard', href: '/dashboard', color: 'bg-green-500' },
     { title: 'Admin Login', href: '/auth/admin-login', color: 'bg-red-500' },
     { title: 'Admin Dashboard', href: '/admin', color: 'bg-red-600' },
@@ -46,12 +47,13 @@ export default function DevLinksPage() {
         <div className="mt-8 p-6 bg-gray-800 rounded-lg">
           <h2 className="text-2xl font-bold text-white mb-4">Project Status</h2>
           <div className="space-y-2 text-gray-300">
-            <p>✅ Frontend UI/UX: 90%</p>
+            <p>✅ Frontend UI/UX: 95%</p>
             <p>✅ TypeScript Definitions: 95%</p>
+            <p>✅ Landing Page Buttons: 100%</p>
             <p>🟨 Authentication: 20%</p>
             <p>🟨 Backend API: 50%</p>
             <p>🟨 Smart Contracts: 65-95%</p>
-            <p>🔴 Landing Page: 0%</p>
+            <p>🟨 Landing Page Content: 30%</p>
           </div>
         </div>
       </div>

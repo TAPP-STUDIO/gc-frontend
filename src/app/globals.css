@@ -22,6 +22,7 @@ body {
   --background-rgb: 21, 21, 21;
   --primary-color: #F9D523;
   --dark-bg: #151515;
+  --teal-accent: #14B8A6;
 }
 
 /* Animované pozadí pouze pro hero */
@@ -1151,6 +1152,219 @@ body {
     border: 1px solid #000;
     background: #fff;
     color: #000;
+  }
+}
+
+/* ==============================
+   PREMIUM LANDING PAGE BUTTONS
+   ============================== */
+
+/* Verified Badge & Premium Buttons */
+.verified-badge {
+  background: linear-gradient(135deg, #B29819 0%, #F9D523 50%, #E6C547 100%);
+  color: #151515;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-radius: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 8px 32px rgba(249, 213, 35, 0.3),
+    inset 0 2px 4px rgba(255, 255, 255, 0.3),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateZ(0);
+  position: relative;
+  overflow: hidden;
+}
+
+.verified-badge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.6s;
+}
+
+.verified-badge:hover::before {
+  left: 100%;
+}
+
+.verified-badge:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 
+    0 12px 40px rgba(249, 213, 35, 0.4),
+    inset 0 2px 4px rgba(255, 255, 255, 0.4),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.15),
+    0 0 0 3px rgba(20, 184, 166, 0.3); /* Teal glow */
+  border-color: rgba(20, 184, 166, 0.4);
+}
+
+.verified-badge:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Premium CTA Button (Sign Up) */
+.cta-button-premium {
+  background: linear-gradient(135deg, #B29819 0%, #F9D523 50%, #E6C547 100%);
+  color: #151515;
+  font-weight: 700;
+  border-radius: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(16px);
+  box-shadow: 
+    0 8px 32px rgba(249, 213, 35, 0.25),
+    inset 0 1px 2px rgba(255, 255, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateZ(0);
+}
+
+/* Shine effect */
+.cta-button-premium::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.7s ease;
+}
+
+.cta-button-premium:hover::before {
+  left: 100%;
+}
+
+/* Hover state with teal accent */
+.cta-button-premium:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 
+    0 16px 48px rgba(249, 213, 35, 0.4),
+    0 8px 16px rgba(20, 184, 166, 0.3), /* Teal shadow */
+    inset 0 2px 4px rgba(255, 255, 255, 0.4),
+    0 0 0 3px rgba(20, 184, 166, 0.5); /* Teal ring */
+  border-color: rgba(20, 184, 166, 0.6);
+  background: linear-gradient(135deg, #B29819 0%, #F9D523 30%, #14B8A6 70%, #E6C547 100%);
+}
+
+.cta-button-premium:active {
+  transform: translateY(-1px) scale(1.01);
+}
+
+/* Glass CTA Button (alternative style) */
+.cta-button-glass {
+  background: rgba(249, 213, 35, 0.1);
+  border: 2px solid rgba(249, 213, 35, 0.3);
+  color: #F9D523;
+  font-weight: 600;
+  border-radius: 1rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 2px rgba(255, 255, 255, 0.1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-button-glass::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(20, 184, 166, 0.0) 0%, rgba(20, 184, 166, 0.1) 100%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  border-radius: inherit;
+}
+
+.cta-button-glass:hover {
+  transform: translateY(-2px) scale(1.02);
+  border-color: rgba(20, 184, 166, 0.6);
+  color: #14B8A6;
+  box-shadow: 
+    0 12px 40px rgba(20, 184, 166, 0.25),
+    0 0 0 3px rgba(20, 184, 166, 0.3),
+    inset 0 2px 4px rgba(255, 255, 255, 0.15);
+  background: rgba(20, 184, 166, 0.05);
+}
+
+.cta-button-glass:hover::after {
+  opacity: 1;
+}
+
+/* Additional premium variants */
+.btn-premium-outline {
+  background: transparent;
+  border: 2px solid;
+  border-image: linear-gradient(135deg, #F9D523, #14B8A6) 1;
+  color: #F9D523;
+  font-weight: 600;
+  border-radius: 1rem;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.btn-premium-outline:hover {
+  color: #14B8A6;
+  background: rgba(20, 184, 166, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(20, 184, 166, 0.3);
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .verified-badge {
+    font-size: 0.75rem;
+    padding: 0.6rem 1.5rem;
+    border-radius: 0.75rem;
+  }
+  
+  .cta-button-premium,
+  .cta-button-glass {
+    font-size: 0.9rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
+  }
+}
+
+/* Focus states for accessibility */
+.verified-badge:focus,
+.cta-button-premium:focus,
+.cta-button-glass:focus {
+  outline: none;
+  box-shadow: 
+    0 0 0 4px rgba(20, 184, 166, 0.4),
+    0 8px 32px rgba(249, 213, 35, 0.3);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .verified-badge,
+  .cta-button-premium,
+  .cta-button-glass {
+    transition: none;
+  }
+  
+  .verified-badge::before,
+  .cta-button-premium::before,
+  .cta-button-glass::after {
+    transition: none;
+  }
+  
+  .verified-badge:hover,
+  .cta-button-premium:hover,
+  .cta-button-glass:hover {
+    transform: none;
   }
 }
 
