@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { VerifiedBadge, PremiumCTA, GlassCTA } from '../ui/premium-button';
+import { VerifiedBadge } from '../ui/premium-button';
 
 // Pure 3D Card GIF Component
 const Card3DGIF = () => {
@@ -30,7 +30,7 @@ export const Hero = () => {
     <section className="min-h-screen bg-black pt-20 lg:pt-24 relative overflow-hidden">
       {/* SVG Background - 75% size */}
       <div className="absolute inset-0 z-0 overflow-visible">
-        <div className="absolute inset-0 transform scale-75 origin-center">
+        <div className="absolute inset-0 transform scale-85 origin-center">
           <Image
             src="/backgrounds/hero.svg"
             alt="Hero Background"
@@ -68,38 +68,9 @@ export const Hero = () => {
               </VerifiedBadge>
             </div>
 
-            {/* CTA Buttons Row */}
-            <div className="flex flex-col sm:flex-row gap-4 lg:gap-6">
-              <PremiumCTA 
-                size="lg"
-                onClick={() => window.open('/dashboard', '_blank')}
-              >
-                Get Your Card
-              </PremiumCTA>
-              
-              <GlassCTA 
-                size="lg"
-                href="#ecosystem"
-              >
-                Learn More
-              </GlassCTA>
-            </div>
+            
 
-            {/* Trust Indicators */}
-            <div className="flex flex-wrap items-center gap-6 pt-4">
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="text-sm text-white/60">Live Trading</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                <span className="text-sm text-white/60">24/7 Support</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                <span className="text-sm text-white/60">Secured Wallet</span>
-              </div>
-            </div>
+            
 
             {/* Statistics */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 lg:gap-12">

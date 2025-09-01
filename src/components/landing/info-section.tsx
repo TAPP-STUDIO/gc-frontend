@@ -1,11 +1,16 @@
 'use client';
 
-import React, { useState } from 'react';
-import Image from 'next/image';
+import React, { useState, useRef, useEffect } from 'react';
+
 
 export const InfoSection = () => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const benefits = [
     'Lifetime access to the Gavlik Capital portfolio, news and analysis.',
@@ -14,29 +19,122 @@ export const InfoSection = () => {
     'Fee bonus.'
   ];
 
+  // Video event handlers
   const toggleVideo = () => {
-    setIsVideoPlaying(!isVideoPlaying);
+    if (videoRef.current) {
+      if (isVideoPlaying) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play();
+      }
+      setIsVideoPlaying(!isVideoPlaying);
+    }
+  };
+
+  const handleVideoClick = () => {
+    toggleVideo();
   };
 
   const toggleMute = () => {
-    setIsMuted(!isMuted);
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
+    }
   };
+
+  const toggleFullscreen = () => {
+    if (containerRef.current) {
+      if (!isFullscreen) {
+        if (containerRef.current.requestFullscreen) {
+          containerRef.current.requestFullscreen();
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+      setIsFullscreen(!isFullscreen);
+    }
+  };
+
+  const handleTimeUpdate = () => {
+    if (videoRef.current) {
+      setCurrentTime(videoRef.current.currentTime);
+    }
+  };
+
+  const handleLoadedMetadata = () => {
+    if (videoRef.current) {
+      setDuration(videoRef.current.duration);
+      // Nastavit preview na 1 sekundu
+      videoRef.current.currentTime = 1;
+    }
+  };
+
+  const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (videoRef.current && duration > 0) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const pos = (e.clientX - rect.left) / rect.width;
+      videoRef.current.currentTime = pos * duration;
+    }
+  };
+
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  };
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (video) {
+      video.addEventListener('timeupdate', handleTimeUpdate);
+      video.addEventListener('loadedmetadata', handleLoadedMetadata);
+      
+      // Nastavit preview na 1 sekundu po načtení
+      const handleCanPlay = () => {
+        video.currentTime = 1;
+      };
+      video.addEventListener('canplay', handleCanPlay);
+      
+      return () => {
+        video.removeEventListener('timeupdate', handleTimeUpdate);
+        video.removeEventListener('loadedmetadata', handleLoadedMetadata);
+        video.removeEventListener('canplay', handleCanPlay);
+      };
+    }
+  }, []);
 
   return (
     <section className="relative min-h-screen py-20 lg:py-32 overflow-hidden bg-black">
-      {/* SVG Background */}
-      <div className="absolute inset-0 z-0">
-        <Image
-          src="/backgrounds/info.svg"
-          alt="Info Background"
-          fill
-          className="object-cover"
-          priority
-        />
-      </div>
+      {/* Background - vše inline bez globals.css */}
+      <div 
+        className="absolute inset-0 z-0"
+        style={{ 
+          backgroundImage: "url('/backgrounds/info.png')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center center',
+          backgroundRepeat: 'no-repeat',
+          width: '100%',
+          height: '100%',
+          minWidth: '100vw',
+          minHeight: '100vh'
+        }}
+      ></div>
+
+      {/* CSS pro ultra wide fix - přidáno inline */}
+      <style jsx>{`
+        @media (min-width: 2560px) {
+          .ultra-wide-bg {
+            background-size: cover !important;
+            background-position: center center !important;
+            background-repeat: no-repeat !important;
+          }
+        }
+      `}</style>
 
       {/* Dark overlay for better text readability */}
-      <div className="absolute inset-0 bg-black/70 z-10"></div>
+      <div className="absolute inset-0 bg-black/40 z-10"></div>
 
       <div className="container mx-auto px-4 lg:px-8 relative z-20">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center min-h-[80vh]">
@@ -87,56 +185,58 @@ export const InfoSection = () => {
             </div>
           </div>
 
-          {/* Right Side - Video Player */}
+          {/* Right Side - Video Player - VĚTŠÍ VELIKOST */}
           <div className="flex justify-center lg:justify-end">
-            <div className="relative w-full max-w-lg">
+            <div className="relative w-full max-w-2xl">
               {/* Video Container */}
-              <div className="relative aspect-video bg-gray-900 rounded-2xl overflow-hidden shadow-2xl border border-gray-700">
-                {/* Video Background/Poster */}
-                <div className="absolute inset-0 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
-                  {/* Gavlik Capital Logo */}
-                  <div className="text-center space-y-4">
-                    <div className="w-24 h-24 mx-auto">
-                      {/* Golden G Logo - simplified version */}
-                      <div className="w-full h-full rounded-full bg-gradient-to-br from-[#F9D523] to-[#d4b01c] flex items-center justify-center shadow-lg">
-                        <span className="text-black text-4xl font-bold">G</span>
-                      </div>
-                    </div>
-                    <div className="text-[#F9D523] text-xl md:text-2xl font-bold">
-                      GavlikCapital
-                    </div>
-                  </div>
+              <div 
+                ref={containerRef}
+                className="relative aspect-video bg-gray-900 rounded-2xl overflow-hidden shadow-2xl border border-gray-700 group"
+              >
+                {/* Skutečné video - KLIKATELNÉ */}
+                <video
+                  ref={videoRef}
+                  className="w-full h-full object-cover cursor-pointer"
+                  muted={isMuted}
+                  onEnded={() => setIsVideoPlaying(false)}
+                  onClick={handleVideoClick}
+                  poster="/backgrounds/info.png"
+                  preload="metadata"
+                >
+                  <source src="/videos/intro.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
 
-                  {/* Play Button Overlay */}
+                {/* Play Button Overlay - zobrazí se pouze když video nehraje */}
+                {!isVideoPlaying && (
                   <button
                     onClick={toggleVideo}
-                    className="absolute inset-0 bg-black/30 hover:bg-black/40 transition-colors duration-300 flex items-center justify-center group"
+                    className="absolute inset-0 bg-black/30 hover:bg-black/40 transition-colors duration-300 flex items-center justify-center group z-10 pointer-events-auto"
                   >
                     <div className="w-16 h-16 bg-white/90 hover:bg-white rounded-full flex items-center justify-center transition-all duration-300 transform group-hover:scale-110 shadow-lg">
-                      {isVideoPlaying ? (
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-black">
-                          <rect x="6" y="4" width="4" height="16" fill="currentColor"/>
-                          <rect x="14" y="4" width="4" height="16" fill="currentColor"/>
-                        </svg>
-                      ) : (
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-black ml-1">
-                          <polygon points="5,3 19,12 5,21" fill="currentColor"/>
-                        </svg>
-                      )}
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-black ml-1">
+                        <polygon points="5,3 19,12 5,21" fill="currentColor"/>
+                      </svg>
                     </div>
                   </button>
-                </div>
+                )}
 
-                {/* Video Controls */}
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                {/* Video Controls - zobrazí se při hover nebo když video hraje */}
+                <div className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 transition-opacity duration-300 ${isVideoPlaying ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} pointer-events-auto z-20`}>
                   {/* Progress Bar */}
                   <div className="mb-3">
-                    <div className="w-full bg-white/20 rounded-full h-1">
-                      <div className="bg-[#F9D523] h-1 rounded-full w-full"></div>
+                    <div 
+                      className="w-full bg-white/20 rounded-full h-1 cursor-pointer"
+                      onClick={handleProgressClick}
+                    >
+                      <div 
+                        className="bg-[#F9D523] h-1 rounded-full transition-all duration-100"
+                        style={{ width: `${duration > 0 ? (currentTime / duration) * 100 : 0}%` }}
+                      ></div>
                     </div>
                     <div className="flex justify-between items-center mt-1">
-                      <span className="text-white text-xs">0:55</span>
-                      <span className="text-white/60 text-xs">0:55</span>
+                      <span className="text-white text-xs">{formatTime(currentTime)}</span>
+                      <span className="text-white/60 text-xs">{formatTime(duration)}</span>
                     </div>
                   </div>
 
@@ -144,7 +244,10 @@ export const InfoSection = () => {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <button
-                        onClick={toggleVideo}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleVideo();
+                        }}
                         className="text-white hover:text-[#F9D523] transition-colors"
                       >
                         {isVideoPlaying ? (
@@ -162,7 +265,10 @@ export const InfoSection = () => {
 
                     <div className="flex items-center gap-3">
                       <button
-                        onClick={toggleMute}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleMute();
+                        }}
                         className="text-white hover:text-[#F9D523] transition-colors"
                       >
                         {isMuted ? (
@@ -180,20 +286,18 @@ export const InfoSection = () => {
                         )}
                       </button>
 
-                      <button className="text-white hover:text-[#F9D523] transition-colors">
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleFullscreen();
+                        }}
+                        className="text-white hover:text-[#F9D523] transition-colors"
+                      >
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                           <polyline points="15,3 21,3 21,9"/>
                           <polyline points="9,21 3,21 3,15"/>
                           <line x1="21" y1="3" x2="14" y2="10"/>
                           <line x1="3" y1="21" x2="10" y2="14"/>
-                        </svg>
-                      </button>
-
-                      <button className="text-white hover:text-[#F9D523] transition-colors">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <circle cx="12" cy="12" r="1"/>
-                          <circle cx="19" cy="12" r="1"/>
-                          <circle cx="5" cy="12" r="1"/>
                         </svg>
                       </button>
                     </div>

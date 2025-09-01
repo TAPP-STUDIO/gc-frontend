@@ -11,7 +11,6 @@ export const Ecosystem = () => {
       id: 1,
       name: 'GC Cards',
       image: '/cards/strat.png',
-      color: 'from-[#F9D523] to-[#e3c320]',
       button: {
         type: 'link',
         text: 'OpenSea',
@@ -22,7 +21,6 @@ export const Ecosystem = () => {
       id: 2,
       name: 'BTC BOT',
       image: '/cards/btc.png',
-      color: 'from-emerald-400 to-teal-500',
       button: {
         type: 'link',
         text: 'OpenSea',
@@ -33,7 +31,6 @@ export const Ecosystem = () => {
       id: 3,
       name: 'ALGO Trader',
       image: '/cards/algo.png',
-      color: 'from-pink-400 to-rose-500',
       button: {
         type: 'date',
         text: '05 / 2023',
@@ -44,10 +41,21 @@ export const Ecosystem = () => {
 
   return (
     <section className="py-20 lg:py-32 bg-black relative overflow-hidden">
-      {/* Background Effects */}
-      <div className="absolute inset-0 bg-gradient-to-br from-teal-900/10 via-transparent to-transparent"></div>
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-teal-600/5 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-emerald-600/5 rounded-full blur-3xl"></div>
+      {/* Hero-style SVG Background - větší o 1/3 (100% místo 75%) */}
+      <div className="absolute inset-0 z-0 overflow-visible">
+        <div className="absolute inset-0 transform scale-100 origin-center">
+          <Image
+            src="/backgrounds/hero.svg"
+            alt="Ecosystem Background"
+            fill
+            className="object-contain"
+            priority
+          />
+        </div>
+      </div>
+
+      {/* Dark overlay jako v hero */}
+      <div className="absolute inset-0 bg-black/40 z-10"></div>
       
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
         {/* Header */}
@@ -60,9 +68,9 @@ export const Ecosystem = () => {
           </p>
         </div>
 
-        {/* Cards Grid */}
+        {/* Cards Grid - jen simple scale hover */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 max-w-7xl mx-auto">
-          {ecosystemItems.map((item, index) => (
+          {ecosystemItems.map((item) => (
             <div
               key={item.id}
               className="group relative text-center"
@@ -76,12 +84,14 @@ export const Ecosystem = () => {
                 </h3>
               </div>
 
-              {/* Simple Card Image Container */}
+              {/* Simple Card Container - jen scale hover */}
               <div className="relative w-full max-w-sm mx-auto mb-8">
                 <div className={`
-                  relative aspect-[2/3] rounded-3xl overflow-hidden transition-all duration-500 cursor-pointer
-                  ${hoveredCard === item.id ? 'scale-110 shadow-2xl' : 'hover:scale-105'}
-                `}>
+                  relative aspect-[2/3] rounded-3xl overflow-hidden transition-all duration-300 cursor-pointer
+                  ${hoveredCard === item.id ? 'scale-105' : 'scale-100'}
+                `}
+                
+                >
                   <Image
                     src={item.image}
                     alt={item.name}
@@ -89,42 +99,23 @@ export const Ecosystem = () => {
                     className="object-cover"
                     priority
                   />
-                  
-                  {/* Subtle hover overlay */}
-                  <div className={`
-                    absolute inset-0 transition-opacity duration-500
-                    ${hoveredCard === item.id 
-                      ? `bg-gradient-to-br ${item.color} opacity-10` 
-                      : 'opacity-0'
-                    }
-                  `}></div>
                 </div>
               </div>
 
               {/* Button */}
               <div className="flex justify-center">
                 {item.button.type === 'link' ? (
-                  <button className="bg-gradient-to-r from-[#B29819] to-[#F9D523] hover:from-[#A08616] hover:to-[#e3c320] text-black font-bold px-10 py-4 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-2xl backdrop-blur-sm border border-white/10">
+                  <button className="bg-gradient-to-r from-[#B29819] to-[#F9D523] hover:from-[#A08616] hover:to-[#e3c320] text-black font-bold px-10 py-4 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-2xl">
                     {item.button.text}
                   </button>
                 ) : (
-                  <div className="px-10 py-4 rounded-2xl border-2 border-white/30 text-white font-bold transition-all duration-300 hover:border-white/50 bg-white/10 backdrop-blur-md hover:bg-white/20 shadow-xl">
+                  <div className="px-10 py-4 rounded-2xl border-2 border-white/30 text-white font-bold transition-all duration-300 hover:border-white/50 shadow-xl">
                     {item.button.text}
                   </div>
                 )}
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Call to Action */}
-        <div className="text-center mt-16 lg:mt-24">
-          <p className="text-white/60 text-lg mb-8">
-            Join the ecosystem and start building your crypto portfolio today
-          </p>
-          <button className="bg-gradient-to-r from-[#B29819] to-[#F9D523] hover:from-[#A08616] hover:to-[#e3c320] text-black font-bold px-10 py-5 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-2xl backdrop-blur-sm border border-white/10">
-            Explore All Projects
-          </button>
         </div>
       </div>
     </section>

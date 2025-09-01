@@ -1,11 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, {  } from 'react';
 import Image from 'next/image';
 
 export const Roadmap = () => {
-  const [hoveredStep, setHoveredStep] = useState<number | null>(null);
-
   const roadmapSteps = [
     {
       id: 1,
@@ -53,7 +51,7 @@ export const Roadmap = () => {
 
   return (
     <section className="relative min-h-screen py-20 lg:py-32 overflow-hidden">
-      {/* Background Image */}
+      {/* Background Image - lehčí overlays pro viditelnost */}
       <div className="absolute inset-0 z-0">
         <Image
           src="/backgrounds/image1.png"
@@ -62,10 +60,8 @@ export const Roadmap = () => {
           className="object-cover"
           priority
         />
-        {/* Dark overlay for better text readability */}
-        <div className="absolute inset-0 bg-black/70"></div>
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-black/50 to-black/70"></div>
+        {/* Lehčí overlay pro lepší viditelnost pozadí */}
+        <div className="absolute inset-0 bg-black/40"></div>
       </div>
 
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
@@ -86,13 +82,8 @@ export const Roadmap = () => {
             <div className="hidden lg:block absolute left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#F9D523] via-[#F9D523]/50 to-transparent"></div>
             {/* Left Column */}
             <div className="space-y-6">
-              {roadmapSteps.slice(0, 4).map((step, index) => (
-                <div
-                  key={step.id}
-                  className="relative"
-                  onMouseEnter={() => setHoveredStep(step.id)}
-                  onMouseLeave={() => setHoveredStep(null)}
-                >
+              {roadmapSteps.slice(0, 4).map((step) => (
+                <div key={step.id} className="relative">
                   {/* Mobile Layout */}
                   <div className="lg:hidden">
                     <div className="flex flex-col items-center gap-4 mb-4">
@@ -140,13 +131,8 @@ export const Roadmap = () => {
 
             {/* Right Column */}
             <div className="space-y-6">
-              {roadmapSteps.slice(4, 7).map((step, index) => (
-                <div
-                  key={step.id}
-                  className="relative"
-                  onMouseEnter={() => setHoveredStep(step.id)}
-                  onMouseLeave={() => setHoveredStep(null)}
-                >
+              {roadmapSteps.slice(4, 7).map((step) => (
+                <div key={step.id} className="relative">
                   {/* Mobile Layout */}
                   <div className="lg:hidden">
                     <div className="flex flex-col items-center gap-4 mb-4">
