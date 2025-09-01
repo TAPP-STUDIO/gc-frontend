@@ -7,6 +7,8 @@ import {
   InfoSection, 
   Ecosystem, 
   Roadmap, 
+  VipClub,
+  Team,
   FAQ, 
   Footer 
 } from '@/components/landing';
@@ -19,6 +21,8 @@ export default function MainPage() {
       <InfoSection />
       <Ecosystem />
       <Roadmap />
+      <VipClub />
+      <Team />
       <FAQ />
       <Footer />
     </div>

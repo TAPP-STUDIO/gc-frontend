@@ -78,7 +78,7 @@ export const FAQ = () => {
                     </span>
                     <div className="flex-shrink-0">
                       <svg
-                        className={`w-6 h-6 text-[#F9D523] transform transition-transform duration-300 ${
+                        className={`w-6 h-6 text-white transform transition-transform duration-300 ${
                           openFaq === faq.id ? 'rotate-180' : ''
                         }`}
                         fill="none"
@@ -124,7 +124,7 @@ export const FAQ = () => {
                     </span>
                     <div className="flex-shrink-0">
                       <svg
-                        className={`w-6 h-6 text-[#F9D523] transform transition-transform duration-300 ${
+                        className={`w-6 h-6 text-white transform transition-transform duration-300 ${
                           openFaq === faq.id ? 'rotate-180' : ''
                         }`}
                         fill="none"

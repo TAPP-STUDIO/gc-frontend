@@ -3,5 +3,7 @@ export { Hero } from './hero';
 export { InfoSection } from './info-section';
 export { Ecosystem } from './ecosystem';
 export { Roadmap } from './roadmap';
+export { VipClub } from './vip-club';
+export { Team } from './team';
 export { FAQ } from './faq';
 export { Footer } from './footer';
