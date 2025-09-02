@@ -38,7 +38,7 @@ class AuthService {
   /**
    * Sign in with email and password
    */
-  async signIn(email: string, password: string): Promise<{ session?: CognitoUserSession; tokens?: AuthTokens; newPasswordRequired?: boolean; sessionData?: any }> {
+  async signIn(email: string, password: string): Promise<{ session?: CognitoUserSession; tokens?: AuthTokens; newPasswordRequired?: boolean; sessionData?: { userAttributes: Record<string, unknown>; requiredAttributes: string[]; cognitoUser: CognitoUser } }> {
     return new Promise((resolve, reject) => {
       const authenticationDetails = new AuthenticationDetails({
         Username: email,
@@ -94,7 +94,7 @@ class AuthService {
   async completeNewPasswordChallenge(
     cognitoUser: CognitoUser,
     newPassword: string,
-    userAttributes: any
+    userAttributes: Record<string, unknown>
   ): Promise<{ session: CognitoUserSession; tokens: AuthTokens }> {
     return new Promise((resolve, reject) => {
       // Remove fields that shouldn't be sent back

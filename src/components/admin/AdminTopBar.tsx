@@ -179,16 +179,6 @@ export default function AdminTopBar() {
               {showProfileMenu && (
                 <div className="absolute right-0 top-full mt-1 w-56 bg-[#151515]/95 backdrop-blur-md rounded-lg shadow-xl z-50 border border-[#333333]/50">
                   <div className="py-2">
-                    <div className="px-4 py-3 border-b border-[#333333]/50">
-                      <div className="text-white font-medium">{displayName}</div>
-                      <div className="text-[#666666] text-sm">{user?.email}</div>
-                      {isInAdminGroup && (
-                        <div className="flex items-center space-x-1 text-red-400 text-xs mt-1">
-                          <Shield className="w-3 h-3" />
-                          <span>gc_super_admins</span>
-                        </div>
-                      )}
-                    </div>
 
                     <Link
                       href="/admin/profile"

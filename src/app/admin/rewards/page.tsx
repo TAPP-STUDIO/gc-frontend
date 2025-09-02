@@ -5,7 +5,6 @@ import { Container, Stack, PageHeader } from '@/components/layout';
 import { EnhancedValueCard } from '@/components/cards';
 
 export default function RewardsAdminPage() {
-  const [selectedReward, setSelectedReward] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'pending' | 'scheduled' | 'history'>('pending');
 
   // Mock rewards data
@@ -204,7 +203,7 @@ export default function RewardsAdminPage() {
           <EnhancedValueCard
             title="Celkem Rozděleno"
             value={rewardsStats.totalDistributed}
-            formatter={(v) => `$${v.toLocaleString()}`}
+            formatter={(v) => `${Number(v).toLocaleString()}`}
             trend={{
               value: 23.5,
               direction: 'up',
@@ -216,14 +215,14 @@ export default function RewardsAdminPage() {
           <EnhancedValueCard
             title="Celkem Holderů"
             value={rewardsStats.totalHolders}
-            formatter={(v) => v.toLocaleString()}
+            formatter={(v) => Number(v).toLocaleString()}
             className="bg-gradient-to-br from-purple-500/10 to-purple-600/10 border-purple-500/20"
           />
           
           <EnhancedValueCard
             title="Průměrný ROI"
             value={rewardsStats.avgROI}
-            formatter={(v) => `${v.toFixed(1)}%`}
+            formatter={(v) => `${Number(v).toFixed(1)}%`}
             trend={{
               value: 2.1,
               direction: 'up',
@@ -326,7 +325,7 @@ export default function RewardsAdminPage() {
             ].map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
+                onClick={() => setActiveTab(tab.id as 'pending' | 'scheduled' | 'history')}
                 className={`flex-1 px-6 py-4 text-sm font-medium transition-colors ${
                   activeTab === tab.id
                     ? 'bg-[#F9D523] text-[#151515] border-b-2 border-[#F9D523]'

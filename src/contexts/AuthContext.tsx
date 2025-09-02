@@ -11,7 +11,7 @@ interface LoginResult {
   requiresNewPassword?: boolean;
   email?: string;
   challengeName?: string;
-  userAttributes?: any;
+  userAttributes?: Record<string, unknown>;
   requiredAttributes?: string[];
   session?: string;
 }
@@ -98,10 +98,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       // Check if it's a NEW_PASSWORD_REQUIRED challenge
       // Check both response.data and direct response for challenge
+      const responseWithChallenge = response as typeof response & { challengeName?: string; session?: string };
       if (!response.success && 
           (response.data?.challengeName === 'NEW_PASSWORD_REQUIRED' || 
            response.error?.includes('NEW_PASSWORD_REQUIRED') ||
-           (response as any).challengeName === 'NEW_PASSWORD_REQUIRED')) {
+           responseWithChallenge.challengeName === 'NEW_PASSWORD_REQUIRED')) {
         
         console.log('NEW_PASSWORD_REQUIRED detected in AuthContext'); // Debug
         
@@ -112,7 +113,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           challengeName: 'NEW_PASSWORD_REQUIRED',
           userAttributes: response.data?.challengeParam?.userAttributes,
           requiredAttributes: response.data?.challengeParam?.requiredAttributes,
-          session: response.data?.session || (response as any).session,
+          session: response.data?.session || responseWithChallenge.session,
           error: 'NEW_PASSWORD_REQUIRED',
         };
       }
@@ -150,12 +151,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           error: response.error || 'Login failed',
         };
       }
-    } catch (error: unknown) {
+    } catch (error) {
       console.error('Login error:', error);
       authService.signOut();
 
-      if (typeof error === 'object' && error !== null) {
-        const err = error as { code?: string; message?: string };
+      if (error instanceof Error) {
+        const err = error as Error & { code?: string };
         // Handle specific Cognito errors
         if (err.code === 'NotAuthorizedException') {
           return { success: false, error: 'Invalid email or password' };
@@ -220,7 +221,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           error: response.error || 'Failed to set new password',
         };
       }
-    } catch (error: unknown) {
+    } catch (error) {
       console.error('Complete new password error:', error);
       return {
         success: false,

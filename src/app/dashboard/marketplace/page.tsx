@@ -297,7 +297,7 @@ export default function MarketplacePage() {
                 {/* Premium badge */}
                 {nft.premium && (
                   <div className="absolute top-2 left-2">
-                    <Badge variant="outline" className="bg-[#F9D523] text-black text-xs">
+                    <Badge className="bg-[#F9D523] text-black text-xs border border-[#F9D523]">
                       PREMIUM
                     </Badge>
                   </div>

@@ -110,8 +110,9 @@ export default function AdminLoginPage() {
         console.log('NEW_PASSWORD_REQUIRED detected'); // Debug log
         console.log('Result data:', result); // Debug log
         // Store session if available
-        if ((result as any).session) {
-          setSessionData((result as any).session);
+        const resultWithSession = result as { requiresNewPassword?: boolean; error?: string; success?: boolean; session?: string };
+        if (resultWithSession.session) {
+          setSessionData(resultWithSession.session);
         }
         // Reset password inputs when switching to new password form
         setNewPassword('');

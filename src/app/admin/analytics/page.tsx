@@ -164,23 +164,57 @@ export default function AnalyticsAdminPage() {
     }
   };
 
-  const getChartColor = () => {
+  const getChartTitle = () => {
     switch (selectedMetric) {
-      case 'users': return '#3B82F6'; // blue
-      case 'revenue': return '#10B981'; // green
-      case 'nfts': return '#F59E0B'; // yellow
-      case 'gas': return '#EF4444'; // red
-      default: return '#3B82F6';
+      case 'users': return 'User Growth';
+      case 'revenue': return 'Revenue Trend';
+      case 'nfts': return 'NFTs Minted';
+      case 'gas': return 'Gas Price History';
+      default: return 'Analytics';
     }
   };
 
-  const formatValue = (value: number, metric: string) => {
-    switch (metric) {
-      case 'revenue': return `$${value.toLocaleString()}`;
-      case 'gas': return `${value} gwei`;
-      default: return value.toLocaleString();
+  const getMinMaxValues = (data: Array<{ name: string; value: number }>) => {
+    if (data.length === 0) return { min: 0, max: 100 };
+    const values = data.map(d => d.value);
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    // Add some padding to the chart
+    const padding = (max - min) * 0.1;
+    return {
+      min: Math.floor(Math.max(0, min - padding)),
+      max: Math.ceil(max + padding)
+    };
+  };
+
+  const getCurrentValueAndMonth = (data: Array<{ name: string; value: number }>) => {
+    if (data.length === 0) return { value: 0, month: '' };
+    const lastItem = data[data.length - 1];
+    return {
+      value: lastItem.value,
+      month: lastItem.name
+    };
+  };
+
+  const getTimeframeValue = () => {
+    switch (selectedTimeRange) {
+      case '7d': return 'weekly';
+      case '30d': return 'monthly';
+      case '90d': return 'monthly';
+      case '1y': return 'yearly';
+      default: return 'monthly';
     }
   };
+
+  const handleTimeframeChange = (value: string) => {
+    switch (value) {
+      case 'weekly': setSelectedTimeRange('7d'); break;
+      case 'monthly': setSelectedTimeRange('30d'); break;
+      case 'yearly': setSelectedTimeRange('1y'); break;
+      default: setSelectedTimeRange('30d');
+    }
+  }
+
 
   const handleExport = (type: 'csv' | 'json' | 'pdf') => {
     console.log(`Exporting analytics as ${type}`);
@@ -269,7 +303,7 @@ export default function AnalyticsAdminPage() {
                   {/* Metric Selector */}
                   <select
                     value={selectedMetric}
-                    onChange={(e) => setSelectedMetric(e.target.value as any)}
+                    onChange={(e) => setSelectedMetric(e.target.value as 'users' | 'revenue' | 'nfts' | 'gas')}
                     className="bg-[#1a1a1a] border border-[#333333] rounded-lg px-3 py-1 text-white text-sm focus:border-[#F9D523] focus:outline-none"
                   >
                     <option value="users">Users</option>
@@ -281,7 +315,7 @@ export default function AnalyticsAdminPage() {
                   {/* Time Range Selector */}
                   <select
                     value={selectedTimeRange}
-                    onChange={(e) => setSelectedTimeRange(e.target.value as any)}
+                    onChange={(e) => setSelectedTimeRange(e.target.value as '7d' | '30d' | '90d' | '1y')}
                     className="bg-[#1a1a1a] border border-[#333333] rounded-lg px-3 py-1 text-white text-sm focus:border-[#F9D523] focus:outline-none"
                   >
                     <option value="7d">7 dní</option>
@@ -293,12 +327,26 @@ export default function AnalyticsAdminPage() {
               </div>
               
               <div className="h-80">
-                <LineChart 
-                  data={getChartData()}
-                  color={getChartColor()}
-                  showGrid={true}
-                  showTooltip={true}
-                />
+                {
+                  (() => {
+                    const chartData = getChartData();
+                    const { min, max } = getMinMaxValues(chartData);
+                    const { value: currentValue, month: currentMonth } = getCurrentValueAndMonth(chartData);
+                    
+                    return (
+                      <LineChart 
+                        title={getChartTitle()}
+                        data={chartData}
+                        currentValue={currentValue}
+                        currentMonth={currentMonth}
+                        minValue={min}
+                        maxValue={max}
+                        timeframe={getTimeframeValue()}
+                        onTimeframeChange={handleTimeframeChange}
+                      />
+                    );
+                  })()
+                }
               </div>
             </div>
           </div>

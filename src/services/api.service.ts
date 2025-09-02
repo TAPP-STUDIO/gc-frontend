@@ -1,8 +1,8 @@
-import axios, { AxiosInstance, AxiosError, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosError } from 'axios';
 import { apiConfig } from '@/config/cognito';
 import { authService } from './auth.service';
 
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean;
   data?: T;
   error?: string;
@@ -40,7 +40,7 @@ export interface LoginResponse {
   // NEW_PASSWORD_REQUIRED challenge fields
   challengeName?: string;
   challengeParam?: {
-    userAttributes: any;
+    userAttributes: Record<string, unknown>;
     requiredAttributes: string[];
   };
   message?: string;
@@ -79,7 +79,7 @@ class ApiService {
     this.api.interceptors.response.use(
       (response) => response,
       async (error: AxiosError) => {
-        const originalRequest = error.config as any;
+        const originalRequest = error.config as typeof error.config & { _retry?: boolean };
 
         if (error.response?.status === 401 && !originalRequest._retry) {
           originalRequest._retry = true;
@@ -93,7 +93,7 @@ class ApiService {
               originalRequest.headers['x-id-token'] = newTokens.idToken;
               return this.api(originalRequest);
             }
-          } catch (refreshError) {
+          } catch {
             // Refresh failed, redirect to login
             authService.signOut();
             if (typeof window !== 'undefined') {
@@ -118,26 +118,33 @@ class ApiService {
       console.log('Raw API response:', response.data); // Debug
       
       // If it's a NEW_PASSWORD_REQUIRED challenge, handle it specially
+      const responseData = response.data as LoginResponse & { challengeName?: string };
       if (response.data && !response.data.success && 
-          (response.data as any).challengeName === 'NEW_PASSWORD_REQUIRED') {
+          responseData.challengeName === 'NEW_PASSWORD_REQUIRED') {
         return {
           success: false,
-          data: response.data as any,
+          data: responseData,
           error: 'NEW_PASSWORD_REQUIRED'
         };
       }
       
       return response.data;
-    } catch (error: any) {
+    } catch (error) {
       console.error('API login error:', error); // Debug
       // Make sure we return a string error message
-      const errorMessage = typeof error.response?.data?.error === 'string' 
-        ? error.response.data.error 
-        : error.message || 'Login failed';
+      if (axios.isAxiosError(error)) {
+        const errorMessage = typeof error.response?.data?.error === 'string' 
+          ? error.response.data.error 
+          : error.message || 'Login failed';
+        return {
+          success: false,
+          error: errorMessage,
+          data: error.response?.data, // Include challenge data if present
+        };
+      }
       return {
         success: false,
-        error: errorMessage,
-        data: error.response?.data, // Include challenge data if present
+        error: 'Login failed',
       };
     }
   }
@@ -160,77 +167,107 @@ class ApiService {
       
       const response = await this.api.post<ApiResponse<LoginResponse>>('/auth/admin/complete-new-password', requestData);
       return response.data;
-    } catch (error: any) {
+    } catch (error) {
       console.error('Complete new password API error:', error);
-      console.error('Error response data:', error.response?.data);
-      console.error('Error response status:', error.response?.status);
-      console.error('Error response headers:', error.response?.headers);
-      // Make sure we return a string error message
-      const errorMessage = typeof error.response?.data?.error === 'string' 
-        ? error.response.data.error 
-        : error.message || 'Failed to set new password';
+      if (axios.isAxiosError(error)) {
+        console.error('Error response data:', error.response?.data);
+        console.error('Error response status:', error.response?.status);
+        console.error('Error response headers:', error.response?.headers);
+        // Make sure we return a string error message
+        const errorMessage = typeof error.response?.data?.error === 'string' 
+          ? error.response.data.error 
+          : error.message || 'Failed to set new password';
+        return {
+          success: false,
+          error: errorMessage,
+        };
+      }
       return {
         success: false,
-        error: errorMessage,
+        error: 'Failed to set new password',
       };
     }
   }
 
   async verifyAdminStatus(idToken: string): Promise<ApiResponse<{ isAdmin: boolean; user?: AdminUser }>> {
     try {
-      const response = await this.api.post<ApiResponse>('/auth/admin/verify-status', {
+      const response = await this.api.post<ApiResponse<{ isAdmin: boolean; user?: AdminUser }>>('/auth/admin/verify-status', {
         idToken,
       });
       return response.data;
-    } catch (error: any) {
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          success: false,
+          error: error.response?.data?.error || error.message || 'Verification failed',
+        };
+      }
       return {
         success: false,
-        error: error.response?.data?.error || error.message || 'Verification failed',
+        error: 'Verification failed',
       };
     }
   }
 
   async forgotPassword(email: string): Promise<ApiResponse> {
     try {
-      const response = await this.api.post<ApiResponse>('/auth/admin/forgot-password', {
+      const response = await this.api.post<ApiResponse<unknown>>('/auth/admin/forgot-password', {
         email,
       });
       return response.data;
-    } catch (error: any) {
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          success: false,
+          error: error.response?.data?.error || error.message || 'Request failed',
+        };
+      }
       return {
         success: false,
-        error: error.response?.data?.error || error.message || 'Request failed',
+        error: 'Request failed',
       };
     }
   }
 
   async resetPassword(email: string, code: string, newPassword: string): Promise<ApiResponse> {
     try {
-      const response = await this.api.post<ApiResponse>('/auth/admin/reset-password', {
+      const response = await this.api.post<ApiResponse<unknown>>('/auth/admin/reset-password', {
         email,
         code,
         newPassword,
       });
       return response.data;
-    } catch (error: any) {
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          success: false,
+          error: error.response?.data?.error || error.message || 'Reset failed',
+        };
+      }
       return {
         success: false,
-        error: error.response?.data?.error || error.message || 'Reset failed',
+        error: 'Reset failed',
       };
     }
   }
 
   async changePassword(oldPassword: string, newPassword: string): Promise<ApiResponse> {
     try {
-      const response = await this.api.post<ApiResponse>('/auth/admin/change-password', {
+      const response = await this.api.post<ApiResponse<unknown>>('/auth/admin/change-password', {
         oldPassword,
         newPassword,
       });
       return response.data;
-    } catch (error: any) {
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          success: false,
+          error: error.response?.data?.error || error.message || 'Change failed',
+        };
+      }
       return {
         success: false,
-        error: error.response?.data?.error || error.message || 'Change failed',
+        error: 'Change failed',
       };
     }
   }
@@ -238,84 +275,126 @@ class ApiService {
   // Admin dashboard endpoints
   async getDashboard(): Promise<ApiResponse> {
     try {
-      const response = await this.api.get<ApiResponse>('/admin/dashboard');
+      const response = await this.api.get<ApiResponse<unknown>>('/admin/dashboard');
       return response.data;
-    } catch (error: any) {
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          success: false,
+          error: error.response?.data?.error || error.message || 'Failed to load dashboard',
+        };
+      }
       return {
         success: false,
-        error: error.response?.data?.error || error.message || 'Failed to load dashboard',
+        error: 'Failed to load dashboard',
       };
     }
   }
 
-  async getUsers(params?: any): Promise<ApiResponse> {
+  async getUsers(params?: Record<string, unknown>): Promise<ApiResponse> {
     try {
-      const response = await this.api.get<ApiResponse>('/admin/users', { params });
+      const response = await this.api.get<ApiResponse<unknown>>('/admin/users', { params });
       return response.data;
-    } catch (error: any) {
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          success: false,
+          error: error.response?.data?.error || error.message || 'Failed to load users',
+        };
+      }
       return {
         success: false,
-        error: error.response?.data?.error || error.message || 'Failed to load users',
+        error: 'Failed to load users',
       };
     }
   }
 
   async getUser(userId: string): Promise<ApiResponse> {
     try {
-      const response = await this.api.get<ApiResponse>(`/admin/users/${userId}`);
+      const response = await this.api.get<ApiResponse<unknown>>(`/admin/users/${userId}`);
       return response.data;
-    } catch (error: any) {
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          success: false,
+          error: error.response?.data?.error || error.message || 'Failed to load user',
+        };
+      }
       return {
         success: false,
-        error: error.response?.data?.error || error.message || 'Failed to load user',
+        error: 'Failed to load user',
       };
     }
   }
 
-  async updateUser(userId: string, data: any): Promise<ApiResponse> {
+  async updateUser(userId: string, data: Record<string, unknown>): Promise<ApiResponse> {
     try {
-      const response = await this.api.put<ApiResponse>(`/admin/users/${userId}`, data);
+      const response = await this.api.put<ApiResponse<unknown>>(`/admin/users/${userId}`, data);
       return response.data;
-    } catch (error: any) {
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          success: false,
+          error: error.response?.data?.error || error.message || 'Failed to update user',
+        };
+      }
       return {
         success: false,
-        error: error.response?.data?.error || error.message || 'Failed to update user',
+        error: 'Failed to update user',
       };
     }
   }
 
   async deleteUser(userId: string): Promise<ApiResponse> {
     try {
-      const response = await this.api.delete<ApiResponse>(`/admin/users/${userId}`);
+      const response = await this.api.delete<ApiResponse<unknown>>(`/admin/users/${userId}`);
       return response.data;
-    } catch (error: any) {
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          success: false,
+          error: error.response?.data?.error || error.message || 'Failed to delete user',
+        };
+      }
       return {
         success: false,
-        error: error.response?.data?.error || error.message || 'Failed to delete user',
+        error: 'Failed to delete user',
       };
     }
   }
 
-  async distributeDividends(data: any): Promise<ApiResponse> {
+  async distributeDividends(data: Record<string, unknown>): Promise<ApiResponse> {
     try {
-      const response = await this.api.post<ApiResponse>('/admin/dividends/distribute', data);
+      const response = await this.api.post<ApiResponse<unknown>>('/admin/dividends/distribute', data);
       return response.data;
-    } catch (error: any) {
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          success: false,
+          error: error.response?.data?.error || error.message || 'Failed to distribute dividends',
+        };
+      }
       return {
         success: false,
-        error: error.response?.data?.error || error.message || 'Failed to distribute dividends',
+        error: 'Failed to distribute dividends',
       };
     }
   }
 
-  async getAnalytics(params?: any): Promise<ApiResponse> {
+  async getAnalytics(params?: Record<string, unknown>): Promise<ApiResponse> {
     try {
-      const response = await this.api.get<ApiResponse>('/admin/analytics', { params });
+      const response = await this.api.get<ApiResponse<unknown>>('/admin/analytics', { params });
       return response.data;
-    } catch (error: any) {
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          success: false,
+          error: error.response?.data?.error || error.message || 'Failed to load analytics',
+        };
+      }
       return {
         success: false,
-        error: error.response?.data?.error || error.message || 'Failed to load analytics',
+        error: 'Failed to load analytics',
       };
     }
   }
