@@ -130,26 +130,48 @@ class ApiService {
       return response.data;
     } catch (error: any) {
       console.error('API login error:', error); // Debug
+      // Make sure we return a string error message
+      const errorMessage = typeof error.response?.data?.error === 'string' 
+        ? error.response.data.error 
+        : error.message || 'Login failed';
       return {
         success: false,
-        error: error.response?.data?.error || error.message || 'Login failed',
+        error: errorMessage,
         data: error.response?.data, // Include challenge data if present
       };
     }
   }
 
-  async completeNewPassword(email: string, password: string, newPassword: string): Promise<ApiResponse<LoginResponse>> {
+  async completeNewPassword(email: string, password: string, newPassword: string, session?: string): Promise<ApiResponse<LoginResponse>> {
     try {
-      const response = await this.api.post<ApiResponse<LoginResponse>>('/auth/admin/complete-new-password', {
+      const requestData = {
         email,
         password,
         newPassword,
-      });
+        session,
+        userAttributes: {
+          given_name: email.split('@')[0],
+          family_name: 'Admin'
+          // Email is already provided, don't send it again
+        }
+      };
+      
+      console.log('Sending to backend:', requestData);
+      
+      const response = await this.api.post<ApiResponse<LoginResponse>>('/auth/admin/complete-new-password', requestData);
       return response.data;
     } catch (error: any) {
+      console.error('Complete new password API error:', error);
+      console.error('Error response data:', error.response?.data);
+      console.error('Error response status:', error.response?.status);
+      console.error('Error response headers:', error.response?.headers);
+      // Make sure we return a string error message
+      const errorMessage = typeof error.response?.data?.error === 'string' 
+        ? error.response.data.error 
+        : error.message || 'Failed to set new password';
       return {
         success: false,
-        error: error.response?.data?.error || error.message || 'Failed to set new password',
+        error: errorMessage,
       };
     }
   }

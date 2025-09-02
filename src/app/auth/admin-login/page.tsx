@@ -13,6 +13,11 @@ interface LoginFormData {
   password: string;
 }
 
+const defaultFormValues: LoginFormData = {
+  email: '',
+  password: ''
+};
+
 interface PasswordStrength {
   score: number;
   label: string;
@@ -43,13 +48,14 @@ export default function AdminLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [newPassword, setNewPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [requiresNewPassword, setRequiresNewPassword] = useState(false);
-  const [loginEmail, setLoginEmail] = useState('');
-  const [loginPassword, setLoginPassword] = useState('');
+  const [loginEmail, setLoginEmail] = useState<string>('');
+  const [loginPassword, setLoginPassword] = useState<string>('');
+  const [sessionData, setSessionData] = useState<string | null>(null);
   const [passwordStrength, setPasswordStrength] = useState<PasswordStrength>({ score: 0, label: '', color: '' });
   const [passwordsMatch, setPasswordsMatch] = useState(true);
   const router = useRouter();
@@ -59,7 +65,9 @@ export default function AdminLoginPage() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormData>();
+  } = useForm<LoginFormData>({
+    defaultValues: defaultFormValues
+  });
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -100,6 +108,14 @@ export default function AdminLoginPage() {
       if (result.requiresNewPassword || result.error === 'NEW_PASSWORD_REQUIRED') {
         // User needs to set a new password
         console.log('NEW_PASSWORD_REQUIRED detected'); // Debug log
+        console.log('Result data:', result); // Debug log
+        // Store session if available
+        if ((result as any).session) {
+          setSessionData((result as any).session);
+        }
+        // Reset password inputs when switching to new password form
+        setNewPassword('');
+        setConfirmPassword('');
         setRequiresNewPassword(true);
         setError(null);
       } else if (!result.success) {
@@ -142,13 +158,18 @@ export default function AdminLoginPage() {
     setIsSubmitting(true);
 
     try {
-      console.log('Calling completeNewPassword with:', { email: loginEmail, password: loginPassword });
-      const result = await completeNewPassword(loginEmail, loginPassword, newPassword);
+      console.log('Calling completeNewPassword with:', { email: loginEmail, password: loginPassword, session: sessionData });
+      const result = await completeNewPassword(loginEmail, loginPassword, newPassword, sessionData || undefined);
       
       console.log('CompleteNewPassword result:', result);
       
       if (!result.success) {
-        setError(result.error || 'Nepodařilo se nastavit nové heslo.');
+        // Check if it's the "waiting for admin approval" message
+        if (result.error?.includes('čeká na schválení') || result.error?.includes('gc_super_admins')) {
+          setError('Heslo bylo úspěšně změněno. Váš účet nyní čeká na schválení administrátorem. Prosím kontaktujte administrátora, aby vás přidal do skupiny gc_super_admins.');
+        } else {
+          setError(result.error || 'Nepodařilo se nastavit nové heslo.');
+        }
       }
       // If successful, the AuthContext will handle the redirect
     } catch (err) {
@@ -188,12 +209,12 @@ export default function AdminLoginPage() {
           </div>
 
           {/* New Password Form */}
-          <form onSubmit={handleNewPasswordSubmit} className="mt-8 space-y-6">
+          <form key="new-password-form" onSubmit={handleNewPasswordSubmit} className="mt-8 space-y-6">
             {error && (
               <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 flex items-start space-x-3">
                 <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
                 <div className="flex-1">
-                  <p className="text-sm text-red-400">{error}</p>
+                  <p className="text-sm text-red-400">{typeof error === 'string' ? error : 'Nastala chyba'}</p>
                 </div>
               </div>
             )}
@@ -212,7 +233,7 @@ export default function AdminLoginPage() {
                     type={showNewPassword ? 'text' : 'password'}
                     autoComplete="new-password"
                     value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
+                    onChange={(e) => setNewPassword(e.target.value || '')}
                     className={`
                       block w-full pl-10 pr-10 py-3 
                       bg-[#151515] border rounded-lg
@@ -222,8 +243,6 @@ export default function AdminLoginPage() {
                       ${error ? 'border-red-500' : 'border-[#333333]'}
                     `}
                     placeholder="••••••••"
-                    minLength={8}
-                    required
                   />
                   <button
                     type="button"
@@ -320,7 +339,7 @@ export default function AdminLoginPage() {
                     type={showConfirmPassword ? 'text' : 'password'}
                     autoComplete="new-password"
                     value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    onChange={(e) => setConfirmPassword(e.target.value || '')}
                     className={`
                       block w-full pl-10 pr-10 py-3 
                       bg-[#151515] border rounded-lg
@@ -330,8 +349,6 @@ export default function AdminLoginPage() {
                       ${!passwordsMatch && confirmPassword ? 'border-red-500' : 'border-[#333333]'}
                     `}
                     placeholder="••••••••"
-                    minLength={8}
-                    required
                   />
                   <button
                     type="button"
@@ -445,13 +462,13 @@ export default function AdminLoginPage() {
         </div>
 
         {/* Login Form */}
-        <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-6">
+        <form key="login-form" onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-6">
         {/* Error Alert */}
         {error && (
           <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 flex items-start space-x-3">
             <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
             <div className="flex-1">
-              <p className="text-sm text-red-400">{error}</p>
+              <p className="text-sm text-red-400">{typeof error === 'string' ? error : 'Nastala chyba při přihlašování'}</p>
             </div>
           </div>
         )}
@@ -474,6 +491,7 @@ export default function AdminLoginPage() {
                       message: 'Neplatný email',
                     },
                   })}
+                  id="email"
                   type="email"
                   autoComplete="email"
                   className={`
@@ -488,7 +506,7 @@ export default function AdminLoginPage() {
                 />
               </div>
               {errors.email && (
-                <p className="mt-1 text-sm text-red-400">{errors.email.message}</p>
+                <p className="mt-1 text-sm text-red-400">{typeof errors.email.message === 'string' ? errors.email.message : 'Email je povinný'}</p>
               )}
             </div>
 
@@ -509,6 +527,7 @@ export default function AdminLoginPage() {
                       message: 'Heslo musí mít alespoň 8 znaků',
                     },
                   })}
+                  id="password"
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="current-password"
                   className={`
@@ -534,7 +553,7 @@ export default function AdminLoginPage() {
                 </button>
               </div>
               {errors.password && (
-                <p className="mt-1 text-sm text-red-400">{errors.password.message}</p>
+                <p className="mt-1 text-sm text-red-400">{typeof errors.password.message === 'string' ? errors.password.message : 'Heslo je povinné'}</p>
               )}
             </div>
           </div>

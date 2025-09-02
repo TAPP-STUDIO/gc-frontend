@@ -13,6 +13,7 @@ interface LoginResult {
   challengeName?: string;
   userAttributes?: any;
   requiredAttributes?: string[];
+  session?: string;
 }
 
 interface AuthContextType {
@@ -22,7 +23,7 @@ interface AuthContextType {
   isLoading: boolean;
   isInAdminGroup: boolean;
   login: (email: string, password: string) => Promise<LoginResult>;
-  completeNewPassword: (email: string, password: string, newPassword: string) => Promise<LoginResult>;
+  completeNewPassword: (email: string, password: string, newPassword: string, session?: string) => Promise<LoginResult>;
   logout: () => void;
   refreshSession: () => Promise<boolean>;
   checkAdminAccess: () => Promise<boolean>;
@@ -111,6 +112,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           challengeName: 'NEW_PASSWORD_REQUIRED',
           userAttributes: response.data?.challengeParam?.userAttributes,
           requiredAttributes: response.data?.challengeParam?.requiredAttributes,
+          session: response.data?.session || (response as any).session,
           error: 'NEW_PASSWORD_REQUIRED',
         };
       }
@@ -178,12 +180,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const completeNewPassword = async (email: string, password: string, newPassword: string): Promise<LoginResult> => {
+  const completeNewPassword = async (email: string, password: string, newPassword: string, session?: string): Promise<LoginResult> => {
     try {
       setIsLoading(true);
 
       // Call backend API to complete new password challenge
-      const response = await apiService.completeNewPassword(email, password, newPassword);
+      const response = await apiService.completeNewPassword(email, password, newPassword, session);
 
       if (!response.success) {
         return {
