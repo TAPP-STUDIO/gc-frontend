@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
 import { LogOut, User, Settings, Shield, Bell, AlertTriangle, Home } from "lucide-react";
 
@@ -143,7 +144,7 @@ export default function AdminTopBar() {
                 {/* Admin Avatar */}
                 <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-red-600 rounded-full flex items-center justify-center">
                   {user?.avatar ? (
-                    <img src={user.avatar} alt={displayName} className="w-full h-full rounded-full" />
+                    <Image src={user.avatar} alt={displayName} width={32} height={32} className="w-full h-full rounded-full" />
                   ) : (
                     <User className="w-4 h-4 text-white" />
                   )}

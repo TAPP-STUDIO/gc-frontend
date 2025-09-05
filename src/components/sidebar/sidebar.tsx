@@ -66,7 +66,7 @@ export default function Sidebar({ isCollapsed = false,  }: SidebarProps) {
   }, []);
 
   useEffect(() => {
-    if (portfolioItems.length > 0 && isActive('/dashboard/portfolio')) {
+    if (portfolioItems.length > 0 && (pathname === '/dashboard/portfolio' || pathname?.startsWith('/dashboard/portfolio/'))) {
       setExpandedItems(prev => ({
         ...prev,
         portfolio: true

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import Logo from '../logo/logo';
 import { useState, useEffect } from 'react';
@@ -157,7 +157,7 @@ export default function AdminSidebar({ isCollapsed = false }: AdminSidebarProps)
                         >
                           <div className="flex items-center">
                             <span className="w-6 h-6 mr-3 flex items-center justify-center">
-                              <img
+                              <Image
                                 src={`/images/icons/${item.icon}`}
                                 alt={item.name}
                                 width={24}
@@ -196,7 +196,7 @@ export default function AdminSidebar({ isCollapsed = false }: AdminSidebarProps)
                           } hover:text-[#F9D523] transition-colors`}
                         >
                           <span className="w-6 h-6 mr-3 flex items-center justify-center">
-                            <img
+                            <Image
                               src={`/images/icons/${item.icon}`}
                               alt={item.name}
                               width={24}
@@ -361,7 +361,7 @@ export default function AdminSidebar({ isCollapsed = false }: AdminSidebarProps)
                       >
                         <div className="flex items-center">
                           <span className="w-6 h-6 mr-3 flex items-center justify-center">
-                            <img
+                            <Image
                               src={`/images/icons/${item.icon}`}
                               alt={item.name}
                               width={24}
@@ -401,7 +401,7 @@ export default function AdminSidebar({ isCollapsed = false }: AdminSidebarProps)
                         title={isCollapsed ? item.name : undefined}
                       >
                         <span className={`w-6 h-6 flex items-center justify-center ${!isCollapsed ? 'mr-3' : ''}`}>
-                          <img
+                          <Image
                             src={`/images/icons/${item.icon}`}
                             alt={item.name}
                             width={24}

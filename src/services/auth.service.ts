@@ -275,9 +275,15 @@ class AuthService {
    */
   async forgotPassword(email: string): Promise<{ message?: string; session?: string }> {
     return new Promise((resolve, reject) => {
+      const pool = getUserPool();
+      if (!pool) {
+        reject(new Error('Cognito User Pool not available'));
+        return;
+      }
+      
       const cognitoUser = new CognitoUser({
         Username: email,
-        Pool: userPool,
+        Pool: pool,
       });
 
       cognitoUser.forgotPassword({
@@ -296,9 +302,15 @@ class AuthService {
    */
   async confirmPassword(email: string, code: string, newPassword: string): Promise<{ message?: string }> {
     return new Promise((resolve, reject) => {
+      const pool = getUserPool();
+      if (!pool) {
+        reject(new Error('Cognito User Pool not available'));
+        return;
+      }
+      
       const cognitoUser = new CognitoUser({
         Username: email,
-        Pool: userPool,
+        Pool: pool,
       });
 
       cognitoUser.confirmPassword(code, newPassword, {
@@ -317,7 +329,13 @@ class AuthService {
    */
   async changePassword(oldPassword: string, newPassword: string): Promise<unknown> {
     return new Promise((resolve, reject) => {
-      const cognitoUser = userPool.getCurrentUser();
+      const pool = getUserPool();
+      if (!pool) {
+        reject(new Error('Cognito User Pool not available'));
+        return;
+      }
+      
+      const cognitoUser = pool.getCurrentUser();
 
       if (!cognitoUser) {
         reject(new Error('No authenticated user'));
