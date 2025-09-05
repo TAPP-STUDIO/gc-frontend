@@ -192,8 +192,8 @@ export const InfoSection = () => {
 
             {/* OpenSea Button */}
             <div className={`pt-4 animate-fade-in ${titleVisible ? 'visible animate-stagger-4' : ''}`}>
-              <button className="bg-gradient-to-r from-[#B29819] to-[#F9D523] text-white hover:text-black font-bold px-10 py-4 rounded-2xl transition-all duration-500 transform hover:scale-110 hover:shadow-[0_0_30px_rgba(249,213,35,0.4)] hover:bg-gradient-to-r hover:from-white hover:to-[#F9D523] shadow-2xl backdrop-blur-sm border border-white/10 text-lg group">
-                <span className="group-hover:text-black transition-colors duration-300">OpenSea</span>
+              <button className="unified-button unified-button-lg">
+                <span>OpenSea</span>
               </button>
             </div>
           </div>

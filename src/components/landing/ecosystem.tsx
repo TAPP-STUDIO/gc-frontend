@@ -112,12 +112,12 @@ export const Ecosystem = () => {
               {/* Button */}
               <div className="flex justify-center">
                 {item.button.type === 'link' ? (
-                  <button className="bg-gradient-to-r from-[#B29819] to-[#F9D523] text-white hover:text-black font-bold px-10 py-4 rounded-2xl transition-all duration-500 transform hover:scale-110 hover:shadow-[0_0_30px_rgba(249,213,35,0.4)] hover:bg-gradient-to-r hover:from-white hover:to-[#F9D523] shadow-2xl group">
-                    <span className="group-hover:text-black transition-colors duration-300">{item.button.text}</span>
+                  <button className="unified-button unified-button-lg">
+                    <span>{item.button.text}</span>
                   </button>
                 ) : (
-                  <div className="px-10 py-4 rounded-2xl border-2 border-white/30 text-white font-bold transition-all duration-300 hover:border-[#F9D523] hover:shadow-[0_0_20px_rgba(249,213,35,0.3)] shadow-xl">
-                    {item.button.text}
+                  <div className="unified-button unified-button-lg cursor-default">
+                    <span>{item.button.text}</span>
                   </div>
                 )}
               </div>

@@ -1288,168 +1288,105 @@ body {
 }
 
 /* ==============================
-   PREMIUM LANDING PAGE BUTTONS
+   UNIFIED LANDING PAGE BUTTONS
    ============================== */
 
-/* Verified Badge - NOVÝ ZLATÝ HOVER */
+/* Verified Badge - vždy žlutý, není klikací */
 .verified-badge {
   background: linear-gradient(135deg, #B29819 0%, #F9D523 50%, #E6C547 100%);
-  color: white;
-  font-weight: 800;
+  color: #151515;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   border-radius: 1rem;
   border: 2px solid rgba(255, 255, 255, 0.2);
   box-shadow: 
     0 8px 32px rgba(249, 213, 35, 0.3),
-    inset 0 2px 4px rgba(255, 255, 255, 0.3),
-    inset 0 -2px 4px rgba(0, 0, 0, 0.1);
+    inset 0 2px 4px rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(10px);
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s ease;
   transform: translateZ(0);
-  position: relative;
-  overflow: hidden;
-}
-
-.verified-badge::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-  transition: left 0.6s;
-}
-
-.verified-badge:hover::before {
-  left: 100%;
+  cursor: default;
 }
 
 .verified-badge:hover {
-  transform: translateY(-2px) scale(1.1);
+  transform: translateY(-1px) scale(1.02);
   box-shadow: 
-    0 0 30px rgba(249, 213, 35, 0.4),
-    0 12px 40px rgba(249, 213, 35, 0.3),
-    inset 0 2px 4px rgba(255, 255, 255, 0.4),
-    inset 0 -2px 4px rgba(0, 0, 0, 0.15);
-  background: linear-gradient(135deg, #ffffff 0%, #F9D523 50%, #E6C547 100%);
-  color: #151515;
+    0 12px 40px rgba(249, 213, 35, 0.4),
+    inset 0 2px 4px rgba(255, 255, 255, 0.4);
 }
 
-.verified-badge:active {
-  transform: translateY(0) scale(1.05);
+/* Verified Badge velikosti */
+.verified-badge-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
 }
 
-/* Premium CTA Button (Sign Up) - NOVÝ ZLATÝ HOVER */
-.cta-button-premium {
-  background: linear-gradient(135deg, #B29819 0%, #F9D523 50%, #E6C547 100%);
+.verified-badge-md {
+  padding: 0.75rem 1.25rem;
+  font-size: 0.875rem;
+}
+
+.verified-badge-lg {
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+}
+
+/* Základní jednotný styl pro všechna landing page tlačítka */
+.unified-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
   color: white;
-  font-weight: 700;
+  font-weight: 500; /* Méně tučné než font-bold */
   border-radius: 1rem;
-  border: 2px solid rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(16px);
-  box-shadow: 
-    0 8px 32px rgba(249, 213, 35, 0.25),
-    inset 0 1px 2px rgba(255, 255, 255, 0.3);
-  position: relative;
-  overflow: hidden;
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   transform: translateZ(0);
-}
-
-/* Shine effect */
-.cta-button-premium::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-  transition: left 0.7s ease;
-}
-
-.cta-button-premium:hover::before {
-  left: 100%;
-}
-
-/* NOVÝ ZLATÝ HOVER DESIGN */
-.cta-button-premium:hover {
-  transform: translateY(-2px) scale(1.1);
-  box-shadow: 
-    0 0 30px rgba(249, 213, 35, 0.4),
-    0 16px 48px rgba(249, 213, 35, 0.3),
-    inset 0 2px 4px rgba(255, 255, 255, 0.4);
-  background: linear-gradient(135deg, #ffffff 0%, #F9D523 50%, #E6C547 100%);
-  color: #151515;
-}
-
-.cta-button-premium:active {
-  transform: translateY(-1px) scale(1.05);
-}
-
-/* Glass CTA Button - NOVÝ ZLATÝ HOVER */
-.cta-button-glass {
-  background: rgba(249, 213, 35, 0.1);
-  border: 2px solid rgba(249, 213, 35, 0.3);
-  color: #F9D523;
-  font-weight: 600;
-  border-radius: 1rem;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.3),
-    inset 0 1px 2px rgba(255, 255, 255, 0.1);
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
 }
 
-.cta-button-glass::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, rgba(249, 213, 35, 0.0) 0%, rgba(249, 213, 35, 0.1) 100%);
-  opacity: 0;
-  transition: opacity 0.5s ease;
-  border-radius: inherit;
-}
-
-.cta-button-glass:hover {
-  transform: translateY(-2px) scale(1.1);
+.unified-button:hover {
+  transform: translateY(-2px) scale(1.05);
   border-color: #F9D523;
+  background: linear-gradient(135deg, #B29819 0%, #F9D523 50%, #E6C547 100%);
   color: #151515;
   box-shadow: 
     0 0 30px rgba(249, 213, 35, 0.4),
-    0 12px 40px rgba(249, 213, 35, 0.3),
-    inset 0 2px 4px rgba(255, 255, 255, 0.15);
-  background: linear-gradient(135deg, #B29819 0%, #F9D523 50%, #E6C547 100%);
+    0 12px 40px rgba(249, 213, 35, 0.3);
 }
 
-.cta-button-glass:hover::after {
-  opacity: 1;
+.unified-button:active {
+  transform: translateY(-1px) scale(1.02);
 }
 
-/* Additional premium variants - NOVÝ ZLATÝ HOVER */
-.btn-premium-outline {
-  background: transparent;
-  border: 2px solid #F9D523;
-  color: #F9D523;
-  font-weight: 600;
-  border-radius: 1rem;
-  backdrop-filter: blur(10px);
-  transition: all 0.5s ease;
+/* Varianta pro menší tlačítka */
+.unified-button-sm {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
 }
 
-.btn-premium-outline:hover {
+/* Varianta pro střední tlačítka */
+.unified-button-md {
+  padding: 1rem 2rem;
+  font-size: 1rem;
+}
+
+/* Varianta pro velká tlačítka */
+.unified-button-lg {
+  padding: 1.25rem 2.5rem;
+  font-size: 1.125rem;
+}
+
+/* Smooth text transition pro hover */
+.unified-button span {
+  transition: color 0.3s ease;
+}
+
+.unified-button:hover span {
   color: #151515;
-  background: linear-gradient(135deg, #B29819 0%, #F9D523 50%, #E6C547 100%);
-  transform: translateY(-2px) scale(1.1);
-  box-shadow: 0 0 30px rgba(249, 213, 35, 0.4);
 }
 
 /* Mobile responsive adjustments */

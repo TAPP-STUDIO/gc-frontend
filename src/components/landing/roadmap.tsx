@@ -227,10 +227,10 @@ export const Roadmap = () => {
             Experience the future of digital finance with our comprehensive ecosystem designed to secure, track, and grow your crypto investments.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
-            <button className="bg-gradient-to-r from-[#B29819] to-[#F9D523] text-white hover:text-black font-bold px-10 py-4 rounded-2xl transition-all duration-500 transform hover:scale-110 hover:shadow-[0_0_30px_rgba(249,213,35,0.4)] hover:bg-gradient-to-r hover:from-white hover:to-[#F9D523] shadow-2xl backdrop-blur-sm border border-white/10 group">
+            <button className="bg-gradient-to-r from-[#B29819] to-[#F9D523] text-white hover:text-black font-medium px-10 py-4 rounded-2xl transition-all duration-500 transform hover:scale-110 hover:shadow-[0_0_30px_rgba(249,213,35,0.4)] hover:bg-gradient-to-r hover:from-white hover:to-[#F9D523] shadow-2xl backdrop-blur-sm border border-white/10 group">
               <span className="group-hover:text-black transition-colors duration-300">Join Our Ecosystem</span>
             </button>
-            <button className="bg-white/10 backdrop-blur-md border-2 border-white/30 text-white font-bold px-10 py-4 rounded-2xl transition-all duration-500 transform hover:scale-110 hover:border-[#F9D523] hover:bg-gradient-to-r hover:from-[#B29819] hover:to-[#F9D523] hover:text-black shadow-xl group">
+            <button className="bg-white/10 backdrop-blur-md border-2 border-white/30 text-white font-medium px-10 py-4 rounded-2xl transition-all duration-500 transform hover:scale-110 hover:border-[#F9D523] hover:bg-gradient-to-r hover:from-[#B29819] hover:to-[#F9D523] hover:text-black shadow-xl group">
               <span className="group-hover:text-black transition-colors duration-300">View Whitepaper</span>
             </button>
           </div>

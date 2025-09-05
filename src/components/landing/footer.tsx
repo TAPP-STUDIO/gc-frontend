@@ -129,9 +129,9 @@ export const Footer = () => {
                   />
                   <button
                     type="submit"
-                    className="bg-gradient-to-r from-[#B29819] to-[#F9D523] hover:from-[#A08616] hover:to-[#e3c320] text-black font-bold px-8 py-3 rounded-2xl transition-all duration-300 shadow-2xl backdrop-blur-sm border border-white/10 transform hover:scale-105"
+                    className="unified-button unified-button-md"
                   >
-                    Subscribe
+                    <span>Subscribe</span>
                   </button>
                 </form>
               </div>

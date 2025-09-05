@@ -190,11 +190,11 @@ export const FAQ = () => {
             Still have questions? Join our community or contact our support team.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
-            <button className="bg-gradient-to-r from-[#B29819] to-[#F9D523] hover:from-[#A08616] hover:to-[#e3c320] text-white hover:text-black font-bold px-10 py-4 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-2xl backdrop-blur-sm border border-white/10">
-              Join Discord
+            <button className="unified-button unified-button-lg">
+              <span>Join Discord</span>
             </button>
-            <button className="bg-white/10 backdrop-blur-md border-2 border-white/30 hover:border-[#F9D523] hover:bg-white/20 text-white hover:text-[#F9D523] font-bold px-10 py-4 rounded-2xl transition-all duration-300 shadow-xl">
-              Contact Support
+            <button className="unified-button unified-button-lg">
+              <span>Contact Support</span>
             </button>
           </div>
         </div>

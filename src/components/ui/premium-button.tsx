@@ -12,16 +12,22 @@ interface PremiumButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 const buttonVariants = {
-  premium: 'cta-button-premium',
-  glass: 'cta-button-glass', 
+  premium: 'unified-button',
+  glass: 'unified-button', 
   verified: 'verified-badge',
-  outline: 'btn-premium-outline'
+  outline: 'unified-button'
 };
 
 const buttonSizes = {
-  sm: 'px-4 py-2 text-sm',
-  md: 'px-6 py-3 text-base',
-  lg: 'px-8 py-4 text-lg'
+  sm: 'unified-button-sm',
+  md: 'unified-button-md',
+  lg: 'unified-button-lg'
+};
+
+const verifiedSizes = {
+  sm: 'verified-badge-sm',
+  md: 'verified-badge-md',
+  lg: 'verified-badge-lg'
 };
 
 export const PremiumButton: React.FC<PremiumButtonProps> = ({
@@ -36,8 +42,8 @@ export const PremiumButton: React.FC<PremiumButtonProps> = ({
 }) => {
   const baseClasses = [
     buttonVariants[variant],
-    buttonSizes[size],
-    'inline-flex items-center justify-center font-bold transition-all duration-400 focus:outline-none focus:ring-4 focus:ring-teal-400/40',
+    variant === 'verified' ? verifiedSizes[size] : buttonSizes[size],
+    variant === 'verified' ? 'inline-flex items-center justify-center transition-all duration-400 focus:outline-none focus:ring-4 focus:ring-teal-400/40' : 'inline-flex items-center justify-center font-medium transition-all duration-400 focus:outline-none focus:ring-4 focus:ring-teal-400/40',
     disabled && 'opacity-50 cursor-not-allowed pointer-events-none',
     className
   ].filter(Boolean).join(' ');
@@ -52,7 +58,7 @@ export const PremiumButton: React.FC<PremiumButtonProps> = ({
           rel="noopener noreferrer"
           className={baseClasses}
         >
-          {children}
+          <span>{children}</span>
         </a>
       );
     }
@@ -63,7 +69,7 @@ export const PremiumButton: React.FC<PremiumButtonProps> = ({
         href={href}
         className={baseClasses}
       >
-        {children}
+        <span>{children}</span>
       </Link>
     );
   }
@@ -75,7 +81,7 @@ export const PremiumButton: React.FC<PremiumButtonProps> = ({
       disabled={disabled}
       {...props}
     >
-      {children}
+      <span>{children}</span>
     </button>
   );
 };
