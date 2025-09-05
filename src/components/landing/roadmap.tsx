@@ -62,7 +62,7 @@ export const Roadmap = () => {
           alt="Roadmap Background"
           fill
           className="object-cover"
-          priority
+          priority={false}
         />
         {/* Lehčí overlay pro lepší viditelnost pozadí */}
         <div className="absolute inset-0 bg-black/40"></div>

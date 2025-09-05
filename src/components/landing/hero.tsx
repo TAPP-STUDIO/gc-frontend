@@ -30,15 +30,15 @@ export const Hero = () => {
   const { elementRef: titleRef, isVisible: titleVisible } = useScrollAnimation({ threshold: 0.1 });
   const { elementRef: statsRef, isVisible: statsVisible } = useScrollAnimation({ threshold: 0.3 });
   const stats = [
-    { value: '3 153 750 $', label: 'Portfolio' },
-    { value: '162 $', label: 'Profit per card' }
+    { value: '3 153 750 $', label: 'Total Portfolio Value' },
+    { value: '162 $', label: 'Average Profit per Card' }
   ];
 
   return (
     <section className="min-h-screen bg-black pt-20 lg:pt-24 relative overflow-visible">
-      {/* SVG Background - 75% size */}
+      {/* SVG Background - 85% size */}
       <div className="absolute inset-0 z-0 overflow-visible">
-        <div className="absolute inset-0 transform scale-85 origin-center">
+        <div className="absolute inset-0 transform scale-85 origin-top-center">
           <Image
             src="/backgrounds/1Hero.svg"
             alt="Hero Background"
@@ -49,8 +49,6 @@ export const Hero = () => {
         </div>
       </div>
 
-
-      
       <div className="container mx-auto px-4 lg:px-8 h-full flex items-center relative z-20 overflow-visible">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center w-full py-12 lg:py-20">
           
@@ -88,7 +86,7 @@ export const Hero = () => {
                   key={index} 
                   className={`space-y-2 animate-slide-up py-4 px-2 hover:scale-105 transition-transform duration-300 ${statsVisible ? `visible animate-stagger-${index + 2}` : ''}`}
                 >
-                  <div className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#F9D523]">
+                  <div className="text-3xl md:text-4xl lg:text-5xl font-medium text-[#F9D523]">
                     {stat.value}
                   </div>
                   <div className="text-white/70 text-lg font-medium">

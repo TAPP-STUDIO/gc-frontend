@@ -7,7 +7,7 @@ import { useScrollAnimation, useStaggeredAnimation } from '@/hook';
 export const Team = () => {
   const { elementRef: titleRef, isVisible: titleVisible } = useScrollAnimation({ threshold: 0.2 });
   const { elementRef: founderRef, isVisible: founderVisible } = useScrollAnimation({ threshold: 0.3 });
-  const { elementRef: teamRef, visibleItems } = useStaggeredAnimation(3, 150);
+  const { elementRef: teamRef, visibleItems } = useStaggeredAnimation(4, 150);
   const teamMembers = [
     {
       name: 'Jakub Gavlík',
@@ -33,22 +33,22 @@ export const Team = () => {
     },
     {
       name: 'Radomír Trumpeš',
-      role: 'Technical Advisor',
-      image: '/team/trumpes.png'
+      role: 'Discord and social media',
+      image: '/team/cab.png'
     }
   ];
 
   return (
     <section className="py-20 lg:py-32 bg-black relative overflow-visible">
-      {/* SVG Background */}
+      {/* SVG Background - načítá od začátku */}
       <div className="absolute inset-0 z-0 overflow-visible">
-        <div className="absolute inset-0 transform scale-100 origin-center">
+        <div className="absolute inset-0 transform scale-100 origin-top-center">
           <Image
-            src="/backgrounds/5VIP + tym.svg"
+            src="/backgrounds/6Tym.svg"
             alt="Team Background"
             fill
             className="object-contain"
-            priority
+            priority={false}
           />
         </div>
       </div>
@@ -80,13 +80,13 @@ export const Team = () => {
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Founder Image */}
             <div className={`flex justify-center lg:justify-start animate-scale ${founderVisible ? 'visible' : ''}`}>
-              <div className="relative w-80 h-96 lg:w-96 lg:h-[500px]">
+              <div className="relative w-80 h-96 lg:w-96 lg:h-[480px]">
                 <div className="absolute inset-0 bg-gradient-to-br from-[#F9D523]/20 to-transparent rounded-3xl"></div>
                 <Image
                   src={teamMembers[0].image}
                   alt={teamMembers[0].name}
                   fill
-                  className="object-cover rounded-3xl shadow-2xl"
+                  className="object-cover rounded-3xl shadow-2xl border-2 border-white/20"
                 />
               </div>
             </div>
@@ -122,19 +122,22 @@ export const Team = () => {
         {/* Other Team Members */}
         <div 
           ref={teamRef}
-          className="max-w-6xl mx-auto animate-container overflow-visible"
+          className="w-full mx-auto animate-container overflow-visible"
         >
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 px-4 py-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 px-4 py-8">
             {teamMembers.slice(1).map((member, index) => (
               <div
                 key={index}
-                className={`group bg-white/5 backdrop-blur-sm border border-white/20 rounded-2xl p-6 group-hover:bg-white/10 group-hover:border-[#F9D523]/50 transition-all duration-300 shadow-xl group-hover:shadow-2xl group-hover:scale-[1.02] animate-scale overflow-visible mx-2 my-4 ${
+                className={`group backdrop-blur-sm border border-white/20 rounded-2xl p-6 group-hover:border-[#F9D523]/50 transition-all duration-300 shadow-xl group-hover:shadow-2xl group-hover:scale-[1.02] animate-scale overflow-visible ${
                   visibleItems.has(index) ? 'visible' : ''
                 }`}
-                style={{ transitionDelay: `${index * 150}ms` }}
+                style={{ 
+                  transitionDelay: `${index * 150}ms`,
+                  backgroundColor: '#001718'
+                }}
               >
                 {/* Member Image */}
-                <div className="relative w-24 h-24 mb-6">
+                <div className="relative w-32 h-32 mb-6">
                   <div className="absolute inset-0 bg-gradient-to-br from-[#F9D523]/20 to-transparent rounded-full"></div>
                   <Image
                     src={member.image}

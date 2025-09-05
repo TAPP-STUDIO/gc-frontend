@@ -16,15 +16,15 @@ export const VipClub = () => {
 
   return (
     <section className="py-20 lg:py-32 bg-black relative overflow-visible">
-      {/* SVG Background */}
+      {/* SVG Background - načítá od začátku */}
       <div className="absolute inset-0 z-0 overflow-visible">
-        <div className="absolute inset-0 transform scale-100 origin-center">
+        <div className="absolute inset-0 transform scale-100 origin-top-center">
           <Image
-            src="/backgrounds/5VIP + tym.svg"
+            src="/backgrounds/5VIP.svg"
             alt="VIP Club Background"
             fill
             className="object-contain"
-            priority
+            priority={false}
           />
         </div>
       </div>
