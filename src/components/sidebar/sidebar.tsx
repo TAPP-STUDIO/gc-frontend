@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import Logo from '../logo/logo';
 import { useState, useEffect } from 'react';
@@ -65,11 +66,12 @@ export default function Sidebar({ isCollapsed = false,  }: SidebarProps) {
   }, []);
 
   useEffect(() => {
-    const newExpanded = { ...expandedItems };
     if (portfolioItems.length > 0 && isActive('/dashboard/portfolio')) {
-      newExpanded['portfolio'] = true;
+      setExpandedItems(prev => ({
+        ...prev,
+        portfolio: true
+      }));
     }
-    setExpandedItems(newExpanded);
   }, [pathname, portfolioItems]);
 
   const toggleItemExpansion = (itemId: string, e: React.MouseEvent) => {
@@ -141,7 +143,7 @@ export default function Sidebar({ isCollapsed = false,  }: SidebarProps) {
                         >
                           <div className="flex items-center">
                             <span className="w-6 h-6 mr-3 flex items-center justify-center">
-                              <img
+                              <Image
                                 src={`/images/icons/${item.icon}`}
                                 alt={item.name}
                                 width={24}
@@ -180,7 +182,7 @@ export default function Sidebar({ isCollapsed = false,  }: SidebarProps) {
                           } hover:text-[#F9D523] transition-colors`}
                         >
                           <span className="w-6 h-6 mr-3 flex items-center justify-center">
-                            <img
+                            <Image
                               src={`/images/icons/${item.icon}`}
                               alt={item.name}
                               width={24}
@@ -340,7 +342,7 @@ export default function Sidebar({ isCollapsed = false,  }: SidebarProps) {
                       >
                         <div className="flex items-center">
                           <span className="w-6 h-6 mr-3 flex items-center justify-center">
-                            <img
+                            <Image
                               src={`/images/icons/${item.icon}`}
                               alt={item.name}
                               width={24}
@@ -380,7 +382,7 @@ export default function Sidebar({ isCollapsed = false,  }: SidebarProps) {
                         title={isCollapsed ? item.name : undefined}
                       >
                         <span className={`w-6 h-6 flex items-center justify-center ${!isCollapsed ? 'mr-3' : ''}`}>
-                          <img
+                          <Image
                             src={`/images/icons/${item.icon}`}
                             alt={item.name}
                             width={24}

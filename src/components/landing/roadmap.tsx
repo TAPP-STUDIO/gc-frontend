@@ -95,13 +95,13 @@ export const Roadmap = () => {
               ref={leftRef}
               className="space-y-6 animate-container overflow-visible"
             >
-              {roadmapSteps.slice(0, 4).map((step, index) => (
+              {roadmapSteps.slice(0, 4).map((step, stepIndex) => (
                 <div 
                   key={step.id} 
                   className={`relative animate-slide-left py-6 px-3 ${
-                    leftVisible.has(index) ? 'visible' : ''
+                    leftVisible.has(stepIndex) ? 'visible' : ''
                   }`}
-                  style={{ transitionDelay: `${index * 200}ms` }}
+                  style={{ transitionDelay: `${stepIndex * 200}ms` }}
                 >
                   {/* Mobile Layout */}
                   <div className="lg:hidden">
@@ -154,7 +154,7 @@ export const Roadmap = () => {
               className="space-y-6 animate-container overflow-visible"
             >
               {/* Speciální text pro položku 05 */}
-              {roadmapSteps.slice(4, 7).map((step, index) => {
+              {roadmapSteps.slice(4, 7).map((step, stepIndex) => {
                 // Pokud je to položka 05 (index 0 v slice), přidáme text nad ni
                 const isItem05 = step.number === '05';
                 return (
@@ -168,9 +168,9 @@ export const Roadmap = () => {
                     )}
                     <div
                       className={`relative animate-slide-right py-6 px-3 ${
-                        rightVisible.has(index) ? 'visible' : ''
+                        rightVisible.has(stepIndex) ? 'visible' : ''
                       }`}
-                      style={{ transitionDelay: `${index * 200}ms` }}
+                      style={{ transitionDelay: `${stepIndex * 200}ms` }}
                     >
                       {/* Mobile Layout */}
                       <div className="lg:hidden">

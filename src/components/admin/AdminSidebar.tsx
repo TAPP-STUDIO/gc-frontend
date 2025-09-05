@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+
 import { usePathname } from 'next/navigation';
 import Logo from '../logo/logo';
 import { useState, useEffect } from 'react';
@@ -75,12 +76,13 @@ export default function AdminSidebar({ isCollapsed = false }: AdminSidebarProps)
   };
 
   useEffect(() => {
-    const newExpanded = { ...expandedItems };
     // Auto-rozbal NFTs sekci pokud jsme v NFT stránce
     if (pathname?.startsWith('/admin/nfts')) {
-      newExpanded['nfts'] = true;
+      setExpandedItems(prev => ({
+        ...prev,
+        nfts: true
+      }));
     }
-    setExpandedItems(newExpanded);
   }, [pathname]);
 
   const toggleItemExpansion = (itemId: string, e: React.MouseEvent) => {

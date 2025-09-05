@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, {  } from 'react';
 import Image from 'next/image';
 import { useScrollAnimation, useStaggeredAnimation } from '@/hook';
 
 export const Ecosystem = () => {
   const { elementRef: titleRef, isVisible: titleVisible } = useScrollAnimation({ threshold: 0.2 });
   const { elementRef: cardsRef, visibleItems } = useStaggeredAnimation(3, 200);
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+ 
 
   const ecosystemItems = [
     {
