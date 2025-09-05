@@ -5,14 +5,27 @@ import {
   CognitoUserSession,
   CognitoRefreshToken,
 } from 'amazon-cognito-identity-js';
-import { cognitoConfig } from '@/config/cognito';
+import { cognitoConfig, isValidConfig } from '@/config/cognito';
 import Cookies from 'js-cookie';
 
-// Initialize Cognito User Pool
-const userPool = new CognitoUserPool({
-  UserPoolId: cognitoConfig.userPoolId,
-  ClientId: cognitoConfig.clientId,
-});
+// Lazy initialization of Cognito User Pool
+let userPool: CognitoUserPool | null = null;
+
+const getUserPool = (): CognitoUserPool | null => {
+  // Only initialize in browser with valid config
+  if (typeof window === 'undefined' || !isValidConfig()) {
+    return null;
+  }
+  
+  if (!userPool) {
+    userPool = new CognitoUserPool({
+      UserPoolId: cognitoConfig.userPoolId,
+      ClientId: cognitoConfig.clientId,
+    });
+  }
+  
+  return userPool;
+};
 
 export interface AuthTokens {
   idToken: string;
@@ -39,6 +52,11 @@ class AuthService {
    * Sign in with email and password
    */
   async signIn(email: string, password: string): Promise<{ session?: CognitoUserSession; tokens?: AuthTokens; newPasswordRequired?: boolean; sessionData?: { userAttributes: Record<string, unknown>; requiredAttributes: string[]; cognitoUser: CognitoUser } }> {
+    const pool = getUserPool();
+    if (!pool) {
+      throw new Error('Cognito User Pool not available');
+    }
+    
     return new Promise((resolve, reject) => {
       const authenticationDetails = new AuthenticationDetails({
         Username: email,
@@ -47,7 +65,7 @@ class AuthService {
 
       const cognitoUser = new CognitoUser({
         Username: email,
-        Pool: userPool,
+        Pool: pool,
       });
 
       cognitoUser.authenticateUser(authenticationDetails, {
@@ -132,9 +150,12 @@ class AuthService {
    * Sign out the current user
    */
   signOut(): void {
-    const cognitoUser = userPool.getCurrentUser();
-    if (cognitoUser) {
-      cognitoUser.signOut();
+    const pool = getUserPool();
+    if (pool) {
+      const cognitoUser = pool.getCurrentUser();
+      if (cognitoUser) {
+        cognitoUser.signOut();
+      }
     }
     this.clearTokens();
     this.clearUserData();
@@ -144,8 +165,13 @@ class AuthService {
    * Get current user session
    */
   async getCurrentSession(): Promise<CognitoUserSession | null> {
+    const pool = getUserPool();
+    if (!pool) {
+      return null;
+    }
+    
     return new Promise((resolve) => {
-      const cognitoUser = userPool.getCurrentUser();
+      const cognitoUser = pool.getCurrentUser();
 
       if (!cognitoUser) {
         resolve(null);
@@ -172,8 +198,13 @@ class AuthService {
    * Refresh access token
    */
   async refreshToken(): Promise<AuthTokens | null> {
+    const pool = getUserPool();
+    if (!pool) {
+      return null;
+    }
+    
     return new Promise((resolve) => {
-      const cognitoUser = userPool.getCurrentUser();
+      const cognitoUser = pool.getCurrentUser();
 
       if (!cognitoUser) {
         resolve(null);
