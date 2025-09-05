@@ -28,7 +28,7 @@ export const VipClub = () => {
             className={`space-y-8 lg:space-y-12 animate-slide-left ${titleVisible ? 'visible' : ''}`}
           >
             <div className="space-y-4">
-              <div className="text-[#F9D523] text-lg md:text-xl font-semibold uppercase tracking-wider">
+              <div className="text-white text-lg md:text-xl font-semibold uppercase tracking-wider">
                 VIP CLUB
               </div>
               <h2 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-tight">
@@ -52,19 +52,17 @@ export const VipClub = () => {
                 }`}
                 style={{ transitionDelay: `${index * 150}ms` }}
               >
-                {/* Golden Check Icon */}
-                <div className="w-6 h-6 bg-gradient-to-r from-[#B29819] to-[#F9D523] rounded-sm flex items-center justify-center shadow-lg flex-shrink-0">
-                  <svg
-                    className="w-4 h-4 text-black"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={3}
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-                <p className="text-white text-lg md:text-xl lg:text-2xl font-medium group-hover:text-[#F9D523] transition-colors duration-300">
+                {/* Jen bílá check ikonka */}
+                <svg
+                  className="w-5 h-5 text-white flex-shrink-0"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={3}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                <p className="text-white text-sm md:text-base font-medium group-hover:text-[#F9D523] transition-colors duration-300">
                   {feature}
                 </p>
               </div>
