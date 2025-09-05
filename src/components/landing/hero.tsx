@@ -61,7 +61,7 @@ export const Hero = () => {
               ref={titleRef}
               className={`space-y-4 animate-slide-left ${titleVisible ? 'visible' : ''}`}
             >
-              <h1 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-white leading-tight">
+              <h1 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-medium text-white leading-tight">
                 Join the lifetime
                 <br />
                 <span className="text-white">membership</span>

@@ -150,7 +150,7 @@ export const InfoSection = () => {
               ref={titleRef}
               className={`space-y-4 animate-slide-left ${titleVisible ? 'visible' : ''}`}
             >
-              <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-white leading-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-medium text-white leading-tight">
                 Gavlik Capital{' '}
                 <span className="text-white/80">cards</span>
               </h2>

@@ -67,7 +67,7 @@ export const Ecosystem = () => {
           className={`text-center mb-16 lg:mb-24 animate-slide-up overflow-visible ${titleVisible ? 'visible' : ''}`}
         >
           <div className="space-y-4">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-6">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-medium text-white mb-6">
               Ecosystem
             </h2>
             <p className="text-lg md:text-xl text-white/70 max-w-3xl mx-auto leading-relaxed font-medium">
@@ -91,7 +91,7 @@ export const Ecosystem = () => {
             >
               {/* Project Title */}
               <div className="mb-8">
-                <h3 className="text-xl md:text-2xl font-bold text-white">
+                <h3 className="text-xl md:text-2xl font-medium text-white">
                   {item.name}
                 </h3>
               </div>

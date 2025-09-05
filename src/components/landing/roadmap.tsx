@@ -75,7 +75,7 @@ export const Roadmap = () => {
           className={`mb-16 lg:mb-24 animate-slide-up ${titleVisible ? 'visible' : ''}`}
         >
           <div className="space-y-4">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-white leading-tight max-w-4xl">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-medium text-white leading-tight max-w-4xl">
               Secure, Track, and
               <br />
               <span className="text-white">Grow Your Crypto</span>
@@ -113,7 +113,7 @@ export const Roadmap = () => {
                           <div className="w-12 h-12 bg-gradient-to-r from-[#B29819] to-[#F9D523] hover:from-[#A08616] hover:to-[#e3c320] rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 hover:scale-110 shadow-2xl border border-white/10">
                             <span className="text-black font-bold text-sm">{step.number}</span>
                           </div>
-                          <h3 className="text-xl font-bold text-white flex-1">
+                          <h3 className="text-xl font-medium text-white flex-1">
                             {step.title}
                           </h3>
                         </div>
@@ -134,7 +134,7 @@ export const Roadmap = () => {
                           <div className="w-14 h-14 bg-gradient-to-r from-[#B29819] to-[#F9D523] group-hover:from-[#A08616] group-hover:to-[#e3c320] rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover:scale-110 shadow-2xl border border-white/10">
                             <span className="text-black font-bold text-lg">{step.number}</span>
                           </div>
-                          <h3 className="text-xl font-bold text-white flex-1">
+                          <h3 className="text-xl font-medium text-white flex-1">
                             {step.title}
                           </h3>
                         </div>
@@ -182,7 +182,7 @@ export const Roadmap = () => {
                               <div className="w-12 h-12 bg-gradient-to-r from-[#B29819] to-[#F9D523] hover:from-[#A08616] hover:to-[#e3c320] rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 hover:scale-110 shadow-2xl border border-white/10">
                                 <span className="text-black font-bold text-sm">{step.number}</span>
                               </div>
-                              <h3 className="text-xl font-bold text-white flex-1">
+                              <h3 className="text-xl font-medium text-white flex-1">
                                 {step.title}
                               </h3>
                             </div>
@@ -203,7 +203,7 @@ export const Roadmap = () => {
                               <div className="w-14 h-14 bg-gradient-to-r from-[#B29819] to-[#F9D523] group-hover:from-[#A08616] group-hover:to-[#e3c320] rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover:scale-110 shadow-2xl border border-white/10">
                                 <span className="text-black font-bold text-lg">{step.number}</span>
                               </div>
-                              <h3 className="text-xl font-bold text-white flex-1">
+                              <h3 className="text-xl font-medium text-white flex-1">
                                 {step.title}
                               </h3>
                             </div>

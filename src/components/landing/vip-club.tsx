@@ -43,7 +43,7 @@ export const VipClub = () => {
               <div className="text-white text-lg md:text-xl font-semibold uppercase tracking-wider">
                 VIP CLUB
               </div>
-              <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-white leading-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-medium text-white leading-tight">
                 Catch them all and
                 <br />
                 be a part of <span className="text-[#F9D523]">VIP CLUB</span>

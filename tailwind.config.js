@@ -12,7 +12,7 @@ module.exports = {
                 'gc-yellow': '#F9D523',
             },
             fontFamily: {
-                sans: ['Inter', 'sans-serif'],
+                sans: ['Poppins', 'sans-serif'],
             },
         },
     },

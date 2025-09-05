@@ -66,7 +66,7 @@ export const Team = () => {
             <div className="text-[#F9D523] text-lg md:text-xl font-semibold mb-4 uppercase tracking-wider">
               OUR TEAM
             </div>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-medium text-white">
               Meet the team
             </h2>
           </div>
@@ -99,7 +99,7 @@ export const Team = () => {
                 </span>
               </div>
 
-              <h3 className="text-3xl md:text-4xl font-bold text-white">
+              <h3 className="text-3xl md:text-4xl font-medium text-white">
                 {teamMembers[0].name}
               </h3>
 
@@ -158,7 +158,7 @@ export const Team = () => {
 
                 {/* Member Info */}
                 <div className="text-left space-y-2">
-                  <h4 className="text-xl font-bold text-white group-hover:text-[#F9D523] transition-colors duration-300">
+                  <h4 className="text-xl font-medium text-white group-hover:text-[#F9D523] transition-colors duration-300">
                     {member.name}
                   </h4>
                   <p className="text-white/70 text-sm">

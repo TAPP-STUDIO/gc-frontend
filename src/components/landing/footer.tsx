@@ -103,7 +103,7 @@ export const Footer = () => {
               
               {/* Newsletter Signup */}
               <div className="space-y-4">
-                <h4 className="text-white font-semibold text-lg">Stay Updated</h4>
+                <h4 className="text-white font-medium text-lg">Stay Updated</h4>
                 <form onSubmit={handleNewsletterSubmit} className="flex gap-3">
                   <input
                     type="email"
@@ -125,7 +125,7 @@ export const Footer = () => {
 
             {/* Navigation Links */}
             <div className="lg:col-span-2">
-              <h4 className="text-white font-bold text-lg mb-6">Navigation</h4>
+              <h4 className="text-white font-medium text-lg mb-6">Navigation</h4>
               <ul className="space-y-3">
                 {navigationLinks.map((link) => (
                   <li key={link.name}>
@@ -142,7 +142,7 @@ export const Footer = () => {
 
             {/* Product Links */}
             <div className="lg:col-span-2">
-              <h4 className="text-white font-bold text-lg mb-6">Products</h4>
+              <h4 className="text-white font-medium text-lg mb-6">Products</h4>
               <ul className="space-y-3">
                 {productLinks.map((link) => (
                   <li key={link.name}>
@@ -175,7 +175,7 @@ export const Footer = () => {
 
             {/* Legal Links */}
             <div className="lg:col-span-2">
-              <h4 className="text-white font-bold text-lg mb-6">Legal</h4>
+              <h4 className="text-white font-medium text-lg mb-6">Legal</h4>
               <ul className="space-y-3">
                 {legalLinks.map((link) => (
                   <li key={link.name}>
@@ -208,7 +208,7 @@ export const Footer = () => {
 
             {/* Social Media */}
             <div className="lg:col-span-2">
-              <h4 className="text-white font-bold text-lg mb-6">Follow Us</h4>
+              <h4 className="text-white font-medium text-lg mb-6">Follow Us</h4>
               <div className="flex gap-4">
                 {socialLinks.map((social) => (
                   <a

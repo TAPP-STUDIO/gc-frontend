@@ -74,7 +74,7 @@ export const FAQ = () => {
           <div className="text-[#F9D523] text-lg md:text-xl font-semibold mb-4 uppercase tracking-wider">
             FAQ
           </div>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-medium text-white">
             Find Your answers
           </h2>
         </div>
