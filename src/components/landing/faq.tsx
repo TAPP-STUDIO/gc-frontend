@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { useScrollAnimation, useStaggeredAnimation } from '@/hook';
 
 export const FAQ = () => {
@@ -47,10 +48,22 @@ export const FAQ = () => {
   };
 
   return (
-    <section className="py-20 lg:py-32 bg-black relative overflow-hidden">
-      {/* Background Effects */}
-      <div className="absolute inset-0 bg-gradient-to-br from-teal-900/5 via-transparent to-transparent"></div>
-      <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-[#F9D523]/5 rounded-full blur-3xl"></div>
+    <section className="py-20 lg:py-32 bg-black relative overflow-visible">
+      {/* SVG Background */}
+      <div className="absolute inset-0 z-0 overflow-visible">
+        <div className="absolute inset-0 transform scale-100 origin-center">
+          <Image
+            src="/backgrounds/6FAQ.svg"
+            alt="FAQ Background"
+            fill
+            className="object-contain"
+            priority
+          />
+        </div>
+      </div>
+
+      {/* Dark overlay */}
+      <div className="absolute inset-0 bg-black/40 z-10"></div>
       
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
         {/* Header */}
@@ -77,9 +90,7 @@ export const FAQ = () => {
               {faqData.slice(0, 3).map((faq, index) => (
                 <div
                   key={faq.id}
-                  className={`bg-teal-900/20 backdrop-blur-sm border border-teal-700/30 rounded-2xl overflow-hidden transition-all duration-300 hover:bg-teal-900/30 hover:border-teal-600/40 animate-slide-left ${
-                    leftVisible.has(index) ? 'visible' : ''
-                  }`}
+                  className={`bg-white/5 backdrop-blur-sm border border-white/20 rounded-2xl overflow-hidden transition-all duration-300 hover:bg-white/10 hover:border-[#F9D523]/50 hover:shadow-lg animate-slide-left ${leftVisible.has(index) ? 'visible' : ''}`}
                   style={{ transitionDelay: `${index * 150}ms` }}
                 >
                   <button
@@ -110,7 +121,7 @@ export const FAQ = () => {
                     }`}
                   >
                     <div className="px-6 pb-6 lg:px-8 lg:pb-7">
-                      <div className="pt-2 border-t border-teal-700/20">
+                      <div className="pt-2 border-t border-white/20">
                         <p className="text-white/80 text-base md:text-lg leading-relaxed mt-4">
                           {faq.answer}
                         </p>
@@ -129,9 +140,7 @@ export const FAQ = () => {
               {faqData.slice(3, 6).map((faq, index) => (
                 <div
                   key={faq.id}
-                  className={`bg-teal-900/20 backdrop-blur-sm border border-teal-700/30 rounded-2xl overflow-hidden transition-all duration-300 hover:bg-teal-900/30 hover:border-teal-600/40 animate-slide-right ${
-                    rightVisible.has(index) ? 'visible' : ''
-                  }`}
+                  className={`bg-white/5 backdrop-blur-sm border border-white/20 rounded-2xl overflow-hidden transition-all duration-300 hover:bg-white/10 hover:border-[#F9D523]/50 hover:shadow-lg animate-slide-right ${rightVisible.has(index) ? 'visible' : ''}`}
                   style={{ transitionDelay: `${index * 150}ms` }}
                 >
                   <button
@@ -162,7 +171,7 @@ export const FAQ = () => {
                     }`}
                   >
                     <div className="px-6 pb-6 lg:px-8 lg:pb-7">
-                      <div className="pt-2 border-t border-teal-700/20">
+                      <div className="pt-2 border-t border-white/20">
                         <p className="text-white/80 text-base md:text-lg leading-relaxed mt-4">
                           {faq.answer}
                         </p>
@@ -181,7 +190,7 @@ export const FAQ = () => {
             Still have questions? Join our community or contact our support team.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
-            <button className="bg-gradient-to-r from-[#B29819] to-[#F9D523] hover:from-[#A08616] hover:to-[#e3c320] text-black font-bold px-10 py-4 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-2xl backdrop-blur-sm border border-white/10">
+            <button className="bg-gradient-to-r from-[#B29819] to-[#F9D523] hover:from-[#A08616] hover:to-[#e3c320] text-white hover:text-black font-bold px-10 py-4 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-2xl backdrop-blur-sm border border-white/10">
               Join Discord
             </button>
             <button className="bg-white/10 backdrop-blur-md border-2 border-white/30 hover:border-[#F9D523] hover:bg-white/20 text-white hover:text-[#F9D523] font-bold px-10 py-4 rounded-2xl transition-all duration-300 shadow-xl">

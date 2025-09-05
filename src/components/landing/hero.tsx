@@ -35,12 +35,12 @@ export const Hero = () => {
   ];
 
   return (
-    <section className="min-h-screen bg-black pt-20 lg:pt-24 relative overflow-hidden">
+    <section className="min-h-screen bg-black pt-20 lg:pt-24 relative overflow-visible">
       {/* SVG Background - 75% size */}
       <div className="absolute inset-0 z-0 overflow-visible">
         <div className="absolute inset-0 transform scale-85 origin-center">
           <Image
-            src="/backgrounds/hero.svg"
+            src="/backgrounds/1Hero.svg"
             alt="Hero Background"
             fill
             className="object-contain"
@@ -49,10 +49,9 @@ export const Hero = () => {
         </div>
       </div>
 
-      {/* Dark overlay for better text readability */}
-      <div className="absolute inset-0 bg-black/40 z-10"></div>
+
       
-      <div className="container mx-auto px-4 lg:px-8 h-full flex items-center relative z-20">
+      <div className="container mx-auto px-4 lg:px-8 h-full flex items-center relative z-20 overflow-visible">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center w-full py-12 lg:py-20">
           
           {/* Left Side - Content */}
@@ -62,7 +61,7 @@ export const Hero = () => {
               ref={titleRef}
               className={`space-y-4 animate-slide-left ${titleVisible ? 'visible' : ''}`}
             >
-              <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-tight">
+              <h1 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-white leading-tight">
                 Join the lifetime
                 <br />
                 <span className="text-white">membership</span>
@@ -82,12 +81,12 @@ export const Hero = () => {
             {/* Statistics */}
             <div 
               ref={statsRef}
-              className={`grid grid-cols-1 sm:grid-cols-2 gap-8 lg:gap-12 animate-slide-up ${statsVisible ? 'visible' : ''}`}
+              className={`grid grid-cols-1 sm:grid-cols-2 gap-8 lg:gap-12 animate-slide-up py-6 px-2 ${statsVisible ? 'visible' : ''}`}
             >
               {stats.map((stat, index) => (
                 <div 
                   key={index} 
-                  className={`space-y-2 animate-slide-up ${statsVisible ? `visible animate-stagger-${index + 2}` : ''}`}
+                  className={`space-y-2 animate-slide-up py-4 px-2 hover:scale-105 transition-transform duration-300 ${statsVisible ? `visible animate-stagger-${index + 2}` : ''}`}
                 >
                   <div className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#F9D523]">
                     {stat.value}

@@ -1290,10 +1290,10 @@ body {
    PREMIUM LANDING PAGE BUTTONS
    ============================== */
 
-/* Verified Badge & Premium Buttons */
+/* Verified Badge - NOVÝ ZLATÝ HOVER */
 .verified-badge {
   background: linear-gradient(135deg, #B29819 0%, #F9D523 50%, #E6C547 100%);
-  color: #151515;
+  color: white;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -1304,7 +1304,7 @@ body {
     inset 0 2px 4px rgba(255, 255, 255, 0.3),
     inset 0 -2px 4px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   transform: translateZ(0);
   position: relative;
   overflow: hidden;
@@ -1326,23 +1326,24 @@ body {
 }
 
 .verified-badge:hover {
-  transform: translateY(-2px) scale(1.02);
+  transform: translateY(-2px) scale(1.1);
   box-shadow: 
-    0 12px 40px rgba(249, 213, 35, 0.4),
+    0 0 30px rgba(249, 213, 35, 0.4),
+    0 12px 40px rgba(249, 213, 35, 0.3),
     inset 0 2px 4px rgba(255, 255, 255, 0.4),
-    inset 0 -2px 4px rgba(0, 0, 0, 0.15),
-    0 0 0 3px rgba(20, 184, 166, 0.3); /* Teal glow */
-  border-color: rgba(20, 184, 166, 0.4);
+    inset 0 -2px 4px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg, #ffffff 0%, #F9D523 50%, #E6C547 100%);
+  color: #151515;
 }
 
 .verified-badge:active {
-  transform: translateY(0) scale(0.98);
+  transform: translateY(0) scale(1.05);
 }
 
-/* Premium CTA Button (Sign Up) */
+/* Premium CTA Button (Sign Up) - NOVÝ ZLATÝ HOVER */
 .cta-button-premium {
   background: linear-gradient(135deg, #B29819 0%, #F9D523 50%, #E6C547 100%);
-  color: #151515;
+  color: white;
   font-weight: 700;
   border-radius: 1rem;
   border: 2px solid rgba(255, 255, 255, 0.15);
@@ -1352,7 +1353,7 @@ body {
     inset 0 1px 2px rgba(255, 255, 255, 0.3);
   position: relative;
   overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   transform: translateZ(0);
 }
 
@@ -1364,7 +1365,7 @@ body {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
   transition: left 0.7s ease;
 }
 
@@ -1372,23 +1373,22 @@ body {
   left: 100%;
 }
 
-/* Hover state with teal accent */
+/* NOVÝ ZLATÝ HOVER DESIGN */
 .cta-button-premium:hover {
-  transform: translateY(-3px) scale(1.03);
+  transform: translateY(-2px) scale(1.1);
   box-shadow: 
-    0 16px 48px rgba(249, 213, 35, 0.4),
-    0 8px 16px rgba(20, 184, 166, 0.3), /* Teal shadow */
-    inset 0 2px 4px rgba(255, 255, 255, 0.4),
-    0 0 0 3px rgba(20, 184, 166, 0.5); /* Teal ring */
-  border-color: rgba(20, 184, 166, 0.6);
-  background: linear-gradient(135deg, #B29819 0%, #F9D523 30%, #14B8A6 70%, #E6C547 100%);
+    0 0 30px rgba(249, 213, 35, 0.4),
+    0 16px 48px rgba(249, 213, 35, 0.3),
+    inset 0 2px 4px rgba(255, 255, 255, 0.4);
+  background: linear-gradient(135deg, #ffffff 0%, #F9D523 50%, #E6C547 100%);
+  color: #151515;
 }
 
 .cta-button-premium:active {
-  transform: translateY(-1px) scale(1.01);
+  transform: translateY(-1px) scale(1.05);
 }
 
-/* Glass CTA Button (alternative style) */
+/* Glass CTA Button - NOVÝ ZLATÝ HOVER */
 .cta-button-glass {
   background: rgba(249, 213, 35, 0.1);
   border: 2px solid rgba(249, 213, 35, 0.3);
@@ -1400,7 +1400,7 @@ body {
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.3),
     inset 0 1px 2px rgba(255, 255, 255, 0.1);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
 }
@@ -1412,44 +1412,43 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(20, 184, 166, 0.0) 0%, rgba(20, 184, 166, 0.1) 100%);
+  background: linear-gradient(135deg, rgba(249, 213, 35, 0.0) 0%, rgba(249, 213, 35, 0.1) 100%);
   opacity: 0;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.5s ease;
   border-radius: inherit;
 }
 
 .cta-button-glass:hover {
-  transform: translateY(-2px) scale(1.02);
-  border-color: rgba(20, 184, 166, 0.6);
-  color: #14B8A6;
+  transform: translateY(-2px) scale(1.1);
+  border-color: #F9D523;
+  color: #151515;
   box-shadow: 
-    0 12px 40px rgba(20, 184, 166, 0.25),
-    0 0 0 3px rgba(20, 184, 166, 0.3),
+    0 0 30px rgba(249, 213, 35, 0.4),
+    0 12px 40px rgba(249, 213, 35, 0.3),
     inset 0 2px 4px rgba(255, 255, 255, 0.15);
-  background: rgba(20, 184, 166, 0.05);
+  background: linear-gradient(135deg, #B29819 0%, #F9D523 50%, #E6C547 100%);
 }
 
 .cta-button-glass:hover::after {
   opacity: 1;
 }
 
-/* Additional premium variants */
+/* Additional premium variants - NOVÝ ZLATÝ HOVER */
 .btn-premium-outline {
   background: transparent;
-  border: 2px solid;
-  border-image: linear-gradient(135deg, #F9D523, #14B8A6) 1;
+  border: 2px solid #F9D523;
   color: #F9D523;
   font-weight: 600;
   border-radius: 1rem;
   backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
+  transition: all 0.5s ease;
 }
 
 .btn-premium-outline:hover {
-  color: #14B8A6;
-  background: rgba(20, 184, 166, 0.1);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(20, 184, 166, 0.3);
+  color: #151515;
+  background: linear-gradient(135deg, #B29819 0%, #F9D523 50%, #E6C547 100%);
+  transform: translateY(-2px) scale(1.1);
+  box-shadow: 0 0 30px rgba(249, 213, 35, 0.4);
 }
 
 /* Mobile responsive adjustments */

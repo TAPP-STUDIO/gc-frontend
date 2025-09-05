@@ -30,16 +30,33 @@ export const Team = () => {
       name: 'Jakub Cáb',
       role: 'Discord and social media',
       image: '/team/cab.png'
+    },
+    {
+      name: 'Radomír Trumpeš',
+      role: 'Technical Advisor',
+      image: '/team/trumpes.png'
     }
   ];
 
   return (
-    <section className="py-20 lg:py-32 bg-black relative overflow-hidden">
-      {/* Background Effects */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-900/20 via-transparent to-transparent"></div>
-      <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-[#F9D523]/5 rounded-full blur-3xl"></div>
+    <section className="py-20 lg:py-32 bg-black relative overflow-visible">
+      {/* SVG Background */}
+      <div className="absolute inset-0 z-0 overflow-visible">
+        <div className="absolute inset-0 transform scale-100 origin-center">
+          <Image
+            src="/backgrounds/5VIP + tym.svg"
+            alt="Team Background"
+            fill
+            className="object-contain"
+            priority
+          />
+        </div>
+      </div>
+
+      {/* Dark overlay */}
+      <div className="absolute inset-0 bg-black/40 z-10"></div>
       
-      <div className="container mx-auto px-4 lg:px-8 relative z-10">
+      <div className="container mx-auto px-4 lg:px-8 relative z-10 overflow-visible">
         {/* Header */}
         <div 
           ref={titleRef}
@@ -49,7 +66,7 @@ export const Team = () => {
             <div className="text-[#F9D523] text-lg md:text-xl font-semibold mb-4 uppercase tracking-wider">
               OUR TEAM
             </div>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white">
               Meet the team
             </h2>
           </div>
@@ -105,19 +122,19 @@ export const Team = () => {
         {/* Other Team Members */}
         <div 
           ref={teamRef}
-          className="max-w-6xl mx-auto animate-container"
+          className="max-w-6xl mx-auto animate-container overflow-visible"
         >
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 px-4 py-8">
             {teamMembers.slice(1).map((member, index) => (
               <div
                 key={index}
-                className={`group bg-white/5 backdrop-blur-sm border border-white/20 rounded-2xl p-6 hover:bg-white/10 hover:border-[#F9D523]/50 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105 animate-scale ${
+                className={`group bg-white/5 backdrop-blur-sm border border-white/20 rounded-2xl p-6 group-hover:bg-white/10 group-hover:border-[#F9D523]/50 transition-all duration-300 shadow-xl group-hover:shadow-2xl group-hover:scale-[1.02] animate-scale overflow-visible mx-2 my-4 ${
                   visibleItems.has(index) ? 'visible' : ''
                 }`}
                 style={{ transitionDelay: `${index * 150}ms` }}
               >
                 {/* Member Image */}
-                <div className="relative w-24 h-24 mx-auto mb-6">
+                <div className="relative w-24 h-24 mb-6">
                   <div className="absolute inset-0 bg-gradient-to-br from-[#F9D523]/20 to-transparent rounded-full"></div>
                   <Image
                     src={member.image}
@@ -140,7 +157,7 @@ export const Team = () => {
                 </div>
 
                 {/* Member Info */}
-                <div className="text-center space-y-2">
+                <div className="text-left space-y-2">
                   <h4 className="text-xl font-bold text-white group-hover:text-[#F9D523] transition-colors duration-300">
                     {member.name}
                   </h4>
@@ -151,6 +168,8 @@ export const Team = () => {
               </div>
             ))}
           </div>
+
+
         </div>
       </div>
     </section>

@@ -38,14 +38,14 @@ export const Navbar = () => {
                     href={item.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-white/80 hover:text-[#F9D523] transition-colors duration-200 text-sm font-medium whitespace-nowrap"
+                    className="text-white/80 hover:text-[#F9D523] hover:scale-105 transition-all duration-300 text-sm font-medium whitespace-nowrap"
                   >
                     {item.name}
                   </a>
                 ) : (
                   <a
                     href={item.href}
-                    className="text-white/80 hover:text-[#F9D523] transition-colors duration-200 text-sm font-medium whitespace-nowrap"
+                    className="text-white/80 hover:text-[#F9D523] hover:scale-105 transition-all duration-300 text-sm font-medium whitespace-nowrap"
                   >
                     {item.name}
                   </a>
@@ -66,7 +66,7 @@ export const Navbar = () => {
           {/* Mobile menu button */}
           <button
             onClick={toggleMobileMenu}
-            className="lg:hidden p-2 text-white hover:text-[#F9D523] transition-colors"
+            className="lg:hidden p-2 text-white hover:text-[#F9D523] hover:scale-110 transition-all duration-300"
             aria-label="Toggle menu"
           >
             <svg
@@ -98,7 +98,7 @@ export const Navbar = () => {
                       href={item.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block px-3 py-2 text-white/80 hover:text-[#F9D523] hover:bg-white/10 rounded-xl transition-colors duration-200 text-base font-medium backdrop-blur-sm"
+                      className="block px-3 py-2 text-white/80 hover:text-[#F9D523] hover:bg-white/10 rounded-xl transition-all duration-300 text-base font-medium backdrop-blur-sm hover:scale-105"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       {item.name}
@@ -106,7 +106,7 @@ export const Navbar = () => {
                   ) : (
                     <a
                       href={item.href}
-                      className="block px-3 py-2 text-white/80 hover:text-[#F9D523] hover:bg-white/10 rounded-xl transition-colors duration-200 text-base font-medium backdrop-blur-sm"
+                      className="block px-3 py-2 text-white/80 hover:text-[#F9D523] hover:bg-white/10 rounded-xl transition-all duration-300 text-base font-medium backdrop-blur-sm hover:scale-105"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       {item.name}

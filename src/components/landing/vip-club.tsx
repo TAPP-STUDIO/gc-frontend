@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { useScrollAnimation, useStaggeredAnimation } from '@/hook';
 
 export const VipClub = () => {
@@ -14,13 +15,24 @@ export const VipClub = () => {
   ];
 
   return (
-    <section className="py-20 lg:py-32 bg-black relative overflow-hidden">
-      {/* Background Effects */}
-      <div className="absolute inset-0 bg-gradient-to-br from-yellow-900/10 via-transparent to-transparent"></div>
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#F9D523]/10 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-[#B29819]/10 rounded-full blur-3xl"></div>
+    <section className="py-20 lg:py-32 bg-black relative overflow-visible">
+      {/* SVG Background */}
+      <div className="absolute inset-0 z-0 overflow-visible">
+        <div className="absolute inset-0 transform scale-100 origin-center">
+          <Image
+            src="/backgrounds/5VIP + tym.svg"
+            alt="VIP Club Background"
+            fill
+            className="object-contain"
+            priority
+          />
+        </div>
+      </div>
+
+      {/* Dark overlay */}
+      <div className="absolute inset-0 bg-black/40 z-10"></div>
       
-      <div className="container mx-auto px-4 lg:px-8 relative z-10">
+      <div className="container mx-auto px-4 lg:px-8 relative z-10 overflow-visible">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center w-full py-12 lg:py-20">
           {/* Left Side - Text */}
           <div 
@@ -31,7 +43,7 @@ export const VipClub = () => {
               <div className="text-white text-lg md:text-xl font-semibold uppercase tracking-wider">
                 VIP CLUB
               </div>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-white leading-tight">
                 Catch them all and
                 <br />
                 be a part of <span className="text-[#F9D523]">VIP CLUB</span>
@@ -42,12 +54,12 @@ export const VipClub = () => {
           {/* Right Side - Features List */}
           <div 
             ref={featuresRef}
-            className="space-y-6 lg:space-y-8 animate-container"
+            className="space-y-6 lg:space-y-8 animate-container py-4"
           >
             {vipFeatures.map((feature, index) => (
               <div
                 key={index}
-                className={`flex items-center gap-4 group animate-slide-right ${
+                className={`flex items-center gap-4 group animate-slide-right py-2 ${
                   visibleItems.has(index) ? 'visible' : ''
                 }`}
                 style={{ transitionDelay: `${index * 150}ms` }}

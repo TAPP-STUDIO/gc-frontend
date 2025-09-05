@@ -110,12 +110,12 @@ export const InfoSection = () => {
   }, []);
 
   return (
-    <section className="relative min-h-screen py-20 lg:py-32 overflow-hidden bg-black">
+    <section className="relative min-h-screen py-20 lg:py-32 bg-black overflow-visible">
       {/* Background - vše inline bez globals.css */}
       <div 
         className="absolute inset-0 z-0"
         style={{ 
-          backgroundImage: "url('/backgrounds/info.png')",
+          backgroundImage: "url('/backgrounds/2Card.svg')",
           backgroundSize: 'cover',
           backgroundPosition: 'center center',
           backgroundRepeat: 'no-repeat',
@@ -140,7 +140,7 @@ export const InfoSection = () => {
       {/* Dark overlay for better text readability */}
       <div className="absolute inset-0 bg-black/40 z-10"></div>
 
-      <div className="container mx-auto px-4 lg:px-8 relative z-20">
+      <div className="container mx-auto px-4 lg:px-8 relative z-20 overflow-visible">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center min-h-[80vh]">
           
           {/* Left Side - Content */}
@@ -150,7 +150,7 @@ export const InfoSection = () => {
               ref={titleRef}
               className={`space-y-4 animate-slide-left ${titleVisible ? 'visible' : ''}`}
             >
-              <h2 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-white leading-tight">
                 Gavlik Capital{' '}
                 <span className="text-white/80">cards</span>
               </h2>
@@ -159,30 +159,27 @@ export const InfoSection = () => {
             {/* Benefits List */}
             <div 
               ref={benefitsRef}
-              className="space-y-6 animate-container"
+              className="space-y-6 animate-container py-4"
             >
               {benefits.map((benefit, index) => (
                 <div 
                   key={index} 
-                  className={`flex items-start gap-4 group animate-slide-up ${
+                  className={`flex items-start gap-4 group animate-slide-up py-2 px-1 ${
                     visibleItems.has(index) ? 'visible' : ''
                   }`}
                   style={{ transitionDelay: `${index * 100}ms` }}
                 >
                   <div className="flex-shrink-0 mt-1">
-                    {/* Custom checkmark */}
-                    <div className="w-6 h-6 rounded-full bg-[#F9D523]/20 border-2 border-[#F9D523] flex items-center justify-center group-hover:bg-[#F9D523]/30 transition-all duration-300">
+                    {/* White check ikonka s borderorem jako VIP */}
+                    <div className="w-6 h-6 rounded-full border-2 border-white/30 flex items-center justify-center group-hover:border-white/50 transition-all duration-300">
                       <svg
-                        width="14"
-                        height="14"
-                        viewBox="0 0 24 24"
+                        className="w-4 h-4 text-white flex-shrink-0"
                         fill="none"
-                        stroke="#F9D523"
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={3}
                       >
-                        <polyline points="20,6 9,17 4,12"></polyline>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
                     </div>
                   </div>
@@ -195,8 +192,8 @@ export const InfoSection = () => {
 
             {/* OpenSea Button */}
             <div className={`pt-4 animate-fade-in ${titleVisible ? 'visible animate-stagger-4' : ''}`}>
-              <button className="bg-gradient-to-r from-[#B29819] to-[#F9D523] hover:from-[#A08616] hover:to-[#e3c320] text-black font-bold px-10 py-4 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-2xl backdrop-blur-sm border border-white/10 text-lg">
-                OpenSea
+              <button className="bg-gradient-to-r from-[#B29819] to-[#F9D523] text-white hover:text-black font-bold px-10 py-4 rounded-2xl transition-all duration-500 transform hover:scale-110 hover:shadow-[0_0_30px_rgba(249,213,35,0.4)] hover:bg-gradient-to-r hover:from-white hover:to-[#F9D523] shadow-2xl backdrop-blur-sm border border-white/10 text-lg group">
+                <span className="group-hover:text-black transition-colors duration-300">OpenSea</span>
               </button>
             </div>
           </div>

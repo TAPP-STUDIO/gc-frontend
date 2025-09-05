@@ -15,7 +15,7 @@ import {
 
 export default function MainPage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen overflow-visible">
       <Navbar />
       <Hero />
       <InfoSection />
