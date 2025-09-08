@@ -377,12 +377,17 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
     onMessage: handleMessage,
     onOpen: () => {
       console.log('Global WebSocket connected');
-      // Re-subscribe to channels on reconnect
+    }
+  });
+
+  // Re-subscribe to channels when connection is established
+  useEffect(() => {
+    if (ws.isConnected) {
       subscribedChannels.forEach(channel => {
         ws.sendMessage('subscribe', { channel });
       });
     }
-  });
+  }, [ws.isConnected, ws.sendMessage, subscribedChannels]);
 
   const subscribe = useCallback((channel: string) => {
     if (ws.isConnected) {

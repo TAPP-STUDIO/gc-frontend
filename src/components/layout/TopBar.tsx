@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Bell, User, Settings, ChevronDown } from "lucide-react";
 
 interface TopBarProps {
@@ -26,6 +27,15 @@ export const TopBar: React.FC<TopBarProps> = ({
   className = "",
 }) => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const router = useRouter();
+
+  const handleNotificationClick = () => {
+    if (onNotificationClick) {
+      onNotificationClick();
+    } else {
+      router.push('/dashboard/messages');
+    }
+  };
 
   // Zobrazit jméno nebo zkrácenou adresu
   const displayName = userProfile.name || 
@@ -43,7 +53,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         <div className="flex items-center gap-4">
           {/* Notifications */}
           <button
-            onClick={onNotificationClick}
+            onClick={handleNotificationClick}
             className="relative flex items-center justify-center h-10 w-10 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 
                      hover:bg-white/10 hover:border-[#F9D523]/30 transition-all duration-300 group"
             aria-label="Notifications"

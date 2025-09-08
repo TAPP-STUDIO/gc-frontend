@@ -113,6 +113,48 @@ export default function Sidebar() {
         </ul>
       </nav>
 
+      {/* Bottom Links - Professional Support */}
+      <div className="border-t border-white/10 py-4">
+        <div className="px-6 mb-3">
+          <span className="text-xs font-medium text-white/50 uppercase tracking-wide">Podpora & Zdroje</span>
+        </div>
+        <ul className="space-y-1">
+          <li>
+            <Link
+              href="/"
+              className="flex items-center px-6 py-2 text-white/70 hover:text-white hover:bg-white/5 transition-all duration-300"
+            >
+              <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
+              <span className="text-xs font-medium">Hlavní stránka</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/docs"
+              className="flex items-center px-6 py-2 text-white/70 hover:text-white hover:bg-white/5 transition-all duration-300"
+            >
+              <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <span className="text-xs font-medium">Dokumentace</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/support"
+              className="flex items-center px-6 py-2 text-white/70 hover:text-white hover:bg-white/5 transition-all duration-300"
+            >
+              <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M12 2.25a9.75 9.75 0 109.75 9.75A9.75 9.75 0 0012 2.25z" />
+              </svg>
+              <span className="text-xs font-medium">Zákaznická podpora</span>
+            </Link>
+          </li>
+        </ul>
+      </div>
+
 
     </div>
   );

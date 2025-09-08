@@ -22,14 +22,14 @@ interface ClaimRecord {
   amount: string;
 }
 
-interface CardRecord {
+interface BotRecord {
   id: string;
   name: string;
   purchaseDate: string;
   value: string;
 }
 
-export default function GCCardsPage() {
+export default function BTCBotPage() {
   const router = useRouter();
   const [timeframe, setTimeframe] = useState('monthly');
   const [claimProgress, setClaimProgress] = useState(45); // Percentage for claim progress
@@ -47,18 +47,18 @@ export default function GCCardsPage() {
   const [claimAmount] = useState(2000);
 
   const [claimHistory] = useState<ClaimRecord[]>([
-    { id: '1', project: 'GC Cards', date: '1.1.2026', amount: '2 000 $' },
-    { id: '2', project: 'GC Cards', date: '1.1.2025', amount: '2 000 $' },
-    { id: '3', project: 'GC Cards', date: '1.1.2025', amount: '2 000 $' },
-    { id: '4', project: 'GC Cards', date: '1.1.2025', amount: '2 000 $' },
-    { id: '5', project: 'GC Cards', date: '1.1.2025', amount: '2 000 $' },
-    { id: '6', project: 'GC Cards', date: '1.1.2025', amount: '2 000 $' },
+    { id: '1', project: 'BTC BOT', date: '1.1.2026', amount: '2 000 $' },
+    { id: '2', project: 'BTC BOT', date: '1.1.2025', amount: '2 000 $' },
+    { id: '3', project: 'BTC BOT', date: '1.1.2025', amount: '2 000 $' },
+    { id: '4', project: 'BTC BOT', date: '1.1.2025', amount: '2 000 $' },
+    { id: '5', project: 'BTC BOT', date: '1.1.2025', amount: '2 000 $' },
+    { id: '6', project: 'BTC BOT', date: '1.1.2025', amount: '2 000 $' },
   ]);
 
-  const [myCards] = useState<CardRecord[]>([
-    { id: '1', name: 'Gold Card Premium', purchaseDate: '1.1.2025', value: '1 500' },
-    { id: '2', name: 'Silver Card Standard', purchaseDate: '15.12.2024', value: '800' },
-    { id: '3', name: 'Diamond Card Elite', purchaseDate: '10.11.2024', value: '2 200' },
+  const [myBots] = useState<BotRecord[]>([
+    { id: '1', name: 'BTC Trading Bot #1', purchaseDate: '1.1.2025', value: '5 000' },
+    { id: '2', name: 'BTC DCA Bot #2', purchaseDate: '15.12.2024', value: '3 000' },
+    { id: '3', name: 'BTC Grid Bot #3', purchaseDate: '10.11.2024', value: '2 000' },
   ]);
 
   // Mock chart data
@@ -96,7 +96,7 @@ export default function GCCardsPage() {
     <div className="min-h-screen">
       {/* TopBar */}
       <TopBar 
-        title="GC Cards" 
+        title="BTC BOT" 
         userProfile={userProfile}
         notificationCount={3}
       />
@@ -254,32 +254,32 @@ export default function GCCardsPage() {
           </DashboardCard>
         </div>
 
-        {/* My Cards Row */}
+        {/* My Bots Row */}
         <div className="grid grid-cols-1 gap-6">
-          {/* My Cards */}
-          <DashboardCard title="Mé karty">
+          {/* My Bots */}
+          <DashboardCard title="Můj bot">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-white/10">
-                    <th className="text-left py-3 text-sm font-medium text-white/70">Karta</th>
-                    <th className="text-left py-3 text-sm font-medium text-white/70">Nákup</th>
-                    <th className="text-right py-3 text-sm font-medium text-white/70">Cena $</th>
+                    <th className="text-left py-3 text-sm font-medium text-white/70">Bot</th>
+                    <th className="text-left py-3 text-sm font-medium text-white/70">Spuštěn</th>
+                    <th className="text-right py-3 text-sm font-medium text-white/70">Investice $</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {myCards.map((card) => (
-                    <tr key={card.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                  {myBots.map((bot) => (
+                    <tr key={bot.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
                       <td className="py-3">
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#B29819] to-[#F9D523] flex items-center justify-center">
-                            <span className="text-black font-bold text-xs">C</span>
+                            <span className="text-black font-bold text-xs">B</span>
                           </div>
-                          <span className="text-sm text-white">{card.name}</span>
+                          <span className="text-sm text-white">{bot.name}</span>
                         </div>
                       </td>
-                      <td className="py-3 text-sm text-white/70">{card.purchaseDate}</td>
-                      <td className="py-3 text-sm text-white text-right">{card.value}</td>
+                      <td className="py-3 text-sm text-white/70">{bot.purchaseDate}</td>
+                      <td className="py-3 text-sm text-white text-right">{bot.value}</td>
                     </tr>
                   ))}
                 </tbody>
