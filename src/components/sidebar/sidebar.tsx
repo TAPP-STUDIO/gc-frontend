@@ -50,9 +50,17 @@ export default function Sidebar() {
   const isActive = (href: string) => pathname === href || pathname?.startsWith(href + '/');
 
   return (
-    <div className="h-full flex flex-col bg-[#081520]/90 backdrop-blur-xl">
+    <div 
+      className="h-full flex flex-col"
+      style={{
+        background: 'linear-gradient(180deg, rgba(21, 21, 21, 0.3) 0%, rgba(21, 21, 21, 0.5) 100%)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        borderRight: '1px solid rgba(255, 255, 255, 0.05)'
+      }}
+    >
       {/* Logo */}
-      <div className="p-6 border-b border-white/10">
+      <div className="p-6 border-b border-white/5">
         <Logo />
       </div>
 
@@ -65,8 +73,8 @@ export default function Sidebar() {
                 href={item.href}
                 className={`flex items-center px-6 py-3 text-white transition-all duration-300 ${
                   isActive(item.href) 
-                    ? 'bg-white/10 border-l-2 border-white' 
-                    : 'hover:bg-white/5'
+                    ? 'bg-white/10 border-l-2 border-[#F9D523]' 
+                    : 'hover:bg-white/5 hover:border-l-2 hover:border-white/20'
                 }`}
               >
                 <Image
@@ -106,18 +114,7 @@ export default function Sidebar() {
         </ul>
       </nav>
 
-      {/* Profile Section */}
-      <div className="p-4 border-t border-white/10 bg-[#081520]/80 backdrop-blur-sm">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
-            <span className="text-white font-bold text-sm">U</span>
-          </div>
-          <div className="flex-1">
-            <p className="text-sm font-medium text-white">User</p>
-            <p className="text-xs text-white/50">Profil</p>
-          </div>
-        </div>
-      </div>
+
     </div>
   );
 }

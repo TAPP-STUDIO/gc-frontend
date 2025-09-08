@@ -28,9 +28,21 @@ export default function AdminLayout({
 
   return (
     <ProtectedRoute requireAdmin={true}>
-      <div className="min-h-screen bg-[#0a0a0a] admin-layout">
+      <div className="min-h-screen relative admin-layout">
+        {/* Background SVG */}
+        <div 
+          className="fixed inset-0 z-0"
+          style={{ 
+            backgroundImage: "url('/backgrounds/content.svg')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundAttachment: 'fixed'
+          }}
+        />
+        
         {/* Mobile-first responsive layout */}
-        <div className="flex h-screen overflow-hidden">
+        <div className="flex h-screen overflow-hidden relative z-10">
           {/* Admin Sidebar */}
           <AdminSidebar 
             isCollapsed={isSidebarCollapsed}
@@ -40,7 +52,7 @@ export default function AdminLayout({
           {/* Main content area */}
           <div className="flex-1 flex flex-col min-w-0 admin-content">
             {/* Content area with proper scrolling */}
-            <main className="flex-1 overflow-auto animated-bg">
+            <main className="flex-1 overflow-auto">
               <div className="min-h-full w-full">
                 {/* Admin TopBar */}
                 <AdminTopBar />

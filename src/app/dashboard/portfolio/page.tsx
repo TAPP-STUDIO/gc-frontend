@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { TopBar } from '@/components/layout/TopBar';
 import { 
   DashboardButton, 
   DashboardCard, 
@@ -91,26 +92,24 @@ const portfolioData = {
 export default function PortfolioDashboard() {
   const [selectedTimeframe, setSelectedTimeframe] = useState('M');
 
+  // Mock user data - nahradit skutečnými daty
+  const userProfile = {
+    name: "Jan Novák",
+    email: "jan.novak@email.cz",
+    address: "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb3",
+    kycVerified: true,
+  };
+
   return (
-    <div className="min-h-screen p-6 lg:p-8">
-      {/* Header */}
-      <div className="backdrop-blur-lg border border-white/20 rounded-2xl p-6 bg-[#001718]/80 shadow-xl mb-6">
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold text-white mb-1">Moje portfolio</h1>
-            <p className="text-white/60 text-sm">Kompletní přehled vašich investic</p>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-[#4ADE80] rounded-full animate-pulse" />
-              <span className="text-sm text-white/70">Online</span>
-            </div>
-            <DashboardButton variant="primary" size="md">
-              Připojit peněženku
-            </DashboardButton>
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen">
+      {/* Transparentní TopBar */}
+      <TopBar 
+        title="Moje portfolio"
+        userProfile={userProfile}
+        notificationCount={3}
+      />
+      
+      <div className="p-6 lg:p-8">
 
       {/* Value Cards Grid */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
@@ -298,6 +297,7 @@ export default function PortfolioDashboard() {
             </button>
           </div>
         </DashboardCard>
+      </div>
       </div>
     </div>
   );

@@ -1812,3 +1812,68 @@ body {
     border: 2px solid rgb(239, 68, 68);
   }
 }
+
+/* ==============================
+   UNIFIED DASHBOARD BUTTON HOVER EFFECTS
+   ============================== */
+
+/* Aplikovat unified hover efekt na všechna dashboard tlačítka */
+.dashboard-button,
+button[class*="dashboard"],
+.btn-dashboard,
+[class*="Button"],
+.dashboard-btn,
+.dashboard-btn-primary,
+.dashboard-btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  font-weight: 500;
+  border-radius: 1rem;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.dashboard-button:hover,
+button[class*="dashboard"]:hover,
+.btn-dashboard:hover,
+[class*="Button"]:hover,
+.dashboard-btn:hover,
+.dashboard-btn-primary:hover,
+.dashboard-btn-secondary:hover {
+  transform: translateY(-2px) scale(1.05);
+  border-color: #F9D523;
+  background: linear-gradient(135deg, #B29819 0%, #F9D523 50%, #E6C547 100%);
+  color: #151515;
+  box-shadow: 
+    0 0 30px rgba(249, 213, 35, 0.4),
+    0 12px 40px rgba(249, 213, 35, 0.3);
+}
+
+/* Active state */
+.dashboard-button:active,
+button[class*="dashboard"]:active,
+.btn-dashboard:active {
+  transform: translateY(-1px) scale(1.02);
+}
+
+/* Disabled state */
+.dashboard-button:disabled,
+button[class*="dashboard"]:disabled,
+.btn-dashboard:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Focus state for accessibility */
+.dashboard-button:focus-visible,
+button[class*="dashboard"]:focus-visible,
+.btn-dashboard:focus-visible {
+  outline: 2px solid #F9D523;
+  outline-offset: 2px;
+}

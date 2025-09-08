@@ -9,20 +9,29 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="dashboard-container">
-      {/* Background with pattern */}
-      <div className="dashboard-background" />
+    <div className="min-h-screen relative">
+      {/* Background SVG */}
+      <div 
+        className="fixed inset-0 z-0"
+        style={{ 
+          backgroundImage: "url('/backgrounds/content.svg')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed'
+        }}
+      />
       
       {/* Main Layout */}
       <div className="flex h-screen relative z-10">
-        {/* Sidebar */}
-        <aside className="dashboard-sidebar w-[200px] lg:w-[240px]">
+        {/* Sidebar with glassmorphism */}
+        <aside className="w-[200px] lg:w-[240px] relative z-20">
           <Sidebar />
         </aside>
         
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto dashboard-scrollbar">
-          <div className="dashboard-content">
+        <main className="flex-1 overflow-y-auto relative">
+          <div className="w-full">
             {children}
           </div>
         </main>
