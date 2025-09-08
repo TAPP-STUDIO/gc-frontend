@@ -149,6 +149,7 @@ interface ValueCardProps {
   variant?: 'default' | 'active';
   onClick?: () => void;
   className?: string;
+  children?: React.ReactNode; // NOVÉ: Podpora pro children (tlačítko)
 }
 
 export const ValueCard: React.FC<ValueCardProps> = ({
@@ -156,7 +157,8 @@ export const ValueCard: React.FC<ValueCardProps> = ({
   value,
   variant = 'default',
   onClick,
-  className
+  className,
+  children
 }) => {
   const isActive = variant === 'active';
   
@@ -166,27 +168,32 @@ export const ValueCard: React.FC<ValueCardProps> = ({
       className={cn(
         'group relative flex flex-col items-center justify-center p-6 rounded-2xl',
         'backdrop-blur-md border transition-all duration-500 cursor-pointer',
+        // ÚPRAVA: Odstraněno žluté orámování pro default variant
         isActive 
           ? 'border-[#F9D523] shadow-xl bg-gradient-to-br from-[#1A3A3A]/60 to-[#001718]/80' 
-          : 'border-white/10 hover:border-[#F9D523] bg-[#001718]/60',
-        'hover:shadow-[0_0_30px_rgba(249,213,35,0.2)]',
+          : 'border-white/10 hover:border-[#F9D523]/50 bg-[#001718]/60',
+        // Zachován hover efekt se zlatým zvýrazněním
+        'hover:shadow-[0_0_30px_rgba(249,213,35,0.15)] hover:scale-105',
         className
       )}
     >
       <span className="text-3xl font-bold text-white mb-2">
         {value}
       </span>
-      <span className="text-xs text-white/50 uppercase tracking-wider text-center font-medium">
+      <span className="text-xs text-white/50 uppercase tracking-wider text-center font-medium mb-3">
         {label}
       </span>
       
-      {isActive && (
-        <button className="mt-3 px-4 py-1.5 bg-white/20 text-white text-xs font-bold rounded-full hover:bg-white/30 transition-all transform hover:scale-105 shadow-lg border border-white/30">
-          AKTÍVNY
-        </button>
+      {/* ÚPRAVA: Místo pevného tlačítka "AKTÍVNY" podporujeme children */}
+      {children ? children : (
+        isActive && (
+          <button className="mt-3 px-4 py-1.5 bg-white/20 text-white text-xs font-bold rounded-full hover:bg-white/30 transition-all transform hover:scale-105 shadow-lg border border-white/30">
+            AKTÍVNY
+          </button>
+        )
       )}
       
-      {/* Glass overlay */}
+      {/* Zachovaný glass overlay efekt */}
       <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
     </div>
   );

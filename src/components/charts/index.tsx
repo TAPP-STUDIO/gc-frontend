@@ -24,6 +24,7 @@ interface PortfolioChartProps extends BaseChartProps {
   valueKey?: string;
   compareKey?: string;
   showComparison?: boolean;
+  title?: string; // NOVÉ: Konfigurovatelý název
 }
 
 export function PortfolioChart({ 
@@ -35,12 +36,13 @@ export function PortfolioChart({
   showComparison = false,
   showGrid = true,
   showTooltip = true,
-  animate = true
+  animate = true,
+  title = 'Vývoj portfolia' // Výchozí název
 }: PortfolioChartProps) {
   return (
     <div className={`glass-card p-6 ${className}`}>
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-white">Vývoj portfolia</h3>
+        <h3 className="text-lg font-semibold text-white">{title}</h3>
         <div className="flex items-center space-x-4 text-sm">
           <div className="flex items-center space-x-2">
             <div className="w-3 h-3 bg-[#F9D523] rounded-full" />

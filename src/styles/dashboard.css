@@ -552,3 +552,20 @@
 .dashboard-glow {
   text-shadow: 0 0 20px rgba(249, 213, 35, 0.5);
 }
+
+/* ==============================
+   PORTFOLIO FIXES - TABLE STYLING (bez hover efektů)
+   ============================== */
+
+.table-hover-effects {
+  /* Pouze základní styling, žádné hover efekty na řádky */
+}
+
+.table-hover-effects tbody tr {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+}
+
+/* HOVER EFEKT JE NYNÍ NA CELÉM KONTEJNERU (DashboardCard) */
+/* Odstraněny všechny hover efekty z řádků tabulky */

@@ -26,7 +26,7 @@ export const DashboardChart: React.FC<ChartProps> = ({
   data,
   height = 300,
   showGrid = true,
-  lineColor = '#FFFFFF',
+  lineColor = '#F9D523', // OPRAVA: Žlutá barva jako výchozí (GC Cards styl)
   className = ''
 }) => {
   const maxValue = Math.max(...data.map(d => d.value));
@@ -232,7 +232,7 @@ interface TableProps<T> {
 
 export function DashboardTable<T>({ columns, data, className = '' }: TableProps<T>) {
   return (
-    <div className={`${className}`}>
+    <div className={className}>
       <table className="w-full">
         <thead className="border-b border-white/10">
           <tr>
@@ -250,7 +250,7 @@ export function DashboardTable<T>({ columns, data, className = '' }: TableProps<
           {data.map((item, rowIndex) => (
             <tr 
               key={rowIndex} 
-              className="border-b border-white/5 hover:bg-white/[0.02] transition-colors"
+              className="border-b border-white/5 transition-colors"
             >
               {columns.map((column) => (
                 <td 
