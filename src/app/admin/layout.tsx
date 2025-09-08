@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminTopBar from '@/components/admin/AdminTopBar';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
+import '@/styles/unified-dashboard.css'; // Import unified styles
 
 export default function AdminLayout({
   children,
@@ -28,8 +29,9 @@ export default function AdminLayout({
 
   return (
     <ProtectedRoute requireAdmin={true}>
-      <div className="min-h-screen relative admin-layout">
-        {/* Background SVG */}
+      {/* UNIFIED LAYOUT STRUCTURE - stejný jako user dashboard */}
+      <div className="min-h-screen relative">
+        {/* Background SVG - unified */}
         <div 
           className="fixed inset-0 z-0"
           style={{ 
@@ -41,31 +43,24 @@ export default function AdminLayout({
           }}
         />
         
-        {/* Mobile-first responsive layout */}
-        <div className="flex h-screen overflow-hidden relative z-10">
-          {/* Admin Sidebar */}
+        {/* Main Layout - unified struktura */}
+        <div className="flex h-screen relative z-10">
+          {/* Admin Sidebar s glassmorphism */}
           <AdminSidebar 
             isCollapsed={isSidebarCollapsed}
             onToggleCollapse={handleToggleSidebar}
           />
 
-          {/* Main content area */}
-          <div className="flex-1 flex flex-col min-w-0 admin-content">
-            {/* Content area with proper scrolling */}
-            <main className="flex-1 overflow-auto">
-              <div className="min-h-full w-full">
-                {/* Admin TopBar */}
-                <AdminTopBar />
-                
-                {/* Content with consistent padding */}
-                <div className="px-4 sm:px-6 lg:px-8 pt-2 pb-6">
-                  <div className="max-w-full mx-auto">
-                    {children}
-                  </div>
-                </div>
-              </div>
-            </main>
-          </div>
+          {/* Main Content - unified struktura */}
+          <main className="flex-1 overflow-y-auto relative">
+            <div className="w-full">
+              {/* Admin TopBar */}
+              <AdminTopBar />
+              
+              {/* Content */}
+              {children}
+            </div>
+          </main>
         </div>
       </div>
     </ProtectedRoute>

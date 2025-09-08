@@ -1,9 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Container, Stack, PageHeader } from '@/components/layout';
-import { EnhancedValueCard } from '@/components/cards';
-import { LineChart } from '@/components/charts';
+import { 
+  DashboardButton, 
+  DashboardCard, 
+  StatCard,
+  DashboardChart,
+  DashboardTable 
+} from '@/components/dashboard';
 
 export default function AnalyticsAdminPage() {
   const [selectedTimeRange, setSelectedTimeRange] = useState<'7d' | '30d' | '90d' | '1y'>('30d');
@@ -174,48 +178,6 @@ export default function AnalyticsAdminPage() {
     }
   };
 
-  const getMinMaxValues = (data: Array<{ name: string; value: number }>) => {
-    if (data.length === 0) return { min: 0, max: 100 };
-    const values = data.map(d => d.value);
-    const min = Math.min(...values);
-    const max = Math.max(...values);
-    // Add some padding to the chart
-    const padding = (max - min) * 0.1;
-    return {
-      min: Math.floor(Math.max(0, min - padding)),
-      max: Math.ceil(max + padding)
-    };
-  };
-
-  const getCurrentValueAndMonth = (data: Array<{ name: string; value: number }>) => {
-    if (data.length === 0) return { value: 0, month: '' };
-    const lastItem = data[data.length - 1];
-    return {
-      value: lastItem.value,
-      month: lastItem.name
-    };
-  };
-
-  const getTimeframeValue = () => {
-    switch (selectedTimeRange) {
-      case '7d': return 'weekly';
-      case '30d': return 'monthly';
-      case '90d': return 'monthly';
-      case '1y': return 'yearly';
-      default: return 'monthly';
-    }
-  };
-
-  const handleTimeframeChange = (value: string) => {
-    switch (value) {
-      case 'weekly': setSelectedTimeRange('7d'); break;
-      case 'monthly': setSelectedTimeRange('30d'); break;
-      case 'yearly': setSelectedTimeRange('1y'); break;
-      default: setSelectedTimeRange('30d');
-    }
-  }
-
-
   const handleExport = (type: 'csv' | 'json' | 'pdf') => {
     console.log(`Exporting analytics as ${type}`);
     // TODO: Implement actual export functionality
@@ -232,288 +194,320 @@ export default function AnalyticsAdminPage() {
   };
 
   return (
-    <Container fluid className="py-4 sm:py-6">
-      <Stack spacing="lg">
-        <PageHeader 
-          title="Analytics Dashboard"
-          showBackButton={true}
-        />
-
-        {/* Analytics Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <EnhancedValueCard
-            title="Celkem Uživatelů"
-            value={analyticsData.overview.totalUsers}
-            formatter={(v) => v.toLocaleString()}
-            trend={{
-              value: ((analyticsData.overview.newUsers30d / analyticsData.overview.totalUsers) * 100),
-              direction: 'up',
-              period: '30 dní'
-            }}
-            className="bg-gradient-to-br from-blue-500/10 to-blue-600/10 border-blue-500/20"
-          />
-          
-          <EnhancedValueCard
-            title="Revenue (Total)"
-            value={analyticsData.overview.totalRevenue}
-            formatter={(v) => `$${v.toLocaleString()}`}
-            trend={{
-              value: 23.5,
-              direction: 'up',
-              period: '30 dní'
-            }}
-            className="bg-gradient-to-br from-green-500/10 to-green-600/10 border-green-500/20"
-          />
-          
-          <EnhancedValueCard
-            title="NFTs Minted"
-            value={analyticsData.overview.totalNFTsMinted}
-            formatter={(v) => v.toLocaleString()}
-            trend={{
-              value: ((analyticsData.overview.nftsMinted30d / analyticsData.overview.totalNFTsMinted) * 100),
-              direction: 'up',
-              period: '30 dní'
-            }}
-            className="bg-gradient-to-br from-yellow-500/10 to-yellow-600/10 border-yellow-500/20"
-          />
-          
-          <EnhancedValueCard
-            title="Avg Gas Price"
-            value={analyticsData.overview.avgGasPrice}
-            formatter={(v) => `${v} gwei`}
-            trend={{
-              value: 8.2,
-              direction: 'down',
-              period: '24h'
-            }}
-            className="bg-gradient-to-br from-purple-500/10 to-purple-600/10 border-purple-500/20"
-          />
+    <div className="p-6 lg:p-8">
+      {/* Admin Page Header - UNIFIED STYLE */}
+      <DashboardCard variant="highlighted" className="mb-6 border-red-500/20 bg-gradient-to-br from-red-500/5 to-transparent">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            <div className="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center mr-4">
+              <svg className="w-6 h-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-white mb-1">Analytics Dashboard</h1>
+              <p className="text-white/60 text-sm">Pokročilá analýza uživatelů a výkonu</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <DashboardButton variant="outline" className="border-red-500 text-red-400">
+              Export Data
+            </DashboardButton>
+            <DashboardButton variant="primary" className="bg-red-500 border-red-500">
+              Real-time View
+            </DashboardButton>
+          </div>
         </div>
+      </DashboardCard>
 
-        {/* Charts Section */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-          
-          {/* Main Chart */}
-          <div className="xl:col-span-2">
-            <div className="bg-[#151515] rounded-xl border border-[#333333] p-6">
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-xl font-semibold text-white">Analytics Trends</h3>
-                
-                <div className="flex space-x-2">
-                  {/* Metric Selector */}
-                  <select
-                    value={selectedMetric}
-                    onChange={(e) => setSelectedMetric(e.target.value as 'users' | 'revenue' | 'nfts' | 'gas')}
-                    className="bg-[#1a1a1a] border border-[#333333] rounded-lg px-3 py-1 text-white text-sm focus:border-[#F9D523] focus:outline-none"
-                  >
-                    <option value="users">Users</option>
-                    <option value="revenue">Revenue</option>
-                    <option value="nfts">NFTs</option>
-                    <option value="gas">Gas Price</option>
-                  </select>
-                  
-                  {/* Time Range Selector */}
-                  <select
-                    value={selectedTimeRange}
-                    onChange={(e) => setSelectedTimeRange(e.target.value as '7d' | '30d' | '90d' | '1y')}
-                    className="bg-[#1a1a1a] border border-[#333333] rounded-lg px-3 py-1 text-white text-sm focus:border-[#F9D523] focus:outline-none"
-                  >
-                    <option value="7d">7 dní</option>
-                    <option value="30d">30 dní</option>
-                    <option value="90d">90 dní</option>
-                    <option value="1y">1 rok</option>
-                  </select>
+      {/* Analytics Overview - UNIFIED STAT CARDS */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <StatCard
+          title="Celkem Uživatelů"
+          value={analyticsData.overview.totalUsers.toLocaleString()}
+          trend={{
+            value: ((analyticsData.overview.newUsers30d / analyticsData.overview.totalUsers) * 100),
+            isPositive: true
+          }}
+        />
+        
+        <StatCard
+          title="Revenue (Total)"
+          value={`$${analyticsData.overview.totalRevenue.toLocaleString()}`}
+          trend={{
+            value: 23.5,
+            isPositive: true
+          }}
+        />
+        
+        <StatCard
+          title="NFTs Minted"
+          value={analyticsData.overview.totalNFTsMinted.toLocaleString()}
+          trend={{
+            value: ((analyticsData.overview.nftsMinted30d / analyticsData.overview.totalNFTsMinted) * 100),
+            isPositive: true
+          }}
+        />
+        
+        <StatCard
+          title="Avg Gas Price"
+          value={`${analyticsData.overview.avgGasPrice} gwei`}
+          trend={{
+            value: 8.2,
+            isPositive: false
+          }}
+        />
+      </div>
+
+      {/* Charts Section - UNIFIED STYLE */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-6">
+        {/* Main Chart */}
+        <div className="xl:col-span-2">
+          <DashboardCard variant="highlighted" className="h-full">
+            <div className="flex justify-between items-center mb-6">
+              <div className="flex items-center">
+                <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center mr-3">
+                  <svg className="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+                  </svg>
                 </div>
+                <h3 className="text-xl font-semibold text-white">Analytics Trends</h3>
               </div>
               
-              <div className="h-80">
-                {
-                  (() => {
-                    const chartData = getChartData();
-                    const { min, max } = getMinMaxValues(chartData);
-                    const { value: currentValue, month: currentMonth } = getCurrentValueAndMonth(chartData);
-                    
-                    return (
-                      <LineChart 
-                        title={getChartTitle()}
-                        data={chartData}
-                        currentValue={currentValue}
-                        currentMonth={currentMonth}
-                        minValue={min}
-                        maxValue={max}
-                        timeframe={getTimeframeValue()}
-                        onTimeframeChange={handleTimeframeChange}
-                      />
-                    );
-                  })()
-                }
+              <div className="flex space-x-2">
+                {/* Metric Selector */}
+                <select
+                  value={selectedMetric}
+                  onChange={(e) => setSelectedMetric(e.target.value as 'users' | 'revenue' | 'nfts' | 'gas')}
+                  className="bg-white/5 border border-white/20 rounded-lg px-3 py-1 text-white text-sm focus:border-red-400 focus:outline-none backdrop-blur-md"
+                >
+                  <option value="users">Users</option>
+                  <option value="revenue">Revenue</option>
+                  <option value="nfts">NFTs</option>
+                  <option value="gas">Gas Price</option>
+                </select>
+                
+                {/* Time Range Selector */}
+                <select
+                  value={selectedTimeRange}
+                  onChange={(e) => setSelectedTimeRange(e.target.value as '7d' | '30d' | '90d' | '1y')}
+                  className="bg-white/5 border border-white/20 rounded-lg px-3 py-1 text-white text-sm focus:border-red-400 focus:outline-none backdrop-blur-md"
+                >
+                  <option value="7d">7 dní</option>
+                  <option value="30d">30 dní</option>
+                  <option value="90d">90 dní</option>
+                  <option value="1y">1 rok</option>
+                </select>
               </div>
             </div>
-          </div>
-
-          {/* Top Users */}
-          <div className="bg-[#151515] rounded-xl border border-[#333333] p-6">
-            <h3 className="text-xl font-semibold text-white mb-4">Top Holders</h3>
             
-            <div className="space-y-4">
-              {topUsers.map((user, index) => (
-                <div key={user.address} className="flex items-center space-x-3 p-3 bg-[#1a1a1a] rounded-lg">
-                  <div className="w-8 h-8 bg-[#F9D523] rounded-full flex items-center justify-center">
-                    <span className="text-[#151515] font-bold text-sm">#{index + 1}</span>
-                  </div>
-                  
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center space-x-2">
-                      <p className="text-white text-sm font-medium truncate">
-                        {user.ensName || `${user.address.slice(0, 6)}...${user.address.slice(-4)}`}
-                      </p>
-                      <span className={`px-2 py-1 rounded text-xs text-white ${getTierColor(user.tier)}`}>
-                        {user.tier.toUpperCase()}
-                      </span>
-                    </div>
-                    <p className="text-xs text-[#666666]">
-                      {user.nftsOwned} NFTs • ${user.totalValue.toLocaleString()}
-                    </p>
-                    <p className="text-xs text-[#666666]">
-                      {user.transactions} txs • {user.lastActive}
-                    </p>
-                  </div>
+            <DashboardChart 
+              data={getChartData()}
+              height={280}
+              lineColor="#EF4444"
+            />
+          </DashboardCard>
+        </div>
+
+        {/* Top Users - UNIFIED STYLE */}
+        <DashboardCard variant="default">
+          <div className="flex items-center mb-4">
+            <div className="w-8 h-8 rounded-lg bg-yellow-500/20 flex items-center justify-center mr-3">
+              <svg className="w-4 h-4 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold text-white">Top Holders</h3>
+          </div>
+          
+          <div className="space-y-3">
+            {topUsers.map((user, index) => (
+              <div key={user.address} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-white/5 transition-all duration-300" style={{ background: 'rgba(255, 255, 255, 0.02)' }}>
+                <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">#{index + 1}</span>
                 </div>
-              ))}
-            </div>
-            
-            <button className="w-full text-center text-[#F9D523] text-sm mt-4 hover:text-[#e3c320] transition-colors">
-              View All Users →
-            </button>
+                
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center space-x-2">
+                    <p className="text-white text-sm font-medium truncate">
+                      {user.ensName || `${user.address.slice(0, 6)}...${user.address.slice(-4)}`}
+                    </p>
+                    <span className={`px-2 py-1 rounded text-xs text-white ${getTierColor(user.tier)}`}>
+                      {user.tier.toUpperCase()}
+                    </span>
+                  </div>
+                  <p className="text-xs text-white/60">
+                    {user.nftsOwned} NFTs • ${user.totalValue.toLocaleString()}
+                  </p>
+                  <p className="text-xs text-white/40">
+                    {user.transactions} txs • {user.lastActive}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
-        </div>
+          
+          <DashboardButton variant="ghost" className="w-full mt-4 text-red-400 hover:text-red-300">
+            View All Users →
+          </DashboardButton>
+        </DashboardCard>
+      </div>
 
-        {/* Project Performance */}
-        <div className="bg-[#151515] rounded-xl border border-[#333333] p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-xl font-semibold text-white">Project Performance</h3>
+      {/* Project Performance - UNIFIED STYLE */}
+      <DashboardCard variant="default" padding="none">
+        <div className="p-6 border-b border-white/10">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center">
+              <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center mr-3">
+                <svg className="w-4 h-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-white">Project Performance</h3>
+            </div>
             <div className="flex space-x-2">
-              <button 
-                onClick={() => handleExport('csv')}
-                className="bg-[#333333] hover:bg-[#444444] text-white px-3 py-2 rounded-lg text-sm transition-colors"
-              >
+              <DashboardButton variant="outline" onClick={() => handleExport('csv')}>
                 Export CSV
-              </button>
-              <button 
-                onClick={() => handleExport('json')}
-                className="bg-[#333333] hover:bg-[#444444] text-white px-3 py-2 rounded-lg text-sm transition-colors"
-              >
+              </DashboardButton>
+              <DashboardButton variant="outline" onClick={() => handleExport('json')}>
                 Export JSON
-              </button>
+              </DashboardButton>
             </div>
           </div>
-          
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-[#1a1a1a] border-b border-[#333333]">
-                <tr>
-                  <th className="text-left p-4 text-[#666666] text-sm font-medium">Project</th>
-                  <th className="text-left p-4 text-[#666666] text-sm font-medium">Users</th>
-                  <th className="text-left p-4 text-[#666666] text-sm font-medium">Revenue</th>
-                  <th className="text-left p-4 text-[#666666] text-sm font-medium">Avg Price</th>
-                  <th className="text-left p-4 text-[#666666] text-sm font-medium">24h Volume</th>
-                  <th className="text-left p-4 text-[#666666] text-sm font-medium">Growth</th>
-                  <th className="text-left p-4 text-[#666666] text-sm font-medium">Holders</th>
-                  <th className="text-left p-4 text-[#666666] text-sm font-medium">Transactions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#333333]">
-                {projectPerformance.map((project) => (
-                  <tr key={project.name} className="hover:bg-[#1a1a1a]/50 transition-colors">
-                    <td className="p-4">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-gradient-to-r from-[#F9D523] to-[#e3c320] rounded-lg flex items-center justify-center">
-                          <svg className="w-4 h-4 text-[#151515]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
-                        </div>
-                        <span className="font-medium text-white">{project.name}</span>
-                      </div>
-                    </td>
-                    <td className="p-4 text-white">{project.users.toLocaleString()}</td>
-                    <td className="p-4 text-white font-medium">${project.revenue.toLocaleString()}</td>
-                    <td className="p-4 text-white">{project.avgPrice} ETH</td>
-                    <td className="p-4 text-white">{project.volume24h} ETH</td>
-                    <td className="p-4">
-                      <span className="text-green-400">+{project.growth}%</span>
-                    </td>
-                    <td className="p-4 text-white">{project.holders.toLocaleString()}</td>
-                    <td className="p-4 text-white">{project.transactions.toLocaleString()}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
         </div>
+        
+        <div className="overflow-x-auto">
+          <DashboardTable
+            columns={[
+              { 
+                key: 'name', 
+                label: 'Project',
+                render: (value) => (
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-red-400 rounded-lg flex items-center justify-center">
+                      <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <span className="font-medium text-white">{value}</span>
+                  </div>
+                )
+              },
+              { 
+                key: 'users', 
+                label: 'Users',
+                render: (value) => <span className="text-white">{value.toLocaleString()}</span>
+              },
+              { 
+                key: 'revenue', 
+                label: 'Revenue',
+                render: (value) => <span className="text-white font-medium">${value.toLocaleString()}</span>
+              },
+              { 
+                key: 'avgPrice', 
+                label: 'Avg Price',
+                render: (value) => <span className="text-white">{value} ETH</span>
+              },
+              { 
+                key: 'volume24h', 
+                label: '24h Volume',
+                render: (value) => <span className="text-white">{value} ETH</span>
+              },
+              { 
+                key: 'growth', 
+                label: 'Growth',
+                render: (value) => <span className="text-green-400">+{value}%</span>
+              },
+              { 
+                key: 'holders', 
+                label: 'Holders',
+                render: (value) => <span className="text-white">{value.toLocaleString()}</span>
+              },
+              { 
+                key: 'transactions', 
+                label: 'Transactions',
+                render: (value) => <span className="text-white">{value.toLocaleString()}</span>
+              }
+            ]}
+            data={projectPerformance}
+          />
+        </div>
+      </DashboardCard>
 
-        {/* Real-time Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          
-          {/* Active Users */}
-          <div className="bg-[#151515] rounded-xl border border-[#333333] p-6">
-            <div className="flex items-center justify-between mb-4">
+      {/* Real-time Stats - UNIFIED STYLE */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+        {/* Active Users */}
+        <DashboardCard variant="default">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center">
+              <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center mr-3">
+                <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+              </div>
               <h4 className="text-lg font-semibold text-white">Live Users</h4>
-              <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-            </div>
-            <div className="text-3xl font-bold text-[#F9D523] mb-2">342</div>
-            <p className="text-sm text-[#666666]">Currently active</p>
-            
-            <div className="mt-4 space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="text-[#666666]">Desktop</span>
-                <span className="text-white">68%</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-[#666666]">Mobile</span>
-                <span className="text-white">32%</span>
-              </div>
             </div>
           </div>
+          <div className="text-3xl font-bold text-red-400 mb-2">342</div>
+          <p className="text-sm text-white/60 mb-4">Currently active</p>
+          
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-white/60">Desktop</span>
+              <span className="text-white">68%</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-white/60">Mobile</span>
+              <span className="text-white">32%</span>
+            </div>
+          </div>
+        </DashboardCard>
 
-          {/* Transaction Volume */}
-          <div className="bg-[#151515] rounded-xl border border-[#333333] p-6">
-            <div className="flex items-center justify-between mb-4">
+        {/* Transaction Volume */}
+        <DashboardCard variant="default">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center">
+              <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center mr-3">
+                <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+              </div>
               <h4 className="text-lg font-semibold text-white">24h Volume</h4>
-              <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-              </svg>
             </div>
-            <div className="text-3xl font-bold text-[#F9D523] mb-2">89.4 ETH</div>
-            <p className="text-sm text-green-400">+15.3% from yesterday</p>
           </div>
+          <div className="text-3xl font-bold text-red-400 mb-2">89.4 ETH</div>
+          <p className="text-sm text-green-400">+15.3% from yesterday</p>
+        </DashboardCard>
 
-          {/* Network Status */}
-          <div className="bg-[#151515] rounded-xl border border-[#333333] p-6">
-            <div className="flex items-center justify-between mb-4">
+        {/* Network Status */}
+        <DashboardCard variant="default">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center">
+              <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center mr-3">
+                <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+              </div>
               <h4 className="text-lg font-semibold text-white">Network</h4>
-              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-            </div>
-            <div className="text-3xl font-bold text-[#F9D523] mb-2">25.6</div>
-            <p className="text-sm text-[#666666]">Gwei average</p>
-            
-            <div className="mt-4">
-              <p className="text-sm text-[#666666]">Block time: 12.1s</p>
             </div>
           </div>
+          <div className="text-3xl font-bold text-red-400 mb-2">25.6</div>
+          <p className="text-sm text-white/60 mb-2">Gwei average</p>
+          <p className="text-sm text-white/60">Block time: 12.1s</p>
+        </DashboardCard>
 
-          {/* Error Rate */}
-          <div className="bg-[#151515] rounded-xl border border-[#333333] p-6">
-            <div className="flex items-center justify-between mb-4">
+        {/* Error Rate */}
+        <DashboardCard variant="default">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center">
+              <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center mr-3">
+                <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
               <h4 className="text-lg font-semibold text-white">Error Rate</h4>
-              <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
             </div>
-            <div className="text-3xl font-bold text-[#F9D523] mb-2">0.02%</div>
-            <p className="text-sm text-green-400">Below 0.1% target</p>
           </div>
-        </div>
-      </Stack>
-    </Container>
+          <div className="text-3xl font-bold text-red-400 mb-2">0.02%</div>
+          <p className="text-sm text-green-400">Below 0.1% target</p>
+        </DashboardCard>
+      </div>
+    </div>
   );
 }

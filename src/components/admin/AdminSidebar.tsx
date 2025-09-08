@@ -27,7 +27,7 @@ export default function AdminSidebar({ isCollapsed = false }: AdminSidebarProps)
     {
       id: 'nfts',
       name: 'NFT Projekty',
-      icon: 'projects.svg', // Použijeme stávající ikonu
+      icon: 'projects.svg',
       href: '/admin/nfts',
       subItems: [
         { id: 'gc-cards', name: 'GC Cards', href: '/admin/nfts/gc-cards' },
@@ -39,7 +39,7 @@ export default function AdminSidebar({ isCollapsed = false }: AdminSidebarProps)
     {
       id: 'users',
       name: 'Uživatelé',
-      icon: 'messages.svg', // Dočasně použijeme stávající ikonu
+      icon: 'messages.svg',
       href: '/admin/users',
     },
     {
@@ -111,24 +111,32 @@ export default function AdminSidebar({ isCollapsed = false }: AdminSidebarProps)
       <>
         {/* Mobile overlay */}
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden backdrop-blur-sm"
           onClick={closeMobileMenu}
         />
         
-        {/* Mobile sidebar */}
-        <aside className="fixed left-0 top-0 h-full w-[280px] bg-[#151515] z-50 lg:hidden border-r border-[#333333] overflow-y-auto">
+        {/* Mobile sidebar - UNIFIED GLASSMORPHISM STYLE */}
+        <aside 
+          className="fixed left-0 top-0 h-full w-[280px] z-50 lg:hidden overflow-y-auto"
+          style={{
+            background: 'linear-gradient(180deg, rgba(21, 21, 21, 0.85) 0%, rgba(21, 21, 21, 0.9) 100%)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            borderRight: '1px solid rgba(239, 68, 68, 0.2)' // Admin červený accent
+          }}
+        >
           <div className="flex flex-col h-full px-4">
-            {/* Header with close button and Admin badge */}
-            <div className="flex items-center justify-between pt-6 pb-6">
+            {/* Header with close button and Admin badge - UNIFIED STYLE */}
+            <div className="flex items-center justify-between p-6 border-b border-white/10">
               <div className="flex items-center">
                 <Logo />
-                <span className="ml-2 px-2 py-1 bg-red-500 text-white text-xs font-bold rounded uppercase">
+                <span className="ml-2 px-3 py-1.5 bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-bold rounded-full uppercase tracking-wider shadow-lg">
                   ADMIN
                 </span>
               </div>
               <button
                 onClick={closeMobileMenu}
-                className="p-2 text-white hover:text-[#F9D523] transition-colors"
+                className="p-2 text-white hover:text-red-400 transition-all duration-300 hover:bg-white/10 rounded-lg"
                 aria-label="Zavřít admin menu"
               >
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -138,12 +146,12 @@ export default function AdminSidebar({ isCollapsed = false }: AdminSidebarProps)
               </button>
             </div>
 
-            {/* Navigation */}
-            <nav className="flex-1">
-              <ul className="space-y-6">
+            {/* Navigation - UNIFIED STYLE */}
+            <nav className="flex-1 py-4">
+              <ul className="space-y-1">
                 {adminNavItems.map(item => (
                   <li key={item.id} className="relative">
-                    <div className="flex items-center mb-2">
+                    <div className="mb-1">
                       {/* Hlavní link/tlačítko */}
                       {item.subItems && item.subItems.length > 0 ? (
                         <button
@@ -151,26 +159,28 @@ export default function AdminSidebar({ isCollapsed = false }: AdminSidebarProps)
                             e.preventDefault();
                             toggleItemExpansion(item.id, e);
                           }}
-                          className={`flex-grow flex items-center justify-between ${
-                            isActive(item.href) ? 'text-[#F9D523]' : 'text-white'
-                          } hover:text-[#F9D523] transition-colors text-left`}
+                          className={`w-full flex items-center justify-between px-6 py-3 text-white transition-all duration-300 rounded-lg group ${
+                            isActive(item.href) 
+                              ? 'bg-white/10 border-l-2 border-red-500 text-red-400' 
+                              : 'hover:bg-white/5 hover:border-l-2 hover:border-red-300'
+                          }`}
                         >
                           <div className="flex items-center">
-                            <span className="w-6 h-6 mr-3 flex items-center justify-center">
+                            <span className="w-5 h-5 mr-3 flex items-center justify-center">
                               <Image
                                 src={`/images/icons/${item.icon}`}
                                 alt={item.name}
-                                width={24}
-                                height={24}
-                                className={`${isActive(item.href) ? 'filter-yellow' : 'filter-white'}`}
+                                width={20}
+                                height={20}
+                                className="opacity-80 transition-all duration-300"
                                 style={{
                                   filter: isActive(item.href)
-                                    ? 'invert(80%) sepia(40%) saturate(1000%) hue-rotate(360deg) brightness(105%) contrast(105%)'
-                                    : 'brightness(0) invert(1)',
+                                    ? 'brightness(0) saturate(100%) invert(55%) sepia(89%) saturate(2466%) hue-rotate(342deg) brightness(99%) contrast(98%)'
+                                    : 'brightness(0) saturate(100%) invert(100%)',
                                 }}
                               />
                             </span>
-                            {item.name}
+                            <span className="text-sm font-medium">{item.name}</span>
                           </div>
                           
                           {/* Šipka */}
@@ -180,7 +190,7 @@ export default function AdminSidebar({ isCollapsed = false }: AdminSidebarProps)
                             viewBox="0 0 10 6"
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
-                            className={`transition-transform duration-200 ${
+                            className={`transition-transform duration-300 ${
                               isExpanded(item.id) ? 'rotate-180' : ''
                             }`}
                           >
@@ -191,25 +201,27 @@ export default function AdminSidebar({ isCollapsed = false }: AdminSidebarProps)
                         <Link
                           href={item.href}
                           onClick={closeMobileMenu}
-                          className={`flex-grow flex items-center ${
-                            isActive(item.href) ? 'text-[#F9D523]' : 'text-white'
-                          } hover:text-[#F9D523] transition-colors`}
+                          className={`flex items-center px-6 py-3 text-white transition-all duration-300 rounded-lg group ${
+                            isActive(item.href) 
+                              ? 'bg-white/10 border-l-2 border-red-500 text-red-400' 
+                              : 'hover:bg-white/5 hover:border-l-2 hover:border-red-300'
+                          }`}
                         >
-                          <span className="w-6 h-6 mr-3 flex items-center justify-center">
+                          <span className="w-5 h-5 mr-3 flex items-center justify-center">
                             <Image
                               src={`/images/icons/${item.icon}`}
                               alt={item.name}
-                              width={24}
-                              height={24}
-                              className={`${isActive(item.href) ? 'filter-yellow' : 'filter-white'}`}
+                              width={20}
+                              height={20}
+                              className="opacity-80 transition-all duration-300"
                               style={{
                                 filter: isActive(item.href)
-                                  ? 'invert(80%) sepia(40%) saturate(1000%) hue-rotate(360deg) brightness(105%) contrast(105%)'
-                                  : 'brightness(0) invert(1)',
+                                  ? 'brightness(0) saturate(100%) invert(55%) sepia(89%) saturate(2466%) hue-rotate(342deg) brightness(99%) contrast(98%)'
+                                  : 'brightness(0) saturate(100%) invert(100%)',
                               }}
                             />
                           </span>
-                          {item.name}
+                          <span className="text-sm font-medium">{item.name}</span>
                         </Link>
                       )}
                     </div>
@@ -219,24 +231,24 @@ export default function AdminSidebar({ isCollapsed = false }: AdminSidebarProps)
                       <div
                         className={`overflow-hidden transition-all duration-300 ease-in-out ${
                           isExpanded(item.id)
-                            ? `max-h-[${item.subItems.length * 40}px] opacity-100 mb-4` 
+                            ? `max-h-[${item.subItems.length * 40}px] opacity-100 mb-2` 
                             : 'max-h-0 opacity-0'
                         }`}
                         style={{
                           maxHeight: isExpanded(item.id) ? `${item.subItems.length * 40 + 20}px` : '0px'
                         }}
                       >
-                        <ul className="space-y-3 mt-3">
+                        <ul className="ml-10 space-y-1 mt-1">
                           {item.subItems.map((subItem) => (
                             <li key={subItem.id}>
                               <Link
                                 href={subItem.href}
                                 onClick={closeMobileMenu}
-                                className={`block py-1 ${
+                                className={`block px-3 py-2 text-xs rounded transition-all duration-300 ${
                                   isActive(subItem.href)
-                                    ? 'text-[#F9D523]'
-                                    : 'text-white'
-                                } hover:text-[#F9D523] transition-colors`}
+                                    ? 'text-red-400 bg-white/10'
+                                    : 'text-white/70 hover:text-red-300 hover:bg-white/5'
+                                }`}
                               >
                                 {subItem.name}
                               </Link>
@@ -250,13 +262,13 @@ export default function AdminSidebar({ isCollapsed = false }: AdminSidebarProps)
               </ul>
             </nav>
 
-            {/* Footer sekce pro mobile */}
-            <div className="mt-auto pb-4 border-t border-[#333333] pt-4">
-              <div className="space-y-3 mb-4">
+            {/* Footer sekce pro mobile - UNIFIED STYLE */}
+            <div className="mt-auto pb-6 border-t border-white/10 pt-4">
+              <div className="space-y-2">
                 {/* Back to User Dashboard */}
                 <Link
                   href="/dashboard"
-                  className="flex items-center text-[#666666] hover:text-[#F9D523] transition-colors"
+                  className="flex items-center px-6 py-3 text-white/60 hover:text-red-300 hover:bg-white/5 transition-all duration-300 rounded-lg group"
                 >
                   <span className="w-5 h-5 mr-3 flex items-center justify-center">
                     <svg 
@@ -276,7 +288,7 @@ export default function AdminSidebar({ isCollapsed = false }: AdminSidebarProps)
                 {/* Admin Docs */}
                 <a
                   href="/admin/docs"
-                  className="flex items-center text-[#666666] hover:text-[#F9D523] transition-colors"
+                  className="flex items-center px-6 py-3 text-white/60 hover:text-red-300 hover:bg-white/5 transition-all duration-300 rounded-lg group"
                 >
                   <span className="w-5 h-5 mr-3 flex items-center justify-center">
                     <svg 
@@ -304,77 +316,87 @@ export default function AdminSidebar({ isCollapsed = false }: AdminSidebarProps)
     );
   }
 
-  // Desktop sidebar
+  // Desktop sidebar - UNIFIED GLASSMORPHISM STYLE
   return (
     <>
-      {/* Mobile menu button */}
+      {/* Mobile menu button - UNIFIED STYLE */}
       <button
         onClick={handleMobileMenuToggle}
-        className="fixed top-4 left-4 z-30 p-2 bg-[#151515] text-white hover:text-red-500 transition-colors lg:hidden border border-red-500 rounded-md"
+        className="fixed top-4 left-4 z-30 p-3 text-white hover:text-red-400 transition-all duration-300 lg:hidden rounded-lg border border-red-500/30 hover:border-red-500/60"
+        style={{
+          background: 'rgba(21, 21, 21, 0.8)',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
+        }}
         aria-label="Otevřít admin menu"
       >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <line x1="3" y1="6" x2="21" y2="6"></line>
           <line x1="3" y1="12" x2="21" y2="12"></line>
           <line x1="3" y1="18" x2="21" y2="18"></line>
         </svg>
       </button>
 
-      {/* Desktop sidebar */}
+      {/* Desktop sidebar - STEJNÝ GLASSMORPHISM JAKO USER DASHBOARD */}
       <aside 
-        className={`hidden lg:flex flex-col h-screen bg-[#151515] border-r border-red-500/30 transition-all duration-300 ease-in-out overflow-hidden relative ${
-          isCollapsed ? 'w-[70px]' : 'w-[200px]'
+        className={`hidden lg:flex flex-col h-screen transition-all duration-300 ease-in-out overflow-hidden relative ${
+          isCollapsed ? 'w-[70px]' : 'w-[240px]'
         }`}
+        style={{
+          background: 'linear-gradient(180deg, rgba(21, 21, 21, 0.3) 0%, rgba(21, 21, 21, 0.5) 100%)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          borderRight: '1px solid rgba(239, 68, 68, 0.15)' // Admin červený accent, ale jemný
+        }}
       >
-        <div className={`flex flex-col h-full ${isCollapsed ? 'px-2' : 'px-4'}`}>
-          {/* Header - logo s admin badge */}
-          <div className={`flex items-center pt-6 pb-10 ${isCollapsed ? 'justify-center' : 'justify-start'}`}>
-            <div className={`transition-all duration-300 ${isCollapsed ? 'scale-75' : 'scale-100'}`}>
-              <div className="flex items-center">
-                <Logo />
-                {!isCollapsed && (
-                  <span className="ml-2 px-2 py-1 bg-red-500 text-white text-xs font-bold rounded uppercase">
-                    ADMIN
-                  </span>
-                )}
-              </div>
+        <div className={`flex flex-col h-full ${isCollapsed ? 'px-2' : 'px-0'}`}>
+          {/* Header - logo s admin badge - UNIFIED STYLE */}
+          <div className={`p-6 border-b border-white/10 ${isCollapsed ? 'text-center' : ''}`}>
+            <div className="flex items-center justify-center">
+              <Logo />
+              {!isCollapsed && (
+                <span className="ml-3 px-3 py-1.5 bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-bold rounded-full uppercase tracking-wider shadow-lg">
+                  ADMIN
+                </span>
+              )}
             </div>
           </div>
 
-          {/* Navigation */}
-          <nav className="flex-1 overflow-y-auto">
-            <ul className={`space-y-6 ${isCollapsed ? 'space-y-4' : ''}`}>
+          {/* Navigation - UNIFIED STYLE JAKO USER DASHBOARD */}
+          <nav className="flex-1 py-4">
+            <ul className="space-y-1">
               {adminNavItems.map(item => (
                 <li key={item.id} className="relative group">
-                  <div className={`${isCollapsed ? 'flex justify-center' : 'flex items-center mb-2'}`}>
+                  <div className={`${isCollapsed ? 'flex justify-center' : 'mb-1'}`}>
                     {/* Hlavní link/tlačítko */}
                     {item.subItems && item.subItems.length > 0 && !isCollapsed ? (
-                      // Položka s rozbalením - celý řádek je klikatelný
                       <button
                         onClick={(e) => {
                           e.preventDefault();
                           toggleItemExpansion(item.id, e);
                         }}
-                        className={`flex-grow flex items-center justify-between ${
-                          isActive(item.href) ? 'text-[#F9D523]' : 'text-white'
-                        } hover:text-[#F9D523] transition-colors text-left`}
+                        className={`w-full flex items-center justify-between px-6 py-3 text-white transition-all duration-300 ${
+                          isActive(item.href) 
+                            ? 'bg-white/10 border-l-2 border-red-500 text-red-400' 
+                            : 'hover:bg-white/5 hover:border-l-2 hover:border-red-300'
+                        }`}
                       >
                         <div className="flex items-center">
-                          <span className="w-6 h-6 mr-3 flex items-center justify-center">
+                          <span className="w-5 h-5 mr-3 flex items-center justify-center">
                             <Image
                               src={`/images/icons/${item.icon}`}
                               alt={item.name}
-                              width={24}
-                              height={24}
-                              className={`${isActive(item.href) ? 'filter-yellow' : 'filter-white'}`}
+                              width={20}
+                              height={20}
+                              className="opacity-80 transition-all duration-300"
                               style={{
                                 filter: isActive(item.href)
-                                  ? 'invert(80%) sepia(40%) saturate(1000%) hue-rotate(360deg) brightness(105%) contrast(105%)'
-                                  : 'brightness(0) invert(1)',
+                                  ? 'brightness(0) saturate(100%) invert(55%) sepia(89%) saturate(2466%) hue-rotate(342deg) brightness(99%) contrast(98%)'
+                                  : 'brightness(0) saturate(100%) invert(100%)',
                               }}
                             />
                           </span>
-                          {item.name}
+                          <span className="text-sm font-medium">{item.name}</span>
                         </div>
                         
                         {/* Šipka */}
@@ -384,7 +406,7 @@ export default function AdminSidebar({ isCollapsed = false }: AdminSidebarProps)
                           viewBox="0 0 10 6"
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg"
-                          className={`transition-transform duration-200 ${
+                          className={`transition-transform duration-300 ${
                             isExpanded(item.id) ? 'rotate-180' : ''
                           }`}
                         >
@@ -392,33 +414,34 @@ export default function AdminSidebar({ isCollapsed = false }: AdminSidebarProps)
                         </svg>
                       </button>
                     ) : (
-                      // Normální link
                       <Link
                         href={item.href}
-                        className={`${isCollapsed ? 'p-3 rounded-lg' : 'flex-grow flex items-center'} ${
-                          isActive(item.href) ? 'text-[#F9D523]' : 'text-white'
-                        } hover:text-[#F9D523] transition-colors relative`}
+                        className={`${isCollapsed ? 'p-3 rounded-lg flex items-center justify-center' : 'flex items-center px-6 py-3'} text-white transition-all duration-300 relative group ${
+                          isActive(item.href) 
+                            ? 'bg-white/10 border-l-2 border-red-500 text-red-400' 
+                            : 'hover:bg-white/5 hover:border-l-2 hover:border-red-300'
+                        }`}
                         title={isCollapsed ? item.name : undefined}
                       >
-                        <span className={`w-6 h-6 flex items-center justify-center ${!isCollapsed ? 'mr-3' : ''}`}>
+                        <span className={`w-5 h-5 flex items-center justify-center ${!isCollapsed ? 'mr-3' : ''}`}>
                           <Image
                             src={`/images/icons/${item.icon}`}
                             alt={item.name}
-                            width={24}
-                            height={24}
-                            className={`${isActive(item.href) ? 'filter-yellow' : 'filter-white'}`}
+                            width={20}
+                            height={20}
+                            className="opacity-80 transition-all duration-300"
                             style={{
                               filter: isActive(item.href)
-                                ? 'invert(80%) sepia(40%) saturate(1000%) hue-rotate(360deg) brightness(105%) contrast(105%)'
-                                : 'brightness(0) invert(1)',
+                                ? 'brightness(0) saturate(100%) invert(55%) sepia(89%) saturate(2466%) hue-rotate(342deg) brightness(99%) contrast(98%)'
+                                : 'brightness(0) saturate(100%) invert(100%)',
                             }}
                           />
                         </span>
-                        {!isCollapsed && item.name}
+                        {!isCollapsed && <span className="text-sm font-medium">{item.name}</span>}
                         
                         {/* Tooltip pro collapsed stav */}
                         {isCollapsed && (
-                          <div className="sidebar-tooltip absolute left-full ml-2 top-1/2 transform -translate-y-1/2 bg-[#1a1a1a] text-white text-sm py-1 px-2 rounded shadow-lg z-50 whitespace-nowrap">
+                          <div className="sidebar-tooltip absolute left-full ml-2 top-1/2 transform -translate-y-1/2 bg-[#1a1a1a] text-white text-sm py-2 px-3 rounded-lg shadow-lg z-50 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                             {item.name}
                           </div>
                         )}
@@ -431,23 +454,23 @@ export default function AdminSidebar({ isCollapsed = false }: AdminSidebarProps)
                     <div
                       className={`overflow-hidden transition-all duration-300 ease-in-out ${
                         isExpanded(item.id)
-                          ? `max-h-[${item.subItems.length * 40}px] opacity-100 mb-4` 
+                          ? `max-h-[${item.subItems.length * 40}px] opacity-100 mb-2` 
                           : 'max-h-0 opacity-0'
                       }`}
                       style={{
                         maxHeight: isExpanded(item.id) ? `${item.subItems.length * 40 + 20}px` : '0px'
                       }}
                     >
-                      <ul className="space-y-3 mt-3">
+                      <ul className="ml-12 mt-2 space-y-1">
                         {item.subItems.map((subItem) => (
                           <li key={subItem.id}>
                             <Link
                               href={subItem.href}
-                              className={`block py-1 ${
+                              className={`block px-3 py-2 text-xs rounded transition-all duration-300 ${
                                 isActive(subItem.href)
-                                  ? 'text-[#F9D523]'
-                                  : 'text-white'
-                              } hover:text-[#F9D523] transition-colors`}
+                                  ? 'text-red-400 bg-white/10'
+                                  : 'text-white/70 hover:text-red-300 hover:bg-white/5'
+                              }`}
                             >
                               {subItem.name}
                             </Link>
@@ -461,15 +484,15 @@ export default function AdminSidebar({ isCollapsed = false }: AdminSidebarProps)
             </ul>
           </nav>
 
-          {/* Footer sekce */}
-          <div className={`mt-auto pb-4 border-t border-[#333333] pt-4 ${isCollapsed ? 'px-1' : 'px-0'}`}>
-            <div className={`space-y-3 mb-4 ${isCollapsed ? 'space-y-2' : ''}`}>
+          {/* Footer sekce - UNIFIED STYLE */}
+          <div className={`mt-auto border-t border-white/10 ${isCollapsed ? 'p-2' : 'p-4'}`}>
+            <div className={`space-y-1 ${isCollapsed ? 'space-y-2' : ''}`}>
               {/* Back to User Dashboard */}
               <Link
                 href="/dashboard"
                 className={`group flex items-center ${
-                  isCollapsed ? 'justify-center p-2 rounded-lg' : ''
-                } text-[#666666] hover:text-[#F9D523] transition-colors relative`}
+                  isCollapsed ? 'justify-center p-3 rounded-lg' : 'px-6 py-3'
+                } text-white/60 hover:text-red-300 hover:bg-white/5 transition-all duration-300 relative`}
                 title={isCollapsed ? "Zpět na Dashboard" : undefined}
               >
                 <span className={`w-5 h-5 flex items-center justify-center ${!isCollapsed ? 'mr-3' : ''}`}>
@@ -488,7 +511,7 @@ export default function AdminSidebar({ isCollapsed = false }: AdminSidebarProps)
                 
                 {/* Tooltip pro collapsed stav */}
                 {isCollapsed && (
-                  <div className="sidebar-tooltip absolute left-full ml-2 top-1/2 transform -translate-y-1/2 bg-[#1a1a1a] text-white text-sm py-1 px-2 rounded shadow-lg z-50 whitespace-nowrap">
+                  <div className="sidebar-tooltip absolute left-full ml-2 top-1/2 transform -translate-y-1/2 bg-[#1a1a1a] text-white text-sm py-2 px-3 rounded-lg shadow-lg z-50 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                     Zpět na Dashboard
                   </div>
                 )}
@@ -498,8 +521,8 @@ export default function AdminSidebar({ isCollapsed = false }: AdminSidebarProps)
               <a
                 href="/admin/docs"
                 className={`group flex items-center ${
-                  isCollapsed ? 'justify-center p-2 rounded-lg' : ''
-                } text-[#666666] hover:text-[#F9D523] transition-colors relative`}
+                  isCollapsed ? 'justify-center p-3 rounded-lg' : 'px-6 py-3'
+                } text-white/60 hover:text-red-300 hover:bg-white/5 transition-all duration-300 relative`}
                 title={isCollapsed ? "Admin Docs" : undefined}
               >
                 <span className={`w-5 h-5 flex items-center justify-center ${!isCollapsed ? 'mr-3' : ''}`}>
@@ -522,7 +545,7 @@ export default function AdminSidebar({ isCollapsed = false }: AdminSidebarProps)
                 
                 {/* Tooltip pro collapsed stav */}
                 {isCollapsed && (
-                  <div className="sidebar-tooltip absolute left-full ml-2 top-1/2 transform -translate-y-1/2 bg-[#1a1a1a] text-white text-sm py-1 px-2 rounded shadow-lg z-50 whitespace-nowrap">
+                  <div className="sidebar-tooltip absolute left-full ml-2 top-1/2 transform -translate-y-1/2 bg-[#1a1a1a] text-white text-sm py-2 px-3 rounded-lg shadow-lg z-50 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                     Admin Docs
                   </div>
                 )}

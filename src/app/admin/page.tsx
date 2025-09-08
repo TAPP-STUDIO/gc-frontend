@@ -76,26 +76,37 @@ export default function AdminDashboard() {
 
   return (
     <div className="p-6 lg:p-8">
-      {/* Admin Header */}
-      <div className="dashboard-header rounded-lg mb-6 border-red-500/20">
+      {/* Admin Header - UNIFIED GLASS CARD STYLE */}
+      <DashboardCard 
+        variant="highlighted" 
+        className="mb-6 border-red-500/20 bg-gradient-to-br from-red-500/5 to-transparent"
+      >
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="dashboard-header-title">Admin Dashboard</h1>
-            <p className="text-[#7FDBDB]/60 text-sm">Gavlik Capital - Kompletní správa DApp</p>
+            <h1 className="text-3xl font-bold text-white mb-2">Admin Dashboard</h1>
+            <p className="text-white/60 text-sm">Gavlik Capital - Kompletní správa DApp</p>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="px-3 py-1 bg-red-500/20 text-red-400 text-xs font-bold rounded uppercase">
+          <div className="flex items-center gap-4">
+            <span 
+              className="px-4 py-2 text-red-400 text-xs font-bold rounded-full uppercase tracking-wider"
+              style={{
+                background: 'rgba(239, 68, 68, 0.1)',
+                border: '1px solid rgba(239, 68, 68, 0.3)',
+                backdropFilter: 'blur(10px)'
+              }}
+            >
               Super Admin
             </span>
-            <button 
+            <DashboardButton 
+              variant="outline"
               onClick={handleEmergencyStop}
-              className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded transition-all"
+              className="border-red-500 text-red-400 hover:bg-red-500 hover:text-white"
             >
               Emergency Stop
-            </button>
+            </DashboardButton>
           </div>
         </div>
-      </div>
+      </DashboardCard>
 
       {/* Admin Stats */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
@@ -133,7 +144,7 @@ export default function AdminDashboard() {
 
       {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-        {/* Portfolio Value Chart */}
+        {/* Portfolio Value Chart - UNIFIED STYLE */}
         <div className="lg:col-span-2">
           <DashboardCard variant="highlighted" className="h-full">
             <div className="flex justify-between items-start mb-6">
@@ -145,16 +156,14 @@ export default function AdminDashboard() {
               </div>
               <div className="flex gap-2">
                 {['D', 'W', 'M', 'Y'].map((period) => (
-                  <button
+                  <DashboardButton
                     key={period}
-                    className={`px-3 py-1 text-xs font-medium rounded transition-all ${
-                      period === 'M' 
-                        ? 'bg-red-500 text-white' 
-                        : 'bg-[#1E3A3A] text-[#7FDBDB] hover:bg-[#2A4A4A]'
-                    }`}
+                    variant={period === 'M' ? 'primary' : 'ghost'}
+                    size="sm"
+                    className={period === 'M' ? 'bg-red-500 border-red-500 text-white' : ''}
                   >
                     {period}
-                  </button>
+                  </DashboardButton>
                 ))}
               </div>
             </div>
@@ -167,53 +176,88 @@ export default function AdminDashboard() {
           </DashboardCard>
         </div>
 
-        {/* System Status */}
+        {/* System Status - UNIFIED STYLE */}
         <div className="space-y-4">
           <DashboardCard variant="default" className="border-red-500/20">
-            <p className="text-xs text-red-400/70 uppercase tracking-wider mb-2">
-              System Status
-            </p>
+            <div className="flex items-center mb-4">
+              <div className="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center mr-3">
+                <svg className="w-4 h-4 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-white">System Status</h3>
+            </div>
             <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-[#7FDBDB]/70">Smart Contracts</span>
-                <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+              <div className="flex justify-between items-center p-2 rounded-lg hover:bg-white/5 transition-all">
+                <span className="text-sm text-white/70">Smart Contracts</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-green-400">Online</span>
+                  <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                </div>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-[#7FDBDB]/70">IPFS Node</span>
-                <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+              <div className="flex justify-between items-center p-2 rounded-lg hover:bg-white/5 transition-all">
+                <span className="text-sm text-white/70">IPFS Node</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-green-400">Online</span>
+                  <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                </div>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-[#7FDBDB]/70">API Server</span>
-                <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+              <div className="flex justify-between items-center p-2 rounded-lg hover:bg-white/5 transition-all">
+                <span className="text-sm text-white/70">API Server</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-green-400">Online</span>
+                  <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                </div>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-[#7FDBDB]/70">Database</span>
-                <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+              <div className="flex justify-between items-center p-2 rounded-lg hover:bg-white/5 transition-all">
+                <span className="text-sm text-white/70">Database</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-green-400">Online</span>
+                  <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                </div>
               </div>
             </div>
           </DashboardCard>
 
           <DashboardCard variant="default">
-            <p className="text-xs text-[#7FDBDB]/70 uppercase tracking-wider mb-2">
-              Pending Actions
-            </p>
+            <div className="flex items-center mb-4">
+              <div className="w-8 h-8 rounded-lg bg-yellow-500/20 flex items-center justify-center mr-3">
+                <svg className="w-4 h-4 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-white">Pending Actions</h3>
+            </div>
             <h3 className="text-2xl font-bold text-red-400 mb-1">23</h3>
-            <p className="text-xs text-[#7FDBDB]/60">Transactions waiting</p>
-            <button className="mt-3 w-full px-3 py-2 bg-red-500/20 text-red-400 border border-red-500/30 rounded text-sm font-medium hover:bg-red-500/30 transition-all">
+            <p className="text-xs text-white/60 mb-4">Transactions waiting</p>
+            <DashboardButton 
+              variant="outline"
+              className="w-full border-red-500/30 text-red-400 hover:bg-red-500/20 hover:border-red-500"
+            >
               Review All
-            </button>
+            </DashboardButton>
           </DashboardCard>
         </div>
       </div>
 
-      {/* NFT Projects Table */}
+      {/* NFT Projects Table - UNIFIED STYLE */}
       <DashboardCard variant="default" padding="none">
-        <div className="p-4 border-b border-[#1E4848]/40">
+        <div className="p-6 border-b border-white/10">
           <div className="flex justify-between items-center">
-            <h3 className="text-lg font-semibold text-white">NFT Projects Overview</h3>
-            <button className="px-4 py-2 bg-red-500 text-white text-sm font-bold rounded hover:bg-red-600 transition-all">
+            <div className="flex items-center">
+              <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center mr-3">
+                <svg className="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-white">NFT Projects Overview</h3>
+            </div>
+            <DashboardButton 
+              variant="primary"
+              className="bg-red-500 border-red-500 hover:bg-red-600"
+            >
               Add New Project
-            </button>
+            </DashboardButton>
           </div>
         </div>
         
@@ -275,10 +319,13 @@ export default function AdminDashboard() {
           />
         </div>
         
-        <div className="p-4 border-t border-[#1E4848]/40">
-          <button className="text-red-400 text-sm font-medium hover:text-red-300 transition-colors">
+        <div className="p-6 border-t border-white/10">
+          <DashboardButton 
+            variant="ghost"
+            className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+          >
             View All Projects →
-          </button>
+          </DashboardButton>
         </div>
       </DashboardCard>
     </div>

@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { BarChart3, RefreshCw, TrendingUp } from 'lucide-react';
+import { 
+  DashboardButton, 
+  DashboardCard, 
+  StatCard 
+} from '@/components/dashboard';
 
 interface CryptoPosition {
   id: string;
@@ -219,241 +221,261 @@ export default function AdminPortfolioPage() {
   };
 
   return (
-    <div className="py-4 sm:py-6">
-      <div className="space-y-6">
-        {/* Admin Page Header */}
-        <div className="mb-4">
-          <h1 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-2">
-            <BarChart3 className="w-6 h-6 text-[#F9D523]" />
-            Crypto Portfolio Management
-          </h1>
-          <p className="text-[#666666] mt-2">
-            Správa crypto portfolia - zadávání pozic, sledování výkonu a real-time ceny
-          </p>
-        </div>
-
-        {/* Portfolio Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card className="bg-[#151515] border-[#333333] p-4">
-            <div className="text-[#666666] text-sm mb-1">Celková hodnota</div>
-            <div className="text-white text-2xl font-bold">
-              ${portfolioStats.totalValue.toLocaleString()}
+    <div className="p-6 lg:p-8">
+      {/* Admin Page Header - UNIFIED STYLE */}
+      <DashboardCard variant="highlighted" className="mb-6 border-red-500/20 bg-gradient-to-br from-red-500/5 to-transparent">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            <div className="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center mr-4">
+              <svg className="w-6 h-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
             </div>
-          </Card>
-          
-          <Card className="bg-[#151515] border-[#333333] p-4">
-            <div className="text-[#666666] text-sm mb-1">Celkový P&L</div>
-            <div className={`text-2xl font-bold ${portfolioStats.totalPnL >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-              ${Math.abs(portfolioStats.totalPnL).toLocaleString()}
-              <span className="text-sm ml-2">
-                ({portfolioStats.totalPnL >= 0 ? '+' : '-'}{Math.abs(portfolioPnLPercentage).toFixed(2)}%)
-              </span>
+            <div>
+              <h1 className="text-3xl font-bold text-white mb-1">Crypto Portfolio Management</h1>
+              <p className="text-white/60 text-sm">Správa crypto portfolia - zadávání pozic, sledování výkonu a real-time ceny</p>
             </div>
-          </Card>
-
-          <Card className="bg-[#151515] border-[#333333] p-4">
-            <div className="text-[#666666] text-sm mb-1">Pozice</div>
-            <div className="text-white text-2xl font-bold">{positions.length}</div>
-          </Card>
-        </div>
-
-        {/* Controls */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-between">
-          <div className="flex gap-2">
-            <Button
-              variant="primary"
+          </div>
+          <div className="flex items-center gap-3">
+            <DashboardButton 
+              variant="outline" 
+              onClick={refreshPrices}
+              className="border-red-500 text-red-400 flex items-center gap-2"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Aktualizovat ceny
+            </DashboardButton>
+            <DashboardButton 
+              variant="primary" 
               onClick={() => setIsFormVisible(true)}
+              className="bg-red-500 border-red-500"
             >
               + Přidat pozici
-            </Button>
-            <Button
-              variant="outline"
-              onClick={refreshPrices}
-              className="flex items-center gap-2"
-            >
-              <RefreshCw className="w-4 h-4" />
-              <span>Aktualizovat ceny</span>
-            </Button>
+            </DashboardButton>
+          </div>
+        </div>
+      </DashboardCard>
+
+      {/* Portfolio Overview - UNIFIED STAT CARDS */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <StatCard
+          title="Celková hodnota"
+          value={`$${portfolioStats.totalValue.toLocaleString()}`}
+        />
+        
+        <StatCard
+          title="Celkový P&L"
+          value={`$${Math.abs(portfolioStats.totalPnL).toLocaleString()}`}
+          trend={{
+            value: Math.abs(portfolioPnLPercentage),
+            isPositive: portfolioStats.totalPnL >= 0
+          }}
+        />
+
+        <StatCard
+          title="Pozice"
+          value={positions.length.toString()}
+        />
+      </div>
+
+      {/* Add/Edit Form - UNIFIED STYLE */}
+      {isFormVisible && (
+        <DashboardCard variant="highlighted" className="mb-6">
+          <div className="flex items-center mb-4">
+            <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center mr-3">
+              <svg className="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold text-white">
+              {editingPosition ? 'Upravit pozici' : 'Přidat novou pozici'}
+            </h3>
           </div>
           
-          <div className="text-[#666666] text-sm flex items-center">
-            Poslední aktualizace: {new Date().toLocaleTimeString()}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-white/60 text-sm mb-2">
+                  Symbol (např. BTC, ETH) *
+                </label>
+                <input
+                  type="text"
+                  value={formData.symbol}
+                  onChange={(e) => setFormData(prev => ({ ...prev, symbol: e.target.value.toUpperCase() }))}
+                  className="w-full bg-white/5 border border-white/20 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-red-400 backdrop-blur-md"
+                  placeholder="BTC"
+                  disabled={editingPosition !== null} // Nelze měnit symbol při editaci
+                />
+                {formErrors.symbol && (
+                  <div className="text-red-400 text-sm mt-1">{formErrors.symbol}</div>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-white/60 text-sm mb-2">Název *</label>
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                  className="w-full bg-white/5 border border-white/20 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-red-400 backdrop-blur-md"
+                  placeholder="Bitcoin"
+                />
+                {formErrors.name && (
+                  <div className="text-red-400 text-sm mt-1">{formErrors.name}</div>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-white/60 text-sm mb-2">Množství *</label>
+                <input
+                  type="number"
+                  step="0.00000001"
+                  value={formData.amount}
+                  onChange={(e) => setFormData(prev => ({ ...prev, amount: e.target.value }))}
+                  className="w-full bg-white/5 border border-white/20 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-red-400 backdrop-blur-md"
+                  placeholder="2.5"
+                />
+                {formErrors.amount && (
+                  <div className="text-red-400 text-sm mt-1">{formErrors.amount}</div>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-white/60 text-sm mb-2">Průměrná nákupní cena ($) *</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={formData.averageBuyPrice}
+                  onChange={(e) => setFormData(prev => ({ ...prev, averageBuyPrice: e.target.value }))}
+                  className="w-full bg-white/5 border border-white/20 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-red-400 backdrop-blur-md"
+                  placeholder="42000"
+                />
+                {formErrors.averageBuyPrice && (
+                  <div className="text-red-400 text-sm mt-1">{formErrors.averageBuyPrice}</div>
+                )}
+              </div>
+            </div>
+
+            <div className="flex gap-2 pt-4">
+              <DashboardButton type="submit" variant="primary" className="bg-red-500 border-red-500">
+                {editingPosition ? 'Uložit změny' : 'Přidat pozici'}
+              </DashboardButton>
+              <DashboardButton type="button" variant="outline" onClick={resetForm}>
+                Zrušit
+              </DashboardButton>
+            </div>
+          </form>
+        </DashboardCard>
+      )}
+
+      {/* Positions List - UNIFIED STYLE */}
+      <DashboardCard variant="default" padding="none">
+        <div className="p-6 border-b border-white/10">
+          <div className="flex items-center">
+            <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center mr-3">
+              <svg className="w-4 h-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold text-white">Crypto pozice</h3>
           </div>
         </div>
 
-        {/* Add/Edit Form */}
-        {isFormVisible && (
-          <Card className="bg-[#151515] border-[#333333] p-6">
-            <h3 className="text-lg font-semibold text-white mb-4">
-              {editingPosition ? 'Upravit pozici' : 'Přidat novou pozici'}
-            </h3>
-            
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-[#666666] text-sm mb-2">
-                    Symbol (např. BTC, ETH) *
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.symbol}
-                    onChange={(e) => setFormData(prev => ({ ...prev, symbol: e.target.value.toUpperCase() }))}
-                    className="w-full bg-[#1a1a1a] border border-[#333333] rounded-md px-3 py-2 text-white focus:outline-none focus:border-[#F9D523]"
-                    placeholder="BTC"
-                    disabled={editingPosition !== null} // Nelze měnit symbol při editaci
-                  />
-                  {formErrors.symbol && (
-                    <div className="text-red-500 text-sm mt-1">{formErrors.symbol}</div>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-[#666666] text-sm mb-2">Název *</label>
-                  <input
-                    type="text"
-                    value={formData.name}
-                    onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                    className="w-full bg-[#1a1a1a] border border-[#333333] rounded-md px-3 py-2 text-white focus:outline-none focus:border-[#F9D523]"
-                    placeholder="Bitcoin"
-                  />
-                  {formErrors.name && (
-                    <div className="text-red-500 text-sm mt-1">{formErrors.name}</div>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-[#666666] text-sm mb-2">Množství *</label>
-                  <input
-                    type="number"
-                    step="0.00000001"
-                    value={formData.amount}
-                    onChange={(e) => setFormData(prev => ({ ...prev, amount: e.target.value }))}
-                    className="w-full bg-[#1a1a1a] border border-[#333333] rounded-md px-3 py-2 text-white focus:outline-none focus:border-[#F9D523]"
-                    placeholder="2.5"
-                  />
-                  {formErrors.amount && (
-                    <div className="text-red-500 text-sm mt-1">{formErrors.amount}</div>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-[#666666] text-sm mb-2">Průměrná nákupní cena ($) *</label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    value={formData.averageBuyPrice}
-                    onChange={(e) => setFormData(prev => ({ ...prev, averageBuyPrice: e.target.value }))}
-                    className="w-full bg-[#1a1a1a] border border-[#333333] rounded-md px-3 py-2 text-white focus:outline-none focus:border-[#F9D523]"
-                    placeholder="42000"
-                  />
-                  {formErrors.averageBuyPrice && (
-                    <div className="text-red-500 text-sm mt-1">{formErrors.averageBuyPrice}</div>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex gap-2 pt-4">
-                <Button type="submit" variant="primary">
-                  {editingPosition ? 'Uložit změny' : 'Přidat pozici'}
-                </Button>
-                <Button type="button" variant="outline" onClick={resetForm}>
-                  Zrušit
-                </Button>
-              </div>
-            </form>
-          </Card>
-        )}
-
-        {/* Positions List */}
-        <Card className="bg-[#151515] border-[#333333] overflow-hidden">
-          <div className="p-4 border-b border-[#333333]">
-            <h3 className="text-lg font-semibold text-white">Crypto pozice</h3>
-          </div>
-
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-[#1a1a1a]">
-                <tr>
-                  <th className="text-left text-[#666666] text-sm px-4 py-3">Asset</th>
-                  <th className="text-right text-[#666666] text-sm px-4 py-3">Množství</th>
-                  <th className="text-right text-[#666666] text-sm px-4 py-3">Nákupní cena</th>
-                  <th className="text-right text-[#666666] text-sm px-4 py-3">Aktuální cena</th>
-                  <th className="text-right text-[#666666] text-sm px-4 py-3">Hodnota</th>
-                  <th className="text-right text-[#666666] text-sm px-4 py-3">P&L</th>
-                  <th className="text-right text-[#666666] text-sm px-4 py-3">Akce</th>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead 
+              className="border-b border-white/10"
+              style={{ background: 'rgba(255, 255, 255, 0.02)' }}
+            >
+              <tr>
+                <th className="text-left text-white/60 text-sm px-4 py-3">Asset</th>
+                <th className="text-right text-white/60 text-sm px-4 py-3">Množství</th>
+                <th className="text-right text-white/60 text-sm px-4 py-3">Nákupní cena</th>
+                <th className="text-right text-white/60 text-sm px-4 py-3">Aktuální cena</th>
+                <th className="text-right text-white/60 text-sm px-4 py-3">Hodnota</th>
+                <th className="text-right text-white/60 text-sm px-4 py-3">P&L</th>
+                <th className="text-right text-white/60 text-sm px-4 py-3">Akce</th>
+              </tr>
+            </thead>
+            <tbody>
+              {positions.map((position) => (
+                <tr key={position.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                  <td className="px-4 py-4">
+                    <div>
+                      <div className="text-white font-medium">{position.symbol}</div>
+                      <div className="text-white/60 text-sm">{position.name}</div>
+                    </div>
+                  </td>
+                  <td className="px-4 py-4 text-right text-white">
+                    {position.amount.toLocaleString()}
+                  </td>
+                  <td className="px-4 py-4 text-right text-white">
+                    ${position.averageBuyPrice.toLocaleString()}
+                  </td>
+                  <td className="px-4 py-4 text-right text-white">
+                    ${position.currentPrice.toLocaleString()}
+                  </td>
+                  <td className="px-4 py-4 text-right text-white font-bold">
+                    ${position.totalValue.toLocaleString()}
+                  </td>
+                  <td className="px-4 py-4 text-right">
+                    <div className={position.pnl >= 0 ? 'text-green-400' : 'text-red-400'}>
+                      <div className="font-bold">
+                        {position.pnl >= 0 ? '+' : ''}${position.pnl.toLocaleString()}
+                      </div>
+                      <div className="text-sm">
+                        ({position.pnl >= 0 ? '+' : ''}{position.pnlPercentage.toFixed(2)}%)
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-4 py-4 text-right">
+                    <div className="flex justify-end gap-2">
+                      <DashboardButton
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleEdit(position)}
+                      >
+                        Upravit
+                      </DashboardButton>
+                      <DashboardButton
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDelete(position.id)}
+                        className="border-red-500 text-red-400 hover:bg-red-500/20"
+                      >
+                        Smazat
+                      </DashboardButton>
+                    </div>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {positions.map((position) => (
-                  <tr key={position.id} className="border-b border-[#2a2a2a] hover:bg-[#1a1a1a]">
-                    <td className="px-4 py-4">
-                      <div>
-                        <div className="text-white font-medium">{position.symbol}</div>
-                        <div className="text-[#666666] text-sm">{position.name}</div>
-                      </div>
-                    </td>
-                    <td className="px-4 py-4 text-right text-white">
-                      {position.amount.toLocaleString()}
-                    </td>
-                    <td className="px-4 py-4 text-right text-white">
-                      ${position.averageBuyPrice.toLocaleString()}
-                    </td>
-                    <td className="px-4 py-4 text-right text-white">
-                      ${position.currentPrice.toLocaleString()}
-                    </td>
-                    <td className="px-4 py-4 text-right text-white font-bold">
-                      ${position.totalValue.toLocaleString()}
-                    </td>
-                    <td className="px-4 py-4 text-right">
-                      <div className={position.pnl >= 0 ? 'text-green-500' : 'text-red-500'}>
-                        <div className="font-bold">
-                          {position.pnl >= 0 ? '+' : ''}${position.pnl.toLocaleString()}
-                        </div>
-                        <div className="text-sm">
-                          ({position.pnl >= 0 ? '+' : ''}{position.pnlPercentage.toFixed(2)}%)
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-4 py-4 text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleEdit(position)}
-                        >
-                          Upravit
-                        </Button>
-                        <Button
-                          variant="danger"
-                          size="sm"
-                          onClick={() => handleDelete(position.id)}
-                        >
-                          Smazat
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {positions.length === 0 && (
+          <div className="p-8 text-center">
+            <div className="text-white/60 mb-4">Žádné crypto pozice</div>
+            <DashboardButton variant="primary" onClick={() => setIsFormVisible(true)} className="bg-red-500 border-red-500">
+              Přidat první pozici
+            </DashboardButton>
           </div>
+        )}
+      </DashboardCard>
 
-          {positions.length === 0 && (
-            <div className="p-8 text-center">
-              <div className="text-[#666666] mb-4">Žádné crypto pozice</div>
-              <Button variant="primary" onClick={() => setIsFormVisible(true)}>
-                Přidat první pozici
-              </Button>
-            </div>
-          )}
-        </Card>
-
-        {/* Footer Note */}
-        <div className="bg-[#1a1a1a] border border-[#333333] rounded-lg p-4">
-          <div className="text-[#666666] text-sm">
-            <div className="flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-green-500" />
-              <span><strong>Admin Info:</strong> Ceny se aktualizují automaticky přes CoinGecko API.</span>
+      {/* Footer Note - UNIFIED STYLE */}
+      <DashboardCard variant="default" className="mt-6">
+        <div className="flex items-center">
+          <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center mr-3">
+            <svg className="w-4 h-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+            </svg>
+          </div>
+          <div className="text-white/60 text-sm">
+            <div>
+              <strong className="text-white">Admin Info:</strong> Ceny se aktualizují automaticky přes CoinGecko API.
             </div>
             <div className="mt-1">
               Tato stránka slouží pro zadávání a správu crypto pozic uživatelů.
@@ -461,7 +483,7 @@ export default function AdminPortfolioPage() {
             </div>
           </div>
         </div>
-      </div>
+      </DashboardCard>
     </div>
   );
 }
