@@ -63,33 +63,33 @@ export default function AlgoTraderPage() {
 
   // Mock chart data
   const portfolioChartData = [
-    { month: 'Jan', value: 8500 },
-    { month: 'Feb', value: 8800 },
-    { month: 'Mar', value: 9200 },
-    { month: 'Apr', value: 9100 },
-    { month: 'May', value: 9500 },
-    { month: 'Jun', value: 9800 },
-    { month: 'Jul', value: 9600 },
-    { month: 'Aug', value: 9900 },
-    { month: 'Sep', value: 10200 },
-    { month: 'Oct', value: 10100 },
-    { month: 'Nov', value: 10300 },
-    { month: 'Dec', value: 10000 },
+    { name: 'Jan', value: 8500 },
+    { name: 'Feb', value: 8800 },
+    { name: 'Mar', value: 9200 },
+    { name: 'Apr', value: 9100 },
+    { name: 'May', value: 9500 },
+    { name: 'Jun', value: 9800 },
+    { name: 'Jul', value: 9600 },
+    { name: 'Aug', value: 9900 },
+    { name: 'Sep', value: 10200 },
+    { name: 'Oct', value: 10100 },
+    { name: 'Nov', value: 10300 },
+    { name: 'Dec', value: 10000 },
   ];
 
   const claimChartData = [
-    { month: 'Jan', value: 1800 },
-    { month: 'Feb', value: 2100 },
-    { month: 'Mar', value: 2200 },
-    { month: 'Apr', value: 2300 },
-    { month: 'May', value: 2400 },
-    { month: 'Jun', value: 2600 },
-    { month: 'Jul', value: 2500 },
-    { month: 'Aug', value: 2700 },
-    { month: 'Sep', value: 2800 },
-    { month: 'Oct', value: 2900 },
-    { month: 'Nov', value: 3200 },
-    { month: 'Dec', value: 3500 },
+    { name: 'Jan', value: 1800 },
+    { name: 'Feb', value: 2100 },
+    { name: 'Mar', value: 2200 },
+    { name: 'Apr', value: 2300 },
+    { name: 'May', value: 2400 },
+    { name: 'Jun', value: 2600 },
+    { name: 'Jul', value: 2500 },
+    { name: 'Aug', value: 2700 },
+    { name: 'Sep', value: 2800 },
+    { name: 'Oct', value: 2900 },
+    { name: 'Nov', value: 3200 },
+    { name: 'Dec', value: 3500 },
   ];
 
   return (
@@ -116,14 +116,16 @@ export default function AlgoTraderPage() {
           </DashboardButton>
         </div>
 
-        {/* Top Stats */}
+        {/* Top Stats - STEJNÁ STRUKTURA JAKO V HLAVNÍM PORTFOLIO */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           
-          {/* Portfolio Development Chart */}
-          <DashboardCard title="Vývoj mojí kolekce" className="lg:col-span-1">
+          {/* Portfolio Chart - PŘÍMO V DIVU BEZ DASHBOARDCARD */}
+          <div className="lg:col-span-1">
+            {/* Nadpis a controls mimo graf */}
             <div className="mb-4">
+              <h2 className="text-xl font-bold text-white mb-2">Hodnota portfolia</h2>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-white/70">Hodnota kolekce</span>
+                <span className="text-sm text-white/70">Hodnota portfolia</span>
                 <select 
                   value={timeframe}
                   onChange={(e) => setTimeframe(e.target.value)}
@@ -138,6 +140,7 @@ export default function AlgoTraderPage() {
               </div>
             </div>
             
+            {/* Graf přímo v divu - jako v hlavním portfolio */}
             <div className="h-64">
               <PortfolioChart 
                 data={portfolioChartData}
@@ -146,7 +149,7 @@ export default function AlgoTraderPage() {
                 currentValue={portfolioValue}
               />
             </div>
-          </DashboardCard>
+          </div>
 
           {/* Claim Stats */}
           <div className="space-y-6">
@@ -189,11 +192,12 @@ export default function AlgoTraderPage() {
           </div>
         </div>
 
-        {/* Charts Row */}
+        {/* Charts Row - STRUKTURA JAKO V HLAVNÍM PORTFOLIO */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           
-          {/* Claim History Chart */}
-          <DashboardCard title="Historie claimů">
+          {/* Claim History Chart - GRAF PŘÍMO V DIVU */}
+          <div>
+            <h2 className="text-xl font-bold text-white mb-4">Celkem claimnuto</h2>
             <div className="mb-4">
               <select 
                 value={timeframe}
@@ -214,7 +218,7 @@ export default function AlgoTraderPage() {
                 dataKey="value"
               />
             </div>
-          </DashboardCard>
+          </div>
 
           {/* Claim History Table */}
           <DashboardCard title="Historie claimů">
@@ -239,14 +243,14 @@ export default function AlgoTraderPage() {
               </table>
             </div>
             
-            {/* Pagination */}
+            {/* Pagination - ÚKOL 4: Opravené pořadí stránek */}
             <div className="flex items-center justify-center gap-2 mt-6">
               <button className="w-8 h-8 rounded bg-white/10 flex items-center justify-center text-white/70 hover:bg-white/20 transition-colors">
                 &lt;
               </button>
               <button className="w-8 h-8 rounded bg-[#F9D523] text-black font-medium">1</button>
-              <button className="w-8 h-8 rounded bg-white/10 flex items-center justify-center text-white/70 hover:bg-white/20 transition-colors">3</button>
               <button className="w-8 h-8 rounded bg-white/10 flex items-center justify-center text-white/70 hover:bg-white/20 transition-colors">2</button>
+              <button className="w-8 h-8 rounded bg-white/10 flex items-center justify-center text-white/70 hover:bg-white/20 transition-colors">3</button>
               <button className="w-8 h-8 rounded bg-white/10 flex items-center justify-center text-white/70 hover:bg-white/20 transition-colors">
                 &gt;
               </button>
@@ -256,8 +260,8 @@ export default function AlgoTraderPage() {
 
         {/* My Algorithms Row */}
         <div className="grid grid-cols-1 gap-6">
-          {/* My Algorithms */}
-          <DashboardCard title="Mé algoritmy">
+          {/* My Algorithms - ÚKOL 5: Změna nadpisu */}
+          <DashboardCard title="Moje karty">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>

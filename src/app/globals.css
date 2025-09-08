@@ -1879,3 +1879,209 @@ button[class*="dashboard"]:focus-visible,
   outline: 2px solid #F9D523;
   outline-offset: 2px;
 }
+
+/* ==============================
+   OPRAVENÉ CSS PRO GRAFY - FRONTEND FIXES
+   ============================== */
+
+/* Graf má lepší minimum height aby se vyrovnal s kartami a byla vidět osa X */
+.portfolio-chart {
+  min-height: 350px; /* Zvětšeno z 400px na 350px pro lepší poměr */
+}
+
+@media (min-width: 1024px) {
+  .portfolio-chart {
+    min-height: 420px; /* Zvětšeno z 500px na 420px */
+  }
+}
+
+/* Zajistit dostatek místa pro osu X u všech grafů */
+.chart-container {
+  min-height: 300px;
+  padding-bottom: 40px; /* Prostor pro osu X */
+}
+
+.chart-container.large {
+  min-height: 380px;
+  padding-bottom: 50px;
+}
+
+/* Responzivní výška grafů v kartách */
+.portfolio-card .chart-wrapper {
+  height: 280px; /* Pevná výška pro konzistenci */
+  min-height: 280px;
+  padding-bottom: 20px;
+}
+
+@media (min-width: 640px) {
+  .portfolio-card .chart-wrapper {
+    height: 320px;
+    min-height: 320px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .portfolio-card .chart-wrapper {
+    height: 360px;
+    min-height: 360px;
+  }
+}
+
+/* Zajistit prostor pro label na ose X */
+.recharts-wrapper {
+  margin-bottom: 10px !important;
+}
+
+.recharts-cartesian-axis-tick {
+  font-size: 12px !important;
+}
+
+/* Spodní grafy s lepším responzivním chováním */
+.portfolio-charts-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  align-items: start; /* Zarovnat na začátek místo stretch */
+}
+
+@media (min-width: 1280px) {
+  .portfolio-charts-grid {
+    grid-template-columns: 2fr 1fr; /* Lepší poměr pro graf a sidebar */
+    gap: 2rem;
+  }
+}
+
+/* Sidebar karty s fixní výškou pro konzistenci */
+.portfolio-side-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  height: fit-content; /* Změněno z 100% na fit-content */
+  min-height: 380px; /* Minimální výška aby sedla k grafu */
+}
+
+@media (min-width: 640px) {
+  .portfolio-side-cards {
+    gap: 1.5rem;
+    min-height: 420px;
+  }
+}
+
+/* Konkrétní třídy pro jednotlivé typy grafů */
+.main-portfolio-chart {
+  height: 380px;
+  min-height: 380px;
+}
+
+.claim-chart {
+  height: 320px;
+  min-height: 320px;
+}
+
+.project-chart {
+  height: 280px;
+  min-height: 280px;
+}
+
+/* Box pro tři karty napravo od prvního grafu */
+.portfolio-info-boxes {
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  gap: 1rem;
+  height: 100%;
+  min-height: 380px;
+}
+
+@media (min-width: 640px) {
+  .portfolio-info-boxes {
+    gap: 1.5rem;
+    min-height: 420px;
+  }
+}
+
+.portfolio-info-box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+}
+
+/* Responzivní adjustments pro menší obrazovky */
+@media (max-width: 1279px) {
+  .portfolio-chart {
+    min-height: 300px;
+  }
+  
+  .portfolio-side-cards {
+    min-height: auto;
+  }
+  
+  .portfolio-info-boxes {
+    min-height: auto;
+    grid-template-rows: auto;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+}
+
+/* ==============================
+   OPRAVENÁ PAGINATION STYLY
+   ============================== */
+
+/* Pagination tlačítka s opravným řazením */
+.pagination-button {
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid #F9D523;
+  color: #F9D523;
+  background: transparent;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+@media (min-width: 640px) {
+  .pagination-button {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1rem;
+  }
+}
+
+.pagination-button:hover:not(:disabled) {
+  background: #F9D523;
+  color: #151515;
+  transform: scale(1.05);
+}
+
+.pagination-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-button.active {
+  background: #F9D523;
+  color: #151515;
+  transform: scale(1.1);
+}
+
+/* Pagination kontejner */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 1rem;
+}
+
+@media (min-width: 640px) {
+  .pagination-container {
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+  }
+}
