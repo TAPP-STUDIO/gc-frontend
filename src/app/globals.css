@@ -2085,3 +2085,272 @@ button[class*="dashboard"]:focus-visible,
     margin-top: 1.5rem;
   }
 }
+
+/* ==============================
+   VIP SECTION SPECIFIC STYLES
+   ============================== */
+
+/* VIP Card Hover Effects - konzistentní s ostatními kartami */
+.vip-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.vip-card:hover {
+  border-color: #F9D523;
+  box-shadow: 0 0 20px rgba(249, 213, 35, 0.3);
+  transform: translateY(-2px);
+}
+
+/* VIP Claim Button - speciální styl pro VIP claim */
+.vip-claim-button {
+  background: linear-gradient(135deg, #8B5CF6 0%, #F9D523 100%);
+  border: 2px solid rgba(249, 213, 35, 0.3);
+  color: white;
+  font-weight: 700;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.vip-claim-button:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.05);
+  border-color: #F9D523;
+  box-shadow: 
+    0 0 30px rgba(249, 213, 35, 0.4),
+    0 12px 40px rgba(139, 92, 246, 0.3);
+}
+
+.vip-claim-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* VIP Chart Container - rovnaká výška ako ostatné grafy */
+.vip-chart-container {
+  min-height: 320px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 0.75rem;
+  padding: 1rem;
+}
+
+.vip-chart-container .chart-wrapper {
+  height: 320px;
+  width: 100%;
+}
+
+/* VIP Members Table - hover efekty ako v ostatních tabulkách */
+.vip-members-table tbody tr {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.vip-members-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-left: 4px solid #F9D523;
+  transform: translateX(4px);
+  box-shadow: inset 0 0 0 1px rgba(249, 213, 35, 0.2);
+}
+
+/* VIP Level Badge - jeden štýl pre všetkých VIP členov */
+.vip-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(249, 213, 35, 0.2);
+  color: #F9D523;
+  border: 1px solid rgba(249, 213, 35, 0.3);
+}
+
+/* VIP Status Indicators - farebné tečky pre status */
+.vip-status-indicator {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+}
+
+.vip-status-indicator.active {
+  background: #10B981;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
+}
+
+.vip-status-indicator.pending {
+  background: #F59E0B;
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.6);
+}
+
+/* VIP Avatar - gradient avatary pre členov */
+.vip-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #F9D523 0%, #B29819 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #151515;
+  font-weight: 700;
+  font-size: 0.875rem;
+  margin-right: 0.75rem;
+  flex-shrink: 0;
+  border: 2px solid rgba(249, 213, 35, 0.3);
+  transition: all 0.3s ease;
+}
+
+.vip-avatar:hover {
+  border-color: #F9D523;
+  box-shadow: 0 0 12px rgba(249, 213, 35, 0.4);
+  transform: scale(1.1);
+}
+
+/* VIP Progress Bar - progresívny bar pre claim */
+.vip-progress-bar {
+  width: 100%;
+  height: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  overflow: hidden;
+  margin: 1rem 0;
+}
+
+.vip-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #F9D523 0%, #B29819 100%);
+  border-radius: 9999px;
+  transition: width 0.5s ease;
+  position: relative;
+}
+
+.vip-progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  animation: vip-progress-shine 2s infinite;
+}
+
+@keyframes vip-progress-shine {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* VIP Benefits List - štylizovaný zoznam výhod */
+.vip-benefits-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.vip-benefits-item {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.875rem;
+  transition: color 0.3s ease;
+}
+
+.vip-benefits-item:hover {
+  color: #F9D523;
+}
+
+.vip-benefits-bullet {
+  width: 0.5rem;
+  height: 0.5rem;
+  background: #F9D523;
+  border-radius: 50%;
+  margin-right: 0.75rem;
+  flex-shrink: 0;
+  box-shadow: 0 0 4px rgba(249, 213, 35, 0.6);
+}
+
+/* VIP Timeframe Buttons - buttony pre filtrovanie času */
+.vip-timeframe-button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+.vip-timeframe-button.active {
+  background: #F9D523;
+  color: #151515;
+  border-color: #F9D523;
+}
+
+.vip-timeframe-button:not(.active) {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.vip-timeframe-button:not(.active):hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Responsive adjustments pre VIP sekciu */
+@media (max-width: 768px) {
+  .vip-chart-container {
+    min-height: 250px;
+  }
+  
+  .vip-chart-container .chart-wrapper {
+    height: 250px;
+  }
+  
+  .vip-avatar {
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.75rem;
+  }
+}
+
+
+
+/* Animácie pre VIP sekciu */
+@keyframes vip-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.vip-fade-in {
+  animation: vip-fade-in 0.6s ease-out forwards;
+}
+
+.vip-fade-in-delay-1 {
+  animation-delay: 0.1s;
+}
+
+.vip-fade-in-delay-2 {
+  animation-delay: 0.2s;
+}
+
+.vip-fade-in-delay-3 {
+  animation-delay: 0.3s;
+}
