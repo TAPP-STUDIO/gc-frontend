@@ -14,7 +14,7 @@ export default function DashboardLayout({
       <div 
         className="fixed inset-0 z-0"
         style={{ 
-          backgroundImage: "url('/backgrounds/content.svg')",
+          backgroundImage: "url('/backgrounds/dashboard/content.svg')",
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',

@@ -1,38 +1,88 @@
-"use client";
+'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { TopBar } from '@/components/layout/TopBar';
-import { DashboardButton, DashboardCard } from '@/components/dashboard';
+import { DashboardButton } from '@/components/dashboard';
+import { NotificationDetailModal, NotificationList } from '@/components/notifications/NotificationModal';
+import { useNotifications } from '@/hook/useApi';
+import { 
+  Bell, 
+  CheckCircle2, 
+  Filter,
+  Search,
+  Settings
+} from 'lucide-react';
 
-// Ukázková data pro oznámení
-const notifications = [
+// Mock data - replace with real API calls
+const mockNotifications = [
   {
-    id: 1,
-    title: "GC Cards - významný nárůst ceny",
-    date: "14. 8. 2025",
-    content: "Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit. Proin At Magna Iaculis, Aliquet Metus A, Interdum Felis. In In Condimentum Justo, Vel Viverra Diam. Nulla Rutrum Ut Nisl Ut Vehicula Diam. Sed Hendrerit Nunc Tempor Massa Sodales Tempor. Nulla Id Metus Nibh. Proin Sagittis Dignissim Mauris. In Imperdiet Ante Lacinia Eget. Aenean Suscipit Luctus Dolor Ut Consectetur. Vivamus Neque Elit, Maximus Sed Vehicula Nec, Tempor Non Nibh.",
-    type: "important",
-    read: false
+    id: '1',
+    title: 'Dividenda byla vyplacena',
+    message: 'Byla vám vyplacena dividenda ve výši $125.50 z projektu GC Cards ETH. Částka byla připsána na váš účet.',
+    type: 'dividend' as const,
+    read: false,
+    createdAt: '2025-09-08T10:30:00Z',
+    actionUrl: '/dashboard/portfolio/gc-cards',
+    metadata: {
+      amount: 125.50,
+      currency: 'USD',
+      projectId: 'gc-cards-eth'
+    }
   },
   {
-    id: 2,
-    title: "BTC Bot - úspěšné obchody",
-    date: "12. 8. 2025",
-    content: "Váš BTC Bot vygeneroval v posledních 24 hodinách výnosné obchody v celkové hodnotě 1 250 $. Pokračuje v automatizovaném obchodování podle vaší strategie.",
-    type: "success",
-    read: true
+    id: '2',
+    title: 'Nová zpráva od týmu',
+    message: 'Tým GC vás informuje o nadcházejících změnách v portfoliu a nových investičních příležitostech.',
+    type: 'info' as const,
+    read: false,
+    createdAt: '2025-09-08T09:15:00Z',
+    actionUrl: '/dashboard/messages/2'
   },
   {
-    id: 3,
-    title: "Nová funkce: Algo Trader dashboard",
-    date: "10. 8. 2025",
-    content: "Spustili jsme nový rozdílený dashboard pro Algo Trader, který vám umožní lépe sledovat výkonnost vaších obchodních algoritmů.",
-    type: "info",
-    read: true
+    id: '3',
+    title: 'Transakce úspěšně dokončena',
+    message: 'Váš nákup NFT "BTC Bot #1234" byl úspěšně dokončen za $1,850.',
+    type: 'success' as const,
+    read: true,
+    createdAt: '2025-09-07T16:45:00Z',
+    metadata: {
+      amount: 1850,
+      currency: 'USD',
+      transactionHash: '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb3'
+    }
+  },
+  {
+    id: '4',
+    title: 'Upozornění: Nízký zůstatek',
+    message: 'Váš zůstatek na účtu je nižší než $100. Doporučujeme dobití účtu pro pokračování v tradingu.',
+    type: 'warning' as const,
+    read: true,
+    createdAt: '2025-09-07T14:20:00Z',
+    actionUrl: '/dashboard/profile/settings'
+  },
+  {
+    id: '5',
+    title: 'Systémová údržba',
+    message: 'Dne 10.9.2025 od 02:00 do 04:00 bude probíhat plánovaná údržba systému. Během této doby může být omezena funkcionalita.',
+    type: 'system' as const,
+    read: true,
+    createdAt: '2025-09-06T12:00:00Z'
   }
 ];
 
-export default function OznameniPage() {
+type FilterType = 'all' | 'unread' | 'dividend' | 'transaction' | 'system';
+
+export default function MessagesPage() {
+  const [selectedNotification, setSelectedNotification] = useState<any>(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [filter, setFilter] = useState<FilterType>('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  
+  // In real app, use: const { notifications, loading, error, markAllAsRead } = useNotifications();
+  const notifications = mockNotifications;
+  const loading = false;
+  const error = null;
+  
   // Mock user data
   const userProfile = {
     name: "Jan Novák",
@@ -41,165 +91,220 @@ export default function OznameniPage() {
     kycVerified: true,
   };
 
-  const handleReadMore = (id: number) => {
-    console.log('Zobrazit celou zprávu:', id);
-    // Zde by bylo přesměrování na detail zprávy
+  const handleNotificationClick = (notification: any) => {
+    setSelectedNotification(notification);
+    setIsDetailModalOpen(true);
   };
 
-  const handleMarkAsRead = (id: number) => {
-    console.log('Označit jako přečtené:', id);
-    // Zde by byla logika pro označení jako přečtené
+  const handleMarkAllAsRead = async () => {
+    // markAllAsRead(); // Real implementation
+    console.log('Mark all as read');
   };
 
-  const getNotificationIcon = (type: string) => {
-    switch (type) {
-      case 'important':
-        return (
-          <svg className="w-6 h-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-          </svg>
-        );
-      case 'success':
-        return (
-          <svg className="w-6 h-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        );
-      case 'info':
-      default:
-        return (
-          <svg className="w-6 h-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        );
+  // Filter notifications
+  const filteredNotifications = notifications.filter(notification => {
+    // Apply filter
+    if (filter === 'unread' && notification.read) return false;
+    if (filter !== 'all' && filter !== 'unread' && notification.type !== filter) return false;
+    
+    // Apply search
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      return (
+        notification.title.toLowerCase().includes(query) ||
+        notification.message.toLowerCase().includes(query)
+      );
     }
-  };
+    
+    return true;
+  });
 
   const unreadCount = notifications.filter(n => !n.read).length;
+
+  const filterOptions = [
+    { value: 'all', label: 'Všechna', count: notifications.length },
+    { value: 'unread', label: 'Nepřečtená', count: unreadCount },
+    { value: 'dividend', label: 'Dividendy', count: notifications.filter(n => n.type === 'dividend').length },
+    { value: 'transaction', label: 'Transakce', count: notifications.filter(n => n.type === 'transaction').length },
+    { value: 'system', label: 'Systém', count: notifications.filter(n => n.type === 'system').length },
+  ];
+
+  if (loading) {
+    return (
+      <div className="min-h-screen">
+        <TopBar 
+          title="Oznámení" 
+          userProfile={userProfile}
+          notificationCount={unreadCount}
+        />
+        <div className="p-4 sm:p-6 lg:p-8">
+          <div className="space-y-4">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="glass-card p-6 animate-pulse">
+                <div className="flex space-x-4">
+                  <div className="w-8 h-8 bg-white/10 rounded-full" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-4 bg-white/10 rounded w-3/4" />
+                    <div className="h-3 bg-white/10 rounded w-1/2" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen">
+        <TopBar 
+          title="Oznámení" 
+          userProfile={userProfile}
+          notificationCount={unreadCount}
+        />
+        <div className="p-4 sm:p-6 lg:p-8">
+          <div className="glass-card p-8 text-center">
+            <Bell className="w-16 h-16 text-white/30 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-white mb-2">Chyba při načítání</h3>
+            <p className="text-white/70 mb-4">Nepodařilo se načíst oznámení.</p>
+            <DashboardButton 
+              onClick={() => window.location.reload()}
+              variant="primary"
+            >
+              Zkusit znovu
+            </DashboardButton>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
       {/* TopBar */}
       <TopBar 
-        title="Oznámení"
+        title="Oznámení" 
         userProfile={userProfile}
         notificationCount={unreadCount}
       />
       
       <div className="p-4 sm:p-6 lg:p-8">
         
-        {/* Statistiky oznámení */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-          <DashboardCard className="p-6 text-center">
-            <div className="text-3xl font-bold text-[#F9D523] mb-2">
-              {notifications.length}
+        {/* Header Actions */}
+        <div className="mb-6">
+          <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
+            
+            {/* Search */}
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/40 w-4 h-4" />
+              <input
+                type="text"
+                placeholder="Hledat oznámení..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="input-glass pl-10 w-full"
+              />
             </div>
-            <div className="text-white/70 text-sm">
-              Celkem oznámení
-            </div>
-          </DashboardCard>
-          
-          <DashboardCard className="p-6 text-center">
-            <div className="text-3xl font-bold text-red-400 mb-2">
-              {unreadCount}
-            </div>
-            <div className="text-white/70 text-sm">
-              Nepřečtených
-            </div>
-          </DashboardCard>
-          
-          <DashboardCard className="p-6 text-center">
-            <div className="text-3xl font-bold text-green-400 mb-2">
-              {notifications.filter(n => n.read).length}
-            </div>
-            <div className="text-white/70 text-sm">
-              Přečtených
-            </div>
-          </DashboardCard>
-        </div>
-
-        {/* Seznam oznámení */}
-        <div className="space-y-4">
-          {notifications.map((notification) => (
-            <DashboardCard key={notification.id} className={`p-6 ${
-              !notification.read ? 'border-[#F9D523]' : ''
-            }`}>
-              <div className="flex items-start gap-4">
-                {/* Icon */}
-                <div className="flex-shrink-0 mt-1">
-                  {getNotificationIcon(notification.type)}
-                </div>
-                
-                {/* Content */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between mb-2">
-                    <h3 className="text-lg font-semibold text-white">
-                      {notification.title}
-                      {!notification.read && (
-                        <span className="ml-2 inline-flex px-2 py-1 rounded-full text-xs font-medium bg-[#F9D523]/20 text-[#F9D523] border border-[#F9D523]/30">
-                          NOVÉ
-                        </span>
-                      )}
-                    </h3>
-                    <span className="text-white/50 text-sm whitespace-nowrap">
-                      {notification.date}
-                    </span>
-                  </div>
-                  
-                  <p className="text-white/70 text-sm leading-relaxed mb-4 line-clamp-3">
-                    {notification.content}
-                  </p>
-                  
-                  <div className="flex gap-2">
-                    <DashboardButton
-                      variant="primary"
-                      size="sm"
-                      onClick={() => handleReadMore(notification.id)}
-                    >
-                      Číst více
-                    </DashboardButton>
-                    {!notification.read && (
-                      <DashboardButton
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleMarkAsRead(notification.id)}
-                      >
-                        Označit jako přečtené
-                      </DashboardButton>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </DashboardCard>
-          ))}
-        </div>
-
-        {/* Prázdné místo pro budoucí oznámení */}
-        {notifications.length === 0 && (
-          <DashboardCard className="p-8 text-center">
-            <div className="text-white/30 mb-4">
-              <svg 
-                width="48" 
-                height="48" 
-                viewBox="0 0 24 24" 
-                fill="none" 
-                stroke="currentColor" 
-                strokeWidth="1" 
-                className="mx-auto mb-4 opacity-50"
+            
+            {/* Actions */}
+            <div className="flex items-center space-x-3">
+              {unreadCount > 0 && (
+                <DashboardButton
+                  onClick={handleMarkAllAsRead}
+                  variant="secondary"
+                  size="sm"
+                >
+                  <CheckCircle2 className="w-4 h-4 mr-2" />
+                  Označit vše jako přečtené
+                </DashboardButton>
+              )}
+              
+              <DashboardButton
+                variant="ghost"
+                size="sm"
               >
-                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-              </svg>
+                <Settings className="w-4 h-4" />
+              </DashboardButton>
             </div>
-            <h3 className="text-lg font-medium text-white/50 mb-2">
-              Žádná oznámení
-            </h3>
-            <p className="text-white/30 text-sm">
-              Momentálně nemáte žádná nezpracovaná oznámení.
+          </div>
+        </div>
+
+        {/* Filters */}
+        <div className="mb-6">
+          <div className="flex items-center space-x-2 overflow-x-auto pb-2">
+            <Filter className="w-4 h-4 text-white/60 flex-shrink-0" />
+            {filterOptions.map((option) => (
+              <button
+                key={option.value}
+                onClick={() => setFilter(option.value as FilterType)}
+                className={`
+                  px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex-shrink-0
+                  ${filter === option.value
+                    ? 'bg-[#F9D523] text-black'
+                    : 'bg-white/10 text-white/70 hover:bg-white/20 hover:text-white'
+                  }
+                `}
+              >
+                {option.label}
+                {option.count > 0 && (
+                  <span className={`ml-1.5 px-1.5 py-0.5 rounded text-xs ${
+                    filter === option.value 
+                      ? 'bg-black/20 text-black/70' 
+                      : 'bg-white/20 text-white/50'
+                  }`}>
+                    {option.count}
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Results Summary */}
+        {(searchQuery || filter !== 'all') && (
+          <div className="mb-4">
+            <p className="text-white/60 text-sm">
+              {filteredNotifications.length === 0 
+                ? 'Žádná oznámení nenalezena'
+                : `Zobrazeno ${filteredNotifications.length} oznámení`
+              }
+              {searchQuery && ` pro "${searchQuery}"`}
             </p>
-          </DashboardCard>
+          </div>
+        )}
+
+        {/* Notifications List */}
+        <NotificationList
+          notifications={filteredNotifications}
+          onNotificationClick={handleNotificationClick}
+          loading={loading}
+        />
+
+        {/* Empty State */}
+        {filteredNotifications.length === 0 && !loading && (
+          <div className="text-center py-12">
+            <Bell className="w-16 h-16 text-white/30 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-white mb-2">
+              {searchQuery ? 'Žádná oznámení nenalezena' : 'Žádná oznámení'}
+            </h3>
+            <p className="text-white/60">
+              {searchQuery 
+                ? 'Zkuste změnit hledaný termín nebo filtr'
+                : 'Zatím nemáte žádná oznámení'
+              }
+            </p>
+          </div>
         )}
       </div>
+
+      {/* Notification Detail Modal */}
+      <NotificationDetailModal
+        isOpen={isDetailModalOpen}
+        onClose={() => setIsDetailModalOpen(false)}
+        notification={selectedNotification}
+      />
     </div>
   );
 }

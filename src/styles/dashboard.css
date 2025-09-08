@@ -10,6 +10,12 @@
   --dashboard-sidebar-bg: #081520;
   --dashboard-border: rgba(255, 255, 255, 0.1);
   
+  /* Gold Colors */
+  --dashboard-gold: #F9D523;
+  --dashboard-gold-light: #FBE05A;
+  --dashboard-gold-dark: #E6C400;
+  --dashboard-cyan: #7FDBDB;
+  
   /* Text Colors */
   --dashboard-text-primary: #FFFFFF;
   --dashboard-text-secondary: rgba(255, 255, 255, 0.7);

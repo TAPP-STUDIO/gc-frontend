@@ -1,0 +1,57 @@
+<svg width="240" height="1615" viewBox="0 0 240 1615" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_sidebar)">
+<rect width="240" height="1615" fill="black"/>
+<rect width="240" height="1615" fill="url(#paint0_radial_sidebar)" fill-opacity="0.51"/>
+<g style="mix-blend-mode:color-burn" clip-path="url(#clip1_sidebar)">
+<mask id="mask0_sidebar" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="-4" width="240" height="1616">
+<path d="M240 -3.23047H0V1611.77H240V-3.23047Z" fill="white"/>
+</mask>
+<g mask="url(#mask0_sidebar)">
+<path d="M240 0H0V1615H240V0Z" fill="url(#paint1_linear_sidebar)"/>
+<path style="mix-blend-mode:screen" d="M-21.44 67.8281C-14.912 114.986 26.912 426.358 32 985.148C36.256 1450.27 13.408 1908.93 -26.88 2177.02H107.2V67.8281H-21.44Z" fill="url(#paint2_radial_sidebar)"/>
+<path style="mix-blend-mode:screen" d="M-2.336 1396.97C-3.648 1317.19 -11.392 798.456 24.128 366.928C53.728 7.75157 102.016 -153.749 149.28 -55.5565L54.464 -1012.61L-93.28 478.686L-2.336 1396.97Z" fill="url(#paint3_radial_sidebar)"/>
+<path style="mix-blend-mode:screen" d="M93.952 -6.78505C110.496 140.18 139.296 436.371 157.568 903.106C182.656 1544.26 172.48 2113.39 167.424 2331.09L222.56 2251.63L188.672 -143.414L93.952 -6.78505Z" fill="url(#paint4_radial_sidebar)"/>
+</g>
+</g>
+</g>
+<defs>
+<radialGradient id="paint0_radial_sidebar" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(-4.3125 969.5) rotate(-6.22556) scale(238.029 1387.87)">
+<stop stop-color="#009B9E"/>
+<stop offset="1" stop-color="#009B9E" stop-opacity="0"/>
+</radialGradient>
+<linearGradient id="paint1_linear_sidebar" x1="153.407" y1="530.689" x2="354.926" y2="-517.989" gradientUnits="userSpaceOnUse">
+<stop stop-color="#DCE1E3"/>
+<stop offset="1" stop-color="#EBF0F2"/>
+</linearGradient>
+<radialGradient id="paint2_radial_sidebar" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(13.28 1059.44) scale(87.776 885.989)">
+<stop stop-color="white"/>
+<stop offset="0.1" stop-color="#D3D3D3"/>
+<stop offset="0.5" stop-color="#797979"/>
+<stop offset="0.7" stop-color="#383838"/>
+<stop offset="0.9" stop-color="#0F0F0F"/>
+<stop offset="1"/>
+</radialGradient>
+<radialGradient id="paint3_radial_sidebar" cx="0" cy="0" r="1" gradientTransform="matrix(-62.067 -626.489 62.067 -626.489 42.576 447.883)" gradientUnits="userSpaceOnUse">
+<stop stop-color="white"/>
+<stop offset="0.1" stop-color="#D3D3D3"/>
+<stop offset="0.5" stop-color="#797979"/>
+<stop offset="0.7" stop-color="#383838"/>
+<stop offset="0.9" stop-color="#0F0F0F"/>
+<stop offset="1"/>
+</radialGradient>
+<radialGradient id="paint4_radial_sidebar" cx="0" cy="0" r="1" gradientTransform="matrix(90.322 -129.752 12.855 911.686 140.451 517.239)" gradientUnits="userSpaceOnUse">
+<stop stop-color="white"/>
+<stop offset="0.1" stop-color="#D3D3D3"/>
+<stop offset="0.5" stop-color="#797979"/>
+<stop offset="0.7" stop-color="#383838"/>
+<stop offset="0.9" stop-color="#0F0F0F"/>
+<stop offset="1"/>
+</radialGradient>
+<clipPath id="clip0_sidebar">
+<rect width="240" height="1615" fill="white"/>
+</clipPath>
+<clipPath id="clip1_sidebar">
+<rect width="240" height="1615" fill="white"/>
+</clipPath>
+</defs>
+</svg>

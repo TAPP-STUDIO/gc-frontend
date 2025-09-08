@@ -1,11 +1,23 @@
-export { Button } from './button';
-export { Card } from './card';
-export { Input } from './input';
 export { Modal } from './modal';
-export { Progress } from './progress';
-export { Badge } from './badge';
-export { Loading } from './loading';
-export { PremiumButton, VerifiedBadge, PremiumCTA, GlassCTA, OutlineCTA } from './premium-button';
-
-// Re-export types
-export type { Size, Variant, Status, BaseProps, ClickableProps, LoadingProps } from '@/lib/types';
+export { ToastProvider, useToast } from './toast';
+export { ErrorBoundary } from './error-boundary';
+export { 
+  Skeleton, 
+  CardSkeleton, 
+  TableSkeleton, 
+  StatsSkeleton, 
+  NFTGridSkeleton,
+  NotificationSkeleton,
+  ChartSkeleton,
+  DashboardSkeleton,
+  PageLoader,
+  ButtonSpinner,
+  ShimmerSkeleton,
+  LoadingBar
+} from './skeleton';
+export { 
+  FileUpload, 
+  ImageUpload, 
+  FileUploadWithProgress, 
+  AvatarUpload 
+} from './file-upload';
