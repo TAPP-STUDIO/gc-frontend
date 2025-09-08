@@ -17,7 +17,8 @@ export const Navbar = () => {
     { name: 'Roadmap', href: '#roadmap' },
     { name: 'VIP club', href: '#vip-club' },
     { name: 'FAQ', href: '#faq' },
-    { name: 'Discord', href: 'https://discord.gg/gavlik-capital', external: true }
+    { name: 'Dokumentace', href: '#', external: false },
+    { name: 'Discord', href: 'https://discord.gg/tcvTy6y5', external: true }
   ];
 
   return (

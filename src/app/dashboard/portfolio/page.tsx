@@ -16,11 +16,10 @@ import {
 // Portfolio data
 const portfolioData = {
   stats: {
-    totalCards: 35,
+    totalCards: 22,
     gcCards: 7,
     btcBot: 2,
-    algoTrader: 13,
-    vcNft: 0
+    algoTrader: 13
   },
   chartData: [
     { name: 'Jan', value: 2000 },
@@ -79,13 +78,7 @@ const portfolioData = {
       claim: 2500,
       status: 'completed'
     },
-    { 
-      project: 'VC NFT', 
-      date: '1.1.2025', 
-      amount: 2500,
-      claim: 2500,
-      status: 'pending'
-    }
+
   ]
 };
 
@@ -109,10 +102,10 @@ export default function PortfolioDashboard() {
         notificationCount={3}
       />
       
-      <div className="p-6 lg:p-8">
+      <div className="p-4 sm:p-6 lg:p-8">
 
       {/* Value Cards Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <ValueCard 
           label="Počet karet" 
           value={portfolioData.stats.totalCards}
@@ -133,15 +126,11 @@ export default function PortfolioDashboard() {
           value={portfolioData.stats.algoTrader}
           variant="active"
         />
-        <ValueCard 
-          label="VC NFT" 
-          value={portfolioData.stats.vcNft}
-          variant="default"
-        />
+
       </div>
 
       {/* Main Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 lg:gap-6 mb-8">
         {/* Portfolio Chart - 2 columns */}
         <div className="lg:col-span-2">
           <ChartCard 
@@ -216,7 +205,7 @@ export default function PortfolioDashboard() {
       </div>
 
       {/* Bottom Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 lg:gap-6">
         {/* Claim Chart */}
         <div className="lg:col-span-2">
           <ChartCard 
@@ -249,7 +238,7 @@ export default function PortfolioDashboard() {
                   <option>GC Cards</option>
                   <option>BTC BOT</option>
                   <option>Algo Trader</option>
-                  <option>VC NFT</option>
+
                 </select>
               </div>
             </div>

@@ -25,9 +25,16 @@ export default function DashboardLayout({
       {/* Main Layout */}
       <div className="flex h-screen relative z-10">
         {/* Sidebar with glassmorphism */}
-        <aside className="w-[200px] lg:w-[240px] relative z-20">
+        <aside className="hidden lg:block w-[200px] lg:w-[240px] relative z-20">
           <Sidebar />
         </aside>
+        
+        {/* Mobile Sidebar - placeholder for future implementation */}
+        <div className="lg:hidden fixed top-4 left-4 z-30">
+          <button className="unified-button unified-button-sm">
+            <span>☰</span>
+          </button>
+        </div>
         
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto relative">

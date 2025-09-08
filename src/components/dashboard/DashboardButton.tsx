@@ -22,39 +22,49 @@ export const DashboardButton: React.FC<DashboardButtonProps> = ({
   className,
   icon
 }) => {
-  const baseStyles = 'relative inline-flex items-center justify-center font-medium transition-all duration-300 rounded-lg overflow-hidden';
+  const baseStyles = 'relative inline-flex items-center justify-center font-medium rounded-xl overflow-hidden cursor-pointer transform-gpu';
   
   const variants = {
     primary: `
-      bg-white/20 
+      bg-white/10 
       text-white 
       border border-white/30
-      hover:bg-white/30 
-      hover:border-white/50
-      hover:shadow-[0_0_20px_rgba(255,255,255,0.2)]
+      backdrop-filter backdrop-blur-md
+      hover:bg-gradient-to-r hover:from-[#B29819] hover:to-[#F9D523]
+      hover:text-[#151515]
+      hover:border-[#F9D523]
+      hover:shadow-[0_0_30px_rgba(249,213,35,0.4)]
       active:scale-95
+      transition-all duration-500
     `,
     secondary: `
-      bg-[#1E3A3A]/50 
+      bg-white/10 
       text-white 
-      border border-white/10
-      hover:bg-[#2A4A4A]/50 
-      hover:border-white/20
-      hover:shadow-[0_0_15px_rgba(255,255,255,0.1)]
+      border border-white/20
+      backdrop-filter backdrop-blur-md
+      hover:bg-gradient-to-r hover:from-[#B29819] hover:to-[#F9D523]
+      hover:text-[#151515]
+      hover:border-[#F9D523]
+      hover:shadow-[0_0_20px_rgba(249,213,35,0.3)]
+      transition-all duration-500
     `,
     outline: `
       bg-transparent 
       text-white 
       border border-white/30
-      hover:bg-white/10 
-      hover:border-white/50
-      hover:shadow-[0_0_10px_rgba(255,255,255,0.2)]
+      backdrop-filter backdrop-blur-md
+      hover:bg-gradient-to-r hover:from-[#B29819] hover:to-[#F9D523]
+      hover:text-[#151515]
+      hover:border-[#F9D523]
+      hover:shadow-[0_0_20px_rgba(249,213,35,0.3)]
+      transition-all duration-500
     `,
     ghost: `
       bg-transparent 
       text-white/70 
-      hover:bg-white/10 
-      hover:text-white
+      hover:bg-gradient-to-r hover:from-[#B29819] hover:to-[#F9D523]
+      hover:text-[#151515]
+      transition-all duration-300
     `
   };
 

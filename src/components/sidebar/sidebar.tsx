@@ -17,8 +17,7 @@ export default function Sidebar() {
       subItems: [
         { name: 'GC Cards', href: '/dashboard/portfolio/gc-cards' },
         { name: 'BTC BOT', href: '/dashboard/portfolio/btc-bot' },
-        { name: 'Algo Trader', href: '/dashboard/portfolio/algo-trader' },
-        { name: 'VC NFT', href: '/dashboard/portfolio/vc-nft' }
+        { name: 'Algo Trader', href: '/dashboard/portfolio/algo-trader' }
       ]
     },
     {

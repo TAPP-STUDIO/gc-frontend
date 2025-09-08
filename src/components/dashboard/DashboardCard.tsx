@@ -102,9 +102,9 @@ export const StatCard: React.FC<StatCardProps> = ({
   return (
     <div className={cn(
       'group backdrop-blur-md border border-white/10 rounded-2xl p-6',
-      'hover:border-white/20 transition-all duration-300',
-      'shadow-xl hover:shadow-[0_0_20px_rgba(255,255,255,0.1)]',
-      'hover:scale-[1.02] bg-[#001718]/80',
+      'hover:border-[#F9D523] transition-all duration-500',
+      'shadow-xl hover:shadow-[0_0_30px_rgba(249,213,35,0.2)]',
+      'bg-[#001718]/80 cursor-pointer',
       className
     )}>
       <div className="flex flex-col space-y-3">
@@ -165,11 +165,11 @@ export const ValueCard: React.FC<ValueCardProps> = ({
       onClick={onClick}
       className={cn(
         'group relative flex flex-col items-center justify-center p-6 rounded-2xl',
-        'backdrop-blur-md border transition-all duration-300 cursor-pointer',
+        'backdrop-blur-md border transition-all duration-500 cursor-pointer',
         isActive 
-          ? 'border-white/20 shadow-xl bg-gradient-to-br from-[#1A3A3A]/60 to-[#001718]/80' 
-          : 'border-white/10 hover:border-white/20 bg-[#001718]/60',
-        'hover:scale-[1.05] hover:shadow-[0_0_20px_rgba(255,255,255,0.15)]',
+          ? 'border-[#F9D523] shadow-xl bg-gradient-to-br from-[#1A3A3A]/60 to-[#001718]/80' 
+          : 'border-white/10 hover:border-[#F9D523] bg-[#001718]/60',
+        'hover:shadow-[0_0_30px_rgba(249,213,35,0.2)]',
         className
       )}
     >
@@ -209,8 +209,8 @@ export const InfoCard: React.FC<InfoCardProps> = ({
   return (
     <div className={cn(
       'backdrop-blur-lg border border-white/10 rounded-2xl p-6',
-      'bg-[#001718]/70 shadow-xl',
-      'hover:border-white/20 transition-all duration-300',
+      'bg-[#001718]/70 shadow-xl cursor-pointer',
+      'hover:border-[#F9D523] hover:shadow-[0_0_30px_rgba(249,213,35,0.2)] transition-all duration-500',
       className
     )}>
       <div className="flex items-start gap-4">
@@ -248,7 +248,7 @@ export const ChartCard: React.FC<ChartCardProps> = ({
     <div className={cn(
       'backdrop-blur-lg border border-white/10 rounded-2xl p-6',
       'bg-[#001718]/80 shadow-xl',
-      'hover:border-white/20 transition-all duration-300',
+      'hover:border-[#F9D523] hover:shadow-[0_0_30px_rgba(249,213,35,0.2)] transition-all duration-500',
       className
     )}>
       <div className="flex justify-between items-start mb-6">

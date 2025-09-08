@@ -135,7 +135,7 @@ export const DashboardChart: React.FC<ChartProps> = ({
           const y = height - ((point.value - minValue) / range) * height * 0.8 - height * 0.1;
           
           return (
-            <g key={index}>
+            <g key={index} className="transition-all duration-300 cursor-pointer group">
               {/* Outer glow */}
               <circle
                 cx={`${x}%`}
@@ -143,6 +143,7 @@ export const DashboardChart: React.FC<ChartProps> = ({
                 r="10"
                 fill={lineColor}
                 fillOpacity="0.05"
+                className="group-hover:fill-opacity-20 transition-all duration-300"
               />
               {/* Middle ring */}
               <circle
@@ -151,6 +152,7 @@ export const DashboardChart: React.FC<ChartProps> = ({
                 r="6"
                 fill={lineColor}
                 fillOpacity="0.1"
+                className="group-hover:fill-opacity-30 transition-all duration-300"
               />
               {/* White border */}
               <circle
@@ -161,6 +163,7 @@ export const DashboardChart: React.FC<ChartProps> = ({
                 stroke={lineColor}
                 strokeWidth="1"
                 strokeOpacity="0.3"
+                className="group-hover:stroke-opacity-80 group-hover:stroke-width-2 transition-all duration-300"
               />
               {/* Inner dot */}
               <circle
@@ -169,7 +172,29 @@ export const DashboardChart: React.FC<ChartProps> = ({
                 r="3"
                 fill={lineColor}
                 fillOpacity="0.8"
+                className="group-hover:fill-opacity-100 transition-all duration-300"
               />
+              {/* Tooltip */}
+              <text
+                x={`${x}%`}
+                y={y - 20}
+                textAnchor="middle"
+                fill={lineColor}
+                fontSize="12"
+                className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-semibold"
+              >
+                {point.value.toLocaleString()}
+              </text>
+              <text
+                x={`${x}%`}
+                y={y - 35}
+                textAnchor="middle"
+                fill="white"
+                fontSize="10"
+                className="opacity-0 group-hover:opacity-70 transition-opacity duration-300"
+              >
+                {point.name}
+              </text>
             </g>
           );
         })}
