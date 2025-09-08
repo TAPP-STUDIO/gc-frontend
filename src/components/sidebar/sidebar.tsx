@@ -31,6 +31,7 @@ export default function Sidebar() {
       name: 'Marketplace',
       icon: '/images/icons/marketplace.svg',
       href: '/dashboard/marketplace',
+      comingSoon: true
     },
     {
       id: 'messages',
@@ -43,6 +44,7 @@ export default function Sidebar() {
       name: 'VIP',
       icon: '/images/icons/vip.svg',
       href: '/dashboard/vip',
+      comingSoon: true
     }
   ];
 
@@ -70,23 +72,30 @@ export default function Sidebar() {
             <li key={item.id}>
               <Link
                 href={item.href}
-                className={`flex items-center px-6 py-3 text-white transition-all duration-300 ${
+                className={`flex items-center justify-between px-6 py-3 text-white transition-all duration-300 ${
                   isActive(item.href) 
                     ? 'bg-white/10 border-l-2 border-[#F9D523]' 
                     : 'hover:bg-white/5 hover:border-l-2 hover:border-white/20'
                 }`}
               >
-                <Image
-                  src={item.icon}
-                  alt={item.name}
-                  width={20}
-                  height={20}
-                  className="mr-3 opacity-80"
-                  style={{
-                    filter: 'brightness(0) saturate(100%) invert(100%)'
-                  }}
-                />
-                <span className="text-sm font-medium">{item.name}</span>
+                <div className="flex items-center">
+                  <Image
+                    src={item.icon}
+                    alt={item.name}
+                    width={20}
+                    height={20}
+                    className="mr-3 opacity-80"
+                    style={{
+                      filter: 'brightness(0) saturate(100%) invert(100%)'
+                    }}
+                  />
+                  <span className="text-sm font-medium">{item.name}</span>
+                </div>
+                {item.comingSoon && (
+                  <span className="text-xs px-2 py-1 bg-gradient-to-r from-[#F9D523] to-[#B29819] text-black rounded-full font-medium">
+                    Soon
+                  </span>
+                )}
               </Link>
               
               {/* Sub Items */}
