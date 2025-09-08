@@ -486,3 +486,99 @@ export function ChartContainer({
 
   return <>{children}</>;
 }
+
+// Projects Chart - rozšířená verze PortfolioChart pro více čar
+interface ProjectsChartProps extends BaseChartProps {
+  showProjects?: boolean;
+  showStocks?: boolean;
+  projectsKey?: string;
+  stocksKey?: string;
+}
+
+export function ProjectsChart({ 
+  data, 
+  height = 300, 
+  className = '',
+  showProjects = true,
+  showStocks = false,
+  projectsKey = 'projects',
+  stocksKey = 'stocks',
+  showGrid = true,
+  showTooltip = true,
+  animate = true
+}: ProjectsChartProps) {
+  // Filtrujeme data podle toho co chceme zobrazit
+  const hasProjectsData = showProjects && data.some(d => d[projectsKey] !== undefined);
+  const hasStocksData = showStocks && data.some(d => d[stocksKey] !== undefined);
+  
+  return (
+    <div className={`${className}`}>
+      <ResponsiveContainer width="100%" height={height}>
+        <AreaChart data={data}>
+          {showGrid && <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />}
+          <XAxis 
+            dataKey="name" 
+            axisLine={false}
+            tickLine={false}
+            tick={{ fill: 'rgba(255,255,255,0.6)', fontSize: 12 }}
+          />
+          <YAxis 
+            axisLine={false}
+            tickLine={false}
+            tick={{ fill: 'rgba(255,255,255,0.6)', fontSize: 12 }}
+            tickFormatter={(value) => `${value.toLocaleString()}`}
+          />
+          {showTooltip && (
+            <Tooltip
+              contentStyle={{
+                backgroundColor: 'rgba(0,0,0,0.8)',
+                border: '1px solid rgba(255,255,255,0.2)',
+                borderRadius: '8px',
+                color: 'white'
+              }}
+              formatter={(value: number, name: string) => {
+                const label = name === projectsKey ? 'Projekty' : name === stocksKey ? 'Akcie' : name;
+                return [`${value.toLocaleString()}`, label];
+              }}
+            />
+          )}
+          
+          {/* Projekty čára - zlatá */}
+          {hasProjectsData && (
+            <Area
+              type="monotone"
+              dataKey={projectsKey}
+              stroke="#F9D523"
+              strokeWidth={2}
+              fill="url(#projectsGradient)"
+              isAnimationActive={animate}
+            />
+          )}
+          
+          {/* Akcie čára - zelená */}
+          {hasStocksData && (
+            <Area
+              type="monotone"
+              dataKey={stocksKey}
+              stroke="#10B981"
+              strokeWidth={2}
+              fill="url(#stocksGradient)"
+              isAnimationActive={animate}
+            />
+          )}
+          
+          <defs>
+            <linearGradient id="projectsGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#F9D523" stopOpacity={0.3}/>
+              <stop offset="95%" stopColor="#F9D523" stopOpacity={0}/>
+            </linearGradient>
+            <linearGradient id="stocksGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#10B981" stopOpacity={0.3}/>
+              <stop offset="95%" stopColor="#10B981" stopOpacity={0}/>
+            </linearGradient>
+          </defs>
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
