@@ -33,7 +33,7 @@ const projects = [
     id: 'gc-cards',
     title: 'GC Cards',
     description: 'Investiční karty s garantovaným výnosem a možností tradingu na sekundárním trhu.',
-    value: '45 000 ,
+    value: '45 000 $',
     trend: { value: 15.2, isPositive: true },
     status: 'active'
   },
@@ -41,7 +41,7 @@ const projects = [
     id: 'btc-bot',
     title: 'BTC Bot',
     description: 'Automatizovaný trading bot pro Bitcoin s pokročilými algoritmy a risk managementem.',
-    value: '32 000 ,
+    value: '32 000 $',
     trend: { value: 8.7, isPositive: true },
     status: 'active'
   },
@@ -49,7 +49,7 @@ const projects = [
     id: 'algo-trader',
     title: 'Algo Trader',
     description: 'Algoritmické obchodování s využitím AI a machine learning pro maximalizaci zisku.',
-    value: '23 000 ,
+    value: '23 000 $',
     trend: { value: 12.1, isPositive: true },
     status: 'active'
   }
