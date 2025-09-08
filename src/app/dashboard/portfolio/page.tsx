@@ -1,179 +1,304 @@
-"use client";
+'use client';
 
-import React from 'react';
-import { Container, Stack, PageHeader } from '@/components/layout';
-import { LineChart } from '@/components/charts';
-import { ValueDisplay, ClaimSection, EnhancedValueCard } from '@/components/cards';
-import { ClaimHistoryTable } from '@/components/tables';
+import React, { useState } from 'react';
+import { 
+  DashboardButton, 
+  DashboardCard, 
+  StatCard, 
+  ValueCard,
+  ChartCard,
+  InfoCard,
+  DashboardChart,
+  DashboardTable 
+} from '@/components/dashboard';
 
-// Ukázková data pro graf portfolia
-const portfolioChartData = [
-  { name: 'Jan', value: 5000 },
-  { name: 'Feb', value: 5800 },
-  { name: 'Mar', value: 6200 },
-  { name: 'Apr', value: 5900 },
-  { name: 'May', value: 7200 },
-  { name: 'Jun', value: 8500 },
-  { name: 'Jul', value: 9800 },
-  { name: 'Aug', value: 10500 },
-  { name: 'Sep', value: 12000 },
-  { name: 'Oct', value: 13500 },
-  { name: 'Nov', value: 15000 },
-  { name: 'Dec', value: 16000 }
-];
-
-// Ukázková data pro graf claimů
-const claimChartData = [
-  { name: 'Jan', value: 120 },
-  { name: 'Feb', value: 180 },
-  { name: 'Mar', value: 220 },
-  { name: 'Apr', value: 270 },
-  { name: 'May', value: 350 },
-  { name: 'Jun', value: 420 },
-  { name: 'Jul', value: 510 },
-  { name: 'Aug', value: 580 },
-  { name: 'Sep', value: 640 },
-  { name: 'Oct', value: 720 },
-  { name: 'Nov', value: 780 },
-  { name: 'Dec', value: 850 }
-];
-
-// Historie claimů
-const claimHistory = [
-  { id: '1', project: 'GC Cards', date: '1.1.2025', amount: 2000 },
-  { id: '2', project: 'BTC BOT', date: '1.1.2025', amount: 2000 },
-  { id: '3', project: 'GC Cards', date: '1.1.2025', amount: 2000 },
-  { id: '4', project: 'GC Cards', date: '1.1.2025', amount: 2000 },
-  { id: '5', project: 'Algo Trader', date: '1.1.2025', amount: 2000 },
-  { id: '6', project: 'GC Cards', date: '1.1.2025', amount: 2000 },
-];
-
-// Počty karet v portfoliu
-const portfolioItems = [
-  { title: 'Počet karet', count: 35 },
-  { title: 'GC cards', count: 7 },
-  { title: 'BTC Bot', count: 2 },
-  { title: 'Algo Trader', count: 13 },
-  { title: 'VC NFT', count: 0 }
-];
+// Portfolio data
+const portfolioData = {
+  stats: {
+    totalCards: 35,
+    gcCards: 7,
+    btcBot: 2,
+    algoTrader: 13,
+    vcNft: 0
+  },
+  chartData: [
+    { name: 'Jan', value: 2000 },
+    { name: 'Feb', value: 2500 },
+    { name: 'Mar', value: 3200 },
+    { name: 'Apr', value: 2800 },
+    { name: 'May', value: 4200 },
+    { name: 'Jun', value: 5100 },
+    { name: 'Jul', value: 6800 },
+    { name: 'Aug', value: 7500 },
+    { name: 'Sep', value: 8200 },
+    { name: 'Oct', value: 9100 },
+    { name: 'Nov', value: 9800 },
+    { name: 'Dec', value: 10000 }
+  ],
+  claimData: [
+    { name: 'Jan', value: 500 },
+    { name: 'Feb', value: 800 },
+    { name: 'Mar', value: 1200 },
+    { name: 'Apr', value: 1500 },
+    { name: 'May', value: 2100 },
+    { name: 'Jun', value: 2400 },
+    { name: 'Jul', value: 2800 },
+    { name: 'Aug', value: 3100 },
+    { name: 'Sep', value: 3300 },
+    { name: 'Oct', value: 3450 },
+    { name: 'Nov', value: 3480 },
+    { name: 'Dec', value: 3500 }
+  ],
+  claimHistory: [
+    { 
+      project: 'GC Cards', 
+      date: '1.1.2025', 
+      amount: 2500,
+      claim: 2500,
+      status: 'completed'
+    },
+    { 
+      project: 'BTC BOT', 
+      date: '1.1.2025', 
+      amount: 2500,
+      claim: 2500,
+      status: 'completed'
+    },
+    { 
+      project: 'GC Cards', 
+      date: '1.1.2025', 
+      amount: 2500,
+      claim: 2500,
+      status: 'pending'
+    },
+    { 
+      project: 'Algo Trader', 
+      date: '1.1.2025', 
+      amount: 2500,
+      claim: 2500,
+      status: 'completed'
+    },
+    { 
+      project: 'VC NFT', 
+      date: '1.1.2025', 
+      amount: 2500,
+      claim: 2500,
+      status: 'pending'
+    }
+  ]
+};
 
 export default function PortfolioDashboard() {
-  const handleClaim = () => {
-    console.log('Claim button clicked');
-  };
-
-  const handleTimeframeChange = (timeframe: string) => {
-    console.log('Timeframe changed:', timeframe);
-  };
+  const [selectedTimeframe, setSelectedTimeframe] = useState('M');
 
   return (
-    <Container fluid className="py-4 sm:py-6">
-      <Stack spacing="lg">
-        {/* Jednotný page header - na homepage nemusí mít tlačítko zpět */}
-        <PageHeader 
-          title="Moje portfolio"
-          showBackButton={false}
-        />
-
-        {/* Portfolio counters */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-6">
-          {portfolioItems.map((item, index) => (
-            <ValueDisplay
-              key={index}
-              title={item.title}
-              value={item.count}
-              formatter={(v) => String(v)}
-              showButton={true}
-              onShowClick={() => console.log(`Zobrazit: ${item.title}`)}
-              className="min-h-0"
-            />
-          ))}
-        </div>
-
-        {/* Graf a hodnoty portfolia - stejná výška */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-stretch portfolio-main-grid">
-          {/* Graf portfolia */}
-          <div className="lg:col-span-8 h-full">
-            <LineChart
-              title="16 000 $"
-              data={portfolioChartData}
-              currentValue={1224.00}
-              currentMonth="Dec"
-              minValue={0}
-              maxValue={18000}
-              timeframe="monthly"
-              onTimeframeChange={handleTimeframeChange}
-              className="h-full min-h-[500px]"
-            />
+    <div className="min-h-screen p-6 lg:p-8">
+      {/* Header */}
+      <div className="backdrop-blur-lg border border-white/20 rounded-2xl p-6 bg-[#001718]/80 shadow-xl mb-6">
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-white mb-1">Moje portfolio</h1>
+            <p className="text-white/60 text-sm">Kompletní přehled vašich investic</p>
           </div>
-
-          {/* Hodnoty na pravé straně */}
-          <div className="lg:col-span-4 flex flex-col gap-4 sm:gap-6 h-full portfolio-cards-stack">
-            <div className="portfolio-card">
-              <EnhancedValueCard
-                title="Hodnota portfolia"
-                value={16000}
-                trend={{
-                  value: 12.5,
-                  direction: 'up',
-                  period: 'měsíc'
-                }}
-                className="h-full"
-              />
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-[#4ADE80] rounded-full animate-pulse" />
+              <span className="text-sm text-white/70">Online</span>
             </div>
+            <DashboardButton variant="primary" size="md">
+              Připojit peněženku
+            </DashboardButton>
+          </div>
+        </div>
+      </div>
 
-            <div className="portfolio-card">
-              <EnhancedValueCard
-                title="Hodnota portfolio + akcie"
-                value={18500}
-                trend={{
-                  value: 8.2,
-                  direction: 'up',
-                  period: 'měsíc'
-                }}
-                className="h-full"
-              />
+      {/* Value Cards Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+        <ValueCard 
+          label="Počet karet" 
+          value={portfolioData.stats.totalCards}
+          variant="active"
+        />
+        <ValueCard 
+          label="GC cards" 
+          value={portfolioData.stats.gcCards}
+          variant="active"
+        />
+        <ValueCard 
+          label="BTC Bot" 
+          value={portfolioData.stats.btcBot}
+          variant="active"
+        />
+        <ValueCard 
+          label="Algo Trader" 
+          value={portfolioData.stats.algoTrader}
+          variant="active"
+        />
+        <ValueCard 
+          label="VC NFT" 
+          value={portfolioData.stats.vcNft}
+          variant="default"
+        />
+      </div>
+
+      {/* Main Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        {/* Portfolio Chart - 2 columns */}
+        <div className="lg:col-span-2">
+          <ChartCard 
+            title="Vývoj portfolia"
+            value="10 000 $"
+            controls={
+              <>
+                {['D', 'W', 'M', 'Y'].map((period) => (
+                  <button
+                    key={period}
+                    onClick={() => setSelectedTimeframe(period)}
+                    className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
+                      selectedTimeframe === period 
+                        ? 'bg-white/20 text-white border border-white/30 shadow-lg' 
+                        : 'bg-white/5 text-white/70 hover:bg-white/10 border border-white/10'
+                    }`}
+                  >
+                    {period}
+                  </button>
+                ))}
+              </>
+            }
+          >
+            <DashboardChart 
+              data={portfolioData.chartData}
+              height={280}
+              lineColor="#FFFFFF"
+            />
+          </ChartCard>
+        </div>
+
+        {/* Right Stats */}
+        <div className="space-y-4">
+          <StatCard
+            title="Hodnota portfolia"
+            value="10 000 $"
+            trend={{ value: 12.5, isPositive: true }}
+          />
+          
+          <InfoCard 
+            title="Celkové výnosy"
+            icon={
+              <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            }
+          >
+            <div className="space-y-2">
+              <p className="text-3xl font-bold text-white">
+                3 500 $
+              </p>
+              <p className="text-xs text-[#4ADE80] font-medium">+35% tento měsíc</p>
+            </div>
+          </InfoCard>
+
+          <InfoCard 
+            title="Další claim BTC BOT"
+            icon={
+              <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            }
+          >
+            <div className="space-y-3">
+              <p className="text-2xl font-bold text-white">1. 1. 2026</p>
+              <DashboardButton variant="primary" size="sm" className="w-full">
+                Vyzvednout odměnu
+              </DashboardButton>
+            </div>
+          </InfoCard>
+        </div>
+      </div>
+
+      {/* Bottom Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Claim Chart */}
+        <div className="lg:col-span-2">
+          <ChartCard 
+            title="Celkové claimy"
+            value="3 500 $"
+            controls={
+              <select className="px-4 py-1.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-white/30">
+                <option>Monthly</option>
+                <option>Weekly</option>
+                <option>Daily</option>
+              </select>
+            }
+          >
+            <DashboardChart 
+              data={portfolioData.claimData}
+              height={220}
+              lineColor="#FFFFFF"
+            />
+          </ChartCard>
+        </div>
+
+        {/* Claim History Table */}
+        <DashboardCard variant="default" padding="none">
+          <div className="p-6 border-b border-white/10">
+            <div className="flex justify-between items-center">
+              <h3 className="text-lg font-semibold text-white">Historie claimů</h3>
+              <div className="flex gap-2">
+                <select className="px-3 py-1 bg-white/5 border border-white/10 rounded text-xs text-white focus:outline-none focus:border-white/30">
+                  <option>Všechny projekty</option>
+                  <option>GC Cards</option>
+                  <option>BTC BOT</option>
+                  <option>Algo Trader</option>
+                  <option>VC NFT</option>
+                </select>
+              </div>
             </div>
           </div>
-        </div>
-
-        {/* Claim sekce a graf claimů */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-stretch">
-          {/* Claim sekce - OPRAVENÝ INTERFACE */}
-          <div className="lg:col-span-4">
-            <ClaimSection
-              title="Další claim"
-              date="15. 8. 2025"
-              amount={850}
-              progress={85}
-              onClaim={handleClaim}
-              className="h-full"
+          
+          <div className="overflow-x-auto">
+            <DashboardTable
+              columns={[
+                { 
+                  key: 'project', 
+                  label: 'Projekt',
+                  render: (value) => (
+                    <span className="font-medium text-white">{value}</span>
+                  )
+                },
+                { 
+                  key: 'date', 
+                  label: 'Datum',
+                  render: (value) => (
+                    <span className="text-white/70 text-sm">{value}</span>
+                  )
+                },
+                { 
+                  key: 'claim', 
+                  label: 'Částka',
+                  render: (value, item) => (
+                    <div className="flex items-center gap-2">
+                      <span className="text-white font-semibold">{value} $</span>
+                      {item.status === 'completed' ? (
+                        <span className="w-2 h-2 bg-[#4ADE80] rounded-full" />
+                      ) : (
+                        <span className="w-2 h-2 bg-[#F59E0B] rounded-full animate-pulse" />
+                      )}
+                    </div>
+                  )
+                }
+              ]}
+              data={portfolioData.claimHistory}
             />
           </div>
-
-          {/* Graf claimů */}
-          <div className="lg:col-span-8 h-full">
-            <LineChart
-              title="850 $"
-              data={claimChartData}
-              currentValue={850}
-              currentMonth="Dec"
-              minValue={0}
-              maxValue={1000}
-              timeframe="monthly"
-              onTimeframeChange={handleTimeframeChange}
-              className="h-full min-h-[400px]"
-            />
+          
+          <div className="p-4 border-t border-white/10">
+            <button className="text-white text-sm font-medium hover:text-white/80 transition-colors">
+              Zobrazit vše →
+            </button>
           </div>
-        </div>
-
-        {/* Historie claimů */}
-        <ClaimHistoryTable
-          title="Historie claimů"
-          data={claimHistory}
-          pageSize={6}
-        />
-      </Stack>
-    </Container>
+        </DashboardCard>
+      </div>
+    </div>
   );
 }

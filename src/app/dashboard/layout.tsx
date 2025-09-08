@@ -1,58 +1,31 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import '@/styles/dashboard.css';
 import Sidebar from '@/components/sidebar/sidebar';
-import { TopBar } from '@/components/layout';
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-
-  // Load sidebar state from localStorage
-  useEffect(() => {
-    const savedState = localStorage.getItem('sidebar-collapsed');
-    if (savedState !== null) {
-      setIsSidebarCollapsed(JSON.parse(savedState));
-    }
-  }, []);
-
-  const handleToggleSidebar = () => {
-    const newState = !isSidebarCollapsed;
-    setIsSidebarCollapsed(newState);
-    localStorage.setItem('sidebar-collapsed', JSON.stringify(newState));
-  };
-
   return (
-    <div className="min-h-screen bg-[#0a0a0a] dashboard-layout">
-      {/* Mobile-first responsive layout */}
-      <div className="flex h-screen overflow-hidden">
+    <div className="dashboard-container">
+      {/* Background with pattern */}
+      <div className="dashboard-background" />
+      
+      {/* Main Layout */}
+      <div className="flex h-screen relative z-10">
         {/* Sidebar */}
-        <Sidebar 
-          isCollapsed={isSidebarCollapsed}
-          onToggleCollapse={handleToggleSidebar}
-        />
-
-        {/* Main content area */}
-        <div className="flex-1 flex flex-col min-w-0 dashboard-content">
-          {/* Content area with proper scrolling */}
-          <main className="flex-1 overflow-auto animated-bg">
-            <div className="min-h-full w-full">
-              {/* TopBar - v normálním flow */}
-              <TopBar />
-              
-              {/* OPRAVENÝ RESPONSIVE PADDING - méně agresivní */}
-              <div className="px-4 sm:px-6 lg:px-8 pt-2 pb-6">
-                {/* Content wrapper for max-width on large screens */}
-                <div className="max-w-full mx-auto">
-                  {children}
-                </div>
-              </div>
-            </div>
-          </main>
-        </div>
+        <aside className="dashboard-sidebar w-[200px] lg:w-[240px]">
+          <Sidebar />
+        </aside>
+        
+        {/* Main Content */}
+        <main className="flex-1 overflow-y-auto dashboard-scrollbar">
+          <div className="dashboard-content">
+            {children}
+          </div>
+        </main>
       </div>
     </div>
   );
