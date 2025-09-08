@@ -30,6 +30,7 @@ export default function AdminSidebar({ isCollapsed = false }: AdminSidebarProps)
       icon: 'projects.svg',
       href: '/admin/nfts',
       subItems: [
+        { id: 'overview', name: 'Přehled', href: '/admin/nfts' },
         { id: 'gc-cards', name: 'GC Cards', href: '/admin/nfts/gc-cards' },
         { id: 'btc-bot', name: 'BTC Bot', href: '/admin/nfts/btc-bot' },
         { id: 'algo-trader', name: 'Algo Trader', href: '/admin/nfts/algo-trader' },

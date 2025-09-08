@@ -126,23 +126,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       if (response.success && response.data) {
+        console.log('📱 AUTH CONTEXT: Login successful, processing response data:', response.data);
+        
         // Store tokens from backend response
         if (response.data.tokens) {
+          console.log('📱 AUTH CONTEXT: Found tokens in response, storing...', {
+            hasIdToken: !!response.data.tokens.idToken,
+            hasAccessToken: !!response.data.tokens.accessToken,
+            hasRefreshToken: !!response.data.tokens.refreshToken
+          });
+          
           authService.storeTokens(response.data.tokens);
+          
           const userData = authService.decodeIdToken(response.data.tokens.idToken);
           if (userData) {
+            console.log('📱 AUTH CONTEXT: Decoded user data from token:', { email: userData.email });
             authService.storeUserData(userData);
             setCognitoUser(userData);
           }
+        } else {
+          console.log('📱 AUTH CONTEXT: No tokens found in response data!');
         }
         
         if (response.data.user) {
+          console.log('📱 AUTH CONTEXT: Setting user data:', response.data.user.email);
           setUser(response.data.user);
           setIsInAdminGroup(true);
+        } else {
+          console.log('📱 AUTH CONTEXT: No user data found in response!');
         }
         
-        // Redirect to admin dashboard
-        router.push('/admin');
+        // Redirect to admin dashboard with small delay to ensure tokens are stored
+        console.log('📱 AUTH CONTEXT: Redirecting to admin dashboard...');
+        setTimeout(() => {
+          router.push('/admin');
+        }, 100); // Small delay to ensure storage completes
         
         return { success: true };
       } else {

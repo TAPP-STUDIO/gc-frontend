@@ -63,11 +63,24 @@ class ApiService {
     // Request interceptor to add auth token
     this.api.interceptors.request.use(
       (config) => {
+        console.log('🚀 API DEBUG: Request interceptor triggered for:', config.url);
         const tokens = authService.getStoredTokens();
+        
+        console.log('🚀 API DEBUG: Retrieved tokens for request:', {
+          hasTokens: !!tokens,
+          hasIdToken: !!tokens?.idToken,
+          url: config.url,
+          method: config.method
+        });
+        
         if (tokens?.idToken) {
+          console.log('🚀 API DEBUG: Adding tokens to headers');
           config.headers['Authorization'] = `Bearer ${tokens.idToken}`;
           config.headers['x-id-token'] = tokens.idToken;
+        } else {
+          console.log('🚀 API DEBUG: No tokens available for request');
         }
+        
         return config;
       },
       (error) => {

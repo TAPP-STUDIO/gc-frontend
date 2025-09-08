@@ -1,148 +1,243 @@
 'use client';
 
-import React from 'react';
-import { Container, Stack, PageHeader } from '@/components/layout';
-import { EnhancedValueCard } from '@/components/cards';
+import React, { useState, useEffect } from 'react';
+import { DashboardCard, StatCard, DashboardButton } from '@/components/dashboard';
+import { nftService, NFTProjectsResponse, NFTProject, NFTHealthCheck } from '@/services/nft.service';
 
 export default function NFTsAdminPage() {
+  const [projectsData, setProjectsData] = useState<NFTProjectsResponse | null>(null);
+  const [healthCheck, setHealthCheck] = useState<NFTHealthCheck | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const nftProjects = [
-    {
-      id: 'gc-cards',
-      name: 'GC Cards',
-      symbol: 'GCC',
-      contractAddress: '0x1234...5678',
-      totalMinted: 3420,
-      maxSupply: 10000,
-      floorPrice: 0.25,
-      volume24h: 12.5,
-      holders: 1247,
-      royalties: 5.0,
-      status: 'active',
-      lastMint: '2 min ago',
-      revenue: 85600,
-      description: 'Investiční karty s garantovaným výnosem a možností tradingu na sekundárním trhu.',
-      features: ['Dividendy', 'Premium Access', 'Trading'],
-      mintPrice: 0.20,
-      publicSaleDate: '2024-01-15',
-    },
-    {
-      id: 'btc-bot',
-      name: 'BTC Bot',
-      symbol: 'BTCB',
-      contractAddress: '0x8765...4321',
-      totalMinted: 1850,
-      maxSupply: 5000,
-      floorPrice: 0.8,
-      volume24h: 8.3,
-      holders: 892,
-      royalties: 7.5,
-      status: 'active',
-      lastMint: '15 min ago',
-      revenue: 148000,
-      description: 'Automatizovaný trading bot pro Bitcoin s pokročilými algoritmy.',
-      features: ['Auto-Trading', 'AI Algoritmy', 'Risk Management'],
-      mintPrice: 0.75,
-      publicSaleDate: '2024-02-01',
-    },
-    {
-      id: 'algo-trader',
-      name: 'Algo Trader',
-      symbol: 'ALGO',
-      contractAddress: '0x9999...1111',
-      totalMinted: 2890,
-      maxSupply: 7500,
-      floorPrice: 0.45,
-      volume24h: 15.7,
-      holders: 1456,
-      royalties: 6.0,
-      status: 'active',
-      lastMint: '5 min ago',
-      revenue: 130050,
-      description: 'Algoritmické obchodování s využitím AI a machine learning.',
-      features: ['Machine Learning', 'Multi-Exchange', 'Portfolio Balancing'],
-      mintPrice: 0.40,
-      publicSaleDate: '2024-03-15',
-    },
-    {
-      id: 'vc-nft',
-      name: 'VC NFT',
-      symbol: 'VCN',
-      contractAddress: '0x7777...3333',
-      totalMinted: 774,
-      maxSupply: 1500,
-      floorPrice: 2.1,
-      volume24h: 32.1,
-      holders: 623,
-      royalties: 10.0,
-      status: 'presale',
-      lastMint: '1 hour ago',
-      revenue: 162540,
-      description: 'Exkluzivní NFT kolekce s utility funkcemi a přístupem k investičním příležitostem.',
-      features: ['Exclusive Access', 'DAO Voting', 'Premium Deals'],
-      mintPrice: 2.0,
-      publicSaleDate: '2024-04-01',
-    },
-  ];
+  // Load initial data
+  useEffect(() => {
+    loadData();
+  }, []);
 
-  const handleProjectAction = (action: string, projectId: string) => {
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Load projects and health check in parallel
+      const [projectsResponse, healthResponse] = await Promise.all([
+        nftService.getProjects(),
+        nftService.healthCheck()
+      ]);
+
+      if (projectsResponse.success && projectsResponse.data) {
+        setProjectsData(projectsResponse.data);
+      } else {
+        setError(projectsResponse.error || 'Failed to load NFT projects');
+      }
+
+      if (healthResponse.success && healthResponse.data) {
+        setHealthCheck(healthResponse.data);
+      }
+
+    } catch (err: any) {
+      console.error('Failed to load NFT data:', err);
+      setError(err.message || 'Failed to load NFT data');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await loadData();
+    setRefreshing(false);
+  };
+
+  const handleProjectAction = async (action: string, projectId?: string) => {
     console.log(`Admin action: ${action} for project: ${projectId}`);
-    // TODO: Implement actual actions
+    
+    switch (action) {
+      case 'manage':
+        // TODO: Open project management dialog
+        alert(`Manage project ${projectId} - coming soon...`);
+        break;
+      case 'mint':
+        // TODO: Open mint dialog for specific project
+        alert(`Mint NFT for project ${projectId} - coming soon...`);
+        break;
+      case 'pause':
+        // TODO: Pause/resume project
+        alert(`Pause/Resume project ${projectId} - coming soon...`);
+        break;
+      case 'analytics':
+        // TODO: Show project analytics
+        alert(`Analytics for project ${projectId} - coming soon...`);
+        break;
+      case 'global-mint':
+        // TODO: Open global mint dialog
+        alert('Global mint dialog coming soon...');
+        break;
+      case 'distribute':
+        // TODO: Open distribution dialog
+        alert('Distribution dialog coming soon...');
+        break;
+      case 'health-check':
+        await handleRefresh();
+        break;
+      default:
+        alert(`Action ${action} not implemented yet`);
+    }
   };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('cs-CZ');
   };
 
-  return (
-    <Container fluid className="py-4 sm:py-6">
-      <Stack spacing="lg">
-        <PageHeader 
-          title="NFT Projekty - Admin Správa"
-          showBackButton={true}
-        />
+  const getCardTypeColor = (cardType: number): string => {
+    switch (cardType) {
+      case 0: return 'from-yellow-500 to-yellow-600'; // GC
+      case 1: return 'from-blue-500 to-blue-600';     // ETH
+      case 2: return 'from-orange-500 to-orange-600'; // BTC
+      case 3: return 'from-purple-500 to-purple-600'; // VC NFT
+      default: return 'from-gray-500 to-gray-600';
+    }
+  };
 
-        {/* Overview Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <EnhancedValueCard
+  if (loading) {
+    return (
+      <div className="p-6 lg:p-8">
+        <DashboardCard variant="highlighted">
+          <h1 className="text-3xl font-bold text-white mb-2">NFT Projekty - Načítání...</h1>
+          <div className="flex items-center justify-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#F9D523]"></div>
+          </div>
+        </DashboardCard>
+      </div>
+    );
+  }
+
+  if (error && !projectsData) {
+    return (
+      <div className="p-6 lg:p-8">
+        <DashboardCard variant="highlighted">
+          <h1 className="text-3xl font-bold text-white mb-2">NFT Projekty - Chyba</h1>
+          <div className="bg-red-500/20 border border-red-500/30 rounded-lg p-6 mt-4">
+            <h3 className="text-red-400 font-semibold mb-2">Chyba při načítání dat</h3>
+            <p className="text-red-300 mb-4">{error}</p>
+            <DashboardButton 
+              onClick={handleRefresh}
+              variant="outline"
+              className="border-red-500/30 text-red-400 hover:bg-red-500/20"
+            >
+              Zkusit znovu
+            </DashboardButton>
+          </div>
+        </DashboardCard>
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-6 lg:p-8">
+      {/* Header with refresh button */}
+      <DashboardCard 
+        variant="highlighted" 
+        className="mb-6 border-[#F9D523]/20 bg-gradient-to-br from-[#F9D523]/5 to-transparent"
+      >
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-white mb-2">NFT Projekty - Admin Správa</h1>
+            <p className="text-white/60 text-sm">Správa všech NFT projektů s live daty ze smart contracts</p>
+          </div>
+          <DashboardButton
+            onClick={handleRefresh}
+            disabled={refreshing}
+            variant="outline"
+            className="border-[#F9D523]/30 text-[#F9D523] hover:bg-[#F9D523]/20 hover:border-[#F9D523] disabled:opacity-50"
+          >
+            <svg className={`w-4 h-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            {refreshing ? 'Načítání...' : 'Obnovit'}
+          </DashboardButton>
+        </div>
+      </DashboardCard>
+
+      {/* Error banner */}
+      {error && (
+        <div className="bg-yellow-500/20 border border-yellow-500/30 rounded-lg p-4 mb-6">
+          <p className="text-yellow-300">
+            <strong>Varování:</strong> {error}
+          </p>
+        </div>
+      )}
+
+      {/* Health Status */}
+      {healthCheck && (
+        <DashboardCard variant="default" className="mb-6">
+          <h3 className="text-lg font-semibold text-white mb-4">Stav Blockchain Připojení</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="bg-[#1a1a1a] rounded-lg p-4">
+              <p className="text-xs text-[#666666] mb-1">Block číslo</p>
+              <p className="text-white font-semibold">{healthCheck.details?.blockNumber.toLocaleString()}</p>
+            </div>
+            <div className="bg-[#1a1a1a] rounded-lg p-4">
+              <p className="text-xs text-[#666666] mb-1">Admin Wallet</p>
+              <p className="text-white font-semibold">{parseFloat(healthCheck.details?.walletBalance || '0').toFixed(4)} ETH</p>
+            </div>
+            <div className="bg-[#1a1a1a] rounded-lg p-4">
+              <p className="text-xs text-[#666666] mb-1">Wallet Address</p>
+              <p className="text-white font-mono text-xs">{healthCheck.details?.walletAddress.slice(0, 10)}...</p>
+            </div>
+            <div className="bg-[#1a1a1a] rounded-lg p-4">
+              <p className="text-xs text-[#666666] mb-1">Stav</p>
+              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-500">
+                <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                Online
+              </span>
+            </div>
+          </div>
+        </DashboardCard>
+      )}
+
+      {/* Overview Stats */}
+      {projectsData && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <StatCard
             title="Celkem Projektů"
-            value={nftProjects.length}
-            formatter={(v) => String(v)}
-            className="bg-gradient-to-br from-blue-500/10 to-blue-600/10 border-blue-500/20"
+            value={projectsData.overview.totalProjects.toString()}
+            trend={{ value: 0, isPositive: true }}
           />
           
-          <EnhancedValueCard
-            title="Celkem Minted"
-            value={nftProjects.reduce((sum, p) => sum + p.totalMinted, 0)}
-            formatter={(v) => v.toLocaleString()}
-            className="bg-gradient-to-br from-green-500/10 to-green-600/10 border-green-500/20"
+          <StatCard
+            title="Celkem NFTs"
+            value={projectsData.overview.totalNFTs?.toLocaleString() || '0'}
+            trend={{ value: 0, isPositive: true }}
           />
           
-          <EnhancedValueCard
-            title="Celkem Holderů"
-            value={nftProjects.reduce((sum, p) => sum + p.holders, 0)}
-            formatter={(v) => v.toLocaleString()}
-            className="bg-gradient-to-br from-purple-500/10 to-purple-600/10 border-purple-500/20"
+          <StatCard
+            title="Aktivní Projekty"
+            value={projectsData.overview.activeProjects.toString()}
+            trend={{ value: 0, isPositive: true }}
           />
           
-          <EnhancedValueCard
+          <StatCard
             title="Celkový Revenue"
-            value={nftProjects.reduce((sum, p) => sum + p.revenue, 0)}
-            formatter={(v) => `$${v.toLocaleString()}`}
-            className="bg-gradient-to-br from-yellow-500/10 to-yellow-600/10 border-yellow-500/20"
+            value={`$${projectsData.overview.totalRevenue.toLocaleString()}`}
+            trend={{ value: 0, isPositive: true }}
           />
         </div>
+      )}
 
-        {/* Projects Grid */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-          {nftProjects.map((project) => (
-            <div key={project.id} className="bg-[#151515] rounded-xl border border-[#333333] p-6 hover:border-[#555555] transition-all duration-200">
+      {/* Projects Grid */}
+      {projectsData && (
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6">
+          {projectsData.projects.map((project) => (
+            <DashboardCard key={project.id} variant="default" className="hover:border-[#555555] transition-all duration-200">
               
               {/* Project Header */}
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-[#F9D523] to-[#e3c320] rounded-lg flex items-center justify-center">
-                    <svg className="w-6 h-6 text-[#151515]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className={`w-12 h-12 bg-gradient-to-r ${getCardTypeColor(project.cardType)} rounded-lg flex items-center justify-center`}>
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
@@ -156,9 +251,11 @@ export default function NFTsAdminPage() {
                   <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                     project.status === 'active' 
                       ? 'bg-green-500/20 text-green-500' 
-                      : 'bg-yellow-500/20 text-yellow-500'
+                      : project.status === 'presale'
+                      ? 'bg-yellow-500/20 text-yellow-500'
+                      : 'bg-red-500/20 text-red-500'
                   }`}>
-                    {project.status === 'active' ? 'Aktivní' : 'Předprodej'}
+                    {project.status === 'active' ? 'Aktivní' : project.status === 'presale' ? 'Předprodej' : 'Pozastaveno'}
                   </span>
                 </div>
               </div>
@@ -166,7 +263,7 @@ export default function NFTsAdminPage() {
               {/* Contract Address */}
               <div className="mb-4 p-3 bg-[#1a1a1a] rounded-lg">
                 <p className="text-xs text-[#666666] mb-1">Contract Address:</p>
-                <p className="text-sm font-mono text-white">{project.contractAddress}</p>
+                <p className="text-sm font-mono text-white">{project.contractAddress.slice(0, 20)}...{project.contractAddress.slice(-8)}</p>
               </div>
 
               {/* Progress Bar */}
@@ -179,7 +276,7 @@ export default function NFTsAdminPage() {
                 </div>
                 <div className="w-full bg-[#333333] rounded-full h-2">
                   <div 
-                    className="bg-[#F9D523] h-2 rounded-full transition-all duration-300"
+                    className={`bg-gradient-to-r ${getCardTypeColor(project.cardType)} h-2 rounded-full transition-all duration-300`}
                     style={{ width: `${(project.totalMinted / project.maxSupply) * 100}%` }}
                   ></div>
                 </div>
@@ -235,76 +332,135 @@ export default function NFTsAdminPage() {
 
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-2 pt-4 border-t border-[#333333]">
-                <button 
+                <DashboardButton 
                   onClick={() => handleProjectAction('manage', project.id)}
-                  className="flex-1 bg-[#F9D523] hover:bg-[#e3c320] text-[#151515] px-4 py-2 rounded-lg font-medium transition-colors text-center"
+                  variant="primary"
+                  className="flex-1 bg-[#F9D523] hover:bg-[#e3c320] text-[#151515] border-[#F9D523]"
                 >
                   Manage Project
-                </button>
-                <button 
-                  onClick={() => handleProjectAction('pause', project.id)}
-                  className="flex-1 bg-orange-500/20 hover:bg-orange-500/30 text-orange-400 px-4 py-2 rounded-lg font-medium transition-colors border border-orange-500/30"
+                </DashboardButton>
+                <DashboardButton 
+                  onClick={() => handleProjectAction('mint', project.id)}
+                  variant="outline"
+                  className="flex-1 border-blue-500/30 text-blue-400 hover:bg-blue-500/20 hover:border-blue-500"
                 >
-                  {project.status === 'active' ? 'Pause' : 'Resume'}
-                </button>
-                <button 
+                  Mint NFT
+                </DashboardButton>
+                <DashboardButton 
                   onClick={() => handleProjectAction('analytics', project.id)}
-                  className="flex-1 bg-[#333333] hover:bg-[#444444] text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                  variant="outline"
+                  className="flex-1 border-[#666666] text-[#666666] hover:bg-[#444444] hover:border-[#444444] hover:text-white"
                 >
                   Analytics
-                </button>
+                </DashboardButton>
               </div>
-            </div>
+            </DashboardCard>
           ))}
         </div>
+      )}
 
-        {/* Quick Actions */}
-        <div className="bg-[#151515] rounded-xl border border-[#333333] p-6">
-          <h3 className="text-xl font-semibold text-white mb-4">Rychlé Admin Akce</h3>
+      {/* Quick Global Actions */}
+      <DashboardCard variant="default" className="mb-6">
+        <h3 className="text-xl font-semibold text-white mb-4">Globální Admin Akce</h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+          <DashboardButton 
+            onClick={() => handleProjectAction('global-mint')}
+            variant="outline"
+            className="p-4 border-blue-500/30 text-blue-400 hover:bg-blue-500/20 hover:border-blue-500 h-auto flex-col"
+          >
+            <svg className="w-6 h-6 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            <span className="text-sm font-medium">Global Mint</span>
+          </DashboardButton>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <button 
-              onClick={() => handleProjectAction('create', 'new')}
-              className="p-4 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg border border-green-500/30 transition-colors"
-            >
-              <svg className="w-6 h-6 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
-              <p className="text-sm font-medium">Nový Projekt</p>
-            </button>
-            
-            <button 
-              onClick={() => handleProjectAction('batch-mint', 'all')}
-              className="p-4 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded-lg border border-blue-500/30 transition-colors"
-            >
-              <svg className="w-6 h-6 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <p className="text-sm font-medium">Batch Mint</p>
-            </button>
-            
-            <button 
-              onClick={() => handleProjectAction('update-metadata', 'all')}
-              className="p-4 bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 rounded-lg border border-purple-500/30 transition-colors"
-            >
-              <svg className="w-6 h-6 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-              <p className="text-sm font-medium">Update Metadata</p>
-            </button>
-            
-            <button 
-              onClick={() => handleProjectAction('emergency-stop', 'all')}
-              className="p-4 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg border border-red-500/30 transition-colors"
-            >
-              <svg className="w-6 h-6 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
-              </svg>
-              <p className="text-sm font-medium">Emergency Stop</p>
-            </button>
-          </div>
+          <DashboardButton 
+            onClick={() => handleProjectAction('distribute')}
+            variant="outline"
+            className="p-4 border-green-500/30 text-green-400 hover:bg-green-500/20 hover:border-green-500 h-auto flex-col"
+          >
+            <svg className="w-6 h-6 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className="text-sm font-medium">Distribute Dividends</span>
+          </DashboardButton>
+          
+          <DashboardButton 
+            onClick={() => handleProjectAction('health-check')}
+            variant="outline"
+            className="p-4 border-yellow-500/30 text-yellow-400 hover:bg-yellow-500/20 hover:border-yellow-500 h-auto flex-col"
+          >
+            <svg className="w-6 h-6 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className="text-sm font-medium">Health Check</span>
+          </DashboardButton>
+          
+          <DashboardButton 
+            onClick={() => alert('Bulk operations coming soon...')}
+            variant="outline"
+            className="p-4 border-purple-500/30 text-purple-400 hover:bg-purple-500/20 hover:border-purple-500 h-auto flex-col"
+          >
+            <svg className="w-6 h-6 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+            <span className="text-sm font-medium">Bulk Operations</span>
+          </DashboardButton>
+          
+          <DashboardButton 
+            onClick={() => alert('Emergency controls coming soon...')}
+            variant="outline"
+            className="p-4 border-red-500/30 text-red-400 hover:bg-red-500/20 hover:border-red-500 h-auto flex-col"
+          >
+            <svg className="w-6 h-6 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+            <span className="text-sm font-medium">Emergency Stop</span>
+          </DashboardButton>
         </div>
-      </Stack>
-    </Container>
+      </DashboardCard>
+
+      {/* Current Distribution Info */}
+      {projectsData?.overview.currentDistribution && (
+        <DashboardCard variant="default" className="mb-6">
+          <h3 className="text-xl font-semibold text-white mb-4">Aktuální Distribuce Dividend</h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-[#1a1a1a] rounded-lg p-4">
+              <h4 className="text-sm font-medium text-[#666666] mb-2">Celková Částka</h4>
+              <p className="text-2xl font-bold text-white">${parseFloat(projectsData.overview.currentDistribution.totalAmount).toLocaleString()}</p>
+              <p className="text-xs text-[#666666] mt-1">USDT</p>
+            </div>
+            
+            <div className="bg-[#1a1a1a] rounded-lg p-4">
+              <h4 className="text-sm font-medium text-[#666666] mb-2">Celkem NFTs</h4>
+              <p className="text-2xl font-bold text-white">{projectsData.overview.currentDistribution.totalNFTs.toLocaleString()}</p>
+              <p className="text-xs text-[#666666] mt-1">aktivních NFTs</p>
+            </div>
+            
+            <div className="bg-[#1a1a1a] rounded-lg p-4">
+              <h4 className="text-sm font-medium text-[#666666] mb-2">Částka na NFT</h4>
+              <p className="text-2xl font-bold text-white">${parseFloat(projectsData.overview.currentDistribution.perNFTAmount).toFixed(6)}</p>
+              <p className="text-xs text-[#666666] mt-1">USDT per NFT</p>
+            </div>
+          </div>
+
+          {projectsData.overview.currentDistribution.description && (
+            <div className="mt-4 p-4 bg-[#2a2a2a] rounded-lg">
+              <h4 className="text-sm font-medium text-[#666666] mb-2">Popis distribuce</h4>
+              <p className="text-white">{projectsData.overview.currentDistribution.description}</p>
+            </div>
+          )}
+        </DashboardCard>
+      )}
+
+      {/* Data timestamp */}
+      {projectsData?.overview.lastUpdated && (
+        <div className="text-center text-xs text-[#666666]">
+          Posledně aktualizováno: {new Date(projectsData.overview.lastUpdated).toLocaleString('cs-CZ')}
+        </div>
+      )}
+    </div>
   );
 }

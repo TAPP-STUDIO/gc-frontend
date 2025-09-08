@@ -353,36 +353,105 @@ class AuthService {
   }
 
   /**
-   * Store tokens in cookies
+   * Store tokens in localStorage (more reliable for SPA)
    */
   storeTokens(tokens: AuthTokens): void {
-    // Store in secure, httpOnly cookies in production
-    Cookies.set(this.TOKEN_KEY, JSON.stringify(tokens), {
-      expires: 7, // 7 days
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+    console.log('🔐 AUTH DEBUG: Storing tokens:', {
+      hasIdToken: !!tokens.idToken,
+      hasAccessToken: !!tokens.accessToken,
+      hasRefreshToken: !!tokens.refreshToken,
+      idTokenLength: tokens.idToken?.length || 0,
+      expiresIn: tokens.expiresIn
     });
+    
+    // Store in localStorage for SPA reliability
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(this.TOKEN_KEY, JSON.stringify(tokens));
+      console.log('🔐 AUTH DEBUG: Tokens stored in localStorage');
+    }
+    
+    // Also store in cookies as backup
+    try {
+      Cookies.set(this.TOKEN_KEY, JSON.stringify(tokens), {
+        expires: 7, // 7 days
+        secure: false, // Allow HTTP in development
+        sameSite: 'lax', // More permissive than 'strict'
+        path: '/', // Ensure cookie is available on all paths
+      });
+      console.log('🔐 AUTH DEBUG: Tokens also stored in cookies');
+    } catch (error) {
+      console.error('🔐 AUTH DEBUG: Cookie storage failed:', error);
+    }
   }
 
   /**
-   * Get stored tokens
+   * Get stored tokens from localStorage or cookies
    */
   getStoredTokens(): AuthTokens | null {
+    console.log('🔐 AUTH DEBUG: Getting stored tokens...');
+    
+    // Try localStorage first (more reliable for SPA)
+    if (typeof window !== 'undefined') {
+      const localTokensStr = localStorage.getItem(this.TOKEN_KEY);
+      if (localTokensStr) {
+        try {
+          const tokens = JSON.parse(localTokensStr) as AuthTokens;
+          console.log('🔐 AUTH DEBUG: Retrieved tokens from localStorage:', {
+            hasIdToken: !!tokens.idToken,
+            hasAccessToken: !!tokens.accessToken,
+            hasRefreshToken: !!tokens.refreshToken,
+            idTokenLength: tokens.idToken?.length || 0
+          });
+          return tokens;
+        } catch (error) {
+          console.error('🔐 AUTH DEBUG: Failed to parse localStorage tokens:', error);
+          localStorage.removeItem(this.TOKEN_KEY);
+        }
+      }
+    }
+    
+    // Fallback to cookies
     const tokensStr = Cookies.get(this.TOKEN_KEY);
-    if (!tokensStr) return null;
+    
+    if (!tokensStr) {
+      console.log('🔐 AUTH DEBUG: No tokens found in localStorage or cookies');
+      return null;
+    }
     
     try {
-      return JSON.parse(tokensStr) as AuthTokens;
-    } catch {
+      const tokens = JSON.parse(tokensStr) as AuthTokens;
+      console.log('🔐 AUTH DEBUG: Retrieved tokens from cookies:', {
+        hasIdToken: !!tokens.idToken,
+        hasAccessToken: !!tokens.accessToken,
+        hasRefreshToken: !!tokens.refreshToken,
+        idTokenLength: tokens.idToken?.length || 0
+      });
+      
+      // Also store in localStorage for next time
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(this.TOKEN_KEY, tokensStr);
+      }
+      
+      return tokens;
+    } catch (error) {
+      console.error('🔐 AUTH DEBUG: Failed to parse cookie tokens:', error);
       return null;
     }
   }
 
   /**
-   * Clear stored tokens
+   * Clear stored tokens from both localStorage and cookies
    */
   private clearTokens(): void {
-    Cookies.remove(this.TOKEN_KEY);
+    console.log('🔐 AUTH DEBUG: Clearing tokens from storage');
+    
+    // Clear localStorage
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(this.TOKEN_KEY);
+    }
+    
+    // Clear cookies
+    Cookies.remove(this.TOKEN_KEY, { path: '/' });
   }
 
   /**
