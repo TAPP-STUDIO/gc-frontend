@@ -11,21 +11,28 @@ export default function NFTsAdminPage() {
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
 
-  // Load initial data
+  // Load initial data only once
   useEffect(() => {
     loadData();
-  }, []);
+  }, []); // Fixed: removed dependency array issues
 
   const loadData = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      // Load projects and health check in parallel
-      const [projectsResponse, healthResponse] = await Promise.all([
-        nftService.getProjects(),
-        nftService.healthCheck()
-      ]);
+      // Load projects first (contains most important data)
+      const projectsResponse = await nftService.getProjects();
+      
+      // Only load health check if projects succeed
+      let healthResponse = null;
+      if (projectsResponse.success) {
+        try {
+          healthResponse = await nftService.healthCheck();
+        } catch (healthError) {
+          console.warn('Health check failed, continuing without it:', healthError);
+        }
+      }
 
       if (projectsResponse.success && projectsResponse.data) {
         setProjectsData(projectsResponse.data);
@@ -33,7 +40,7 @@ export default function NFTsAdminPage() {
         setError(projectsResponse.error || 'Failed to load NFT projects');
       }
 
-      if (healthResponse.success && healthResponse.data) {
+      if (healthResponse?.success && healthResponse.data) {
         setHealthCheck(healthResponse.data);
       }
 

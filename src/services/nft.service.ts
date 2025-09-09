@@ -48,6 +48,73 @@ export interface ContractAddresses {
   usdt: string;
 }
 
+// New interfaces for collection management
+export interface NFTCollection {
+  _id: string;
+  collectionName: string;
+  symbol: string;
+  contractType: 'GC_CARD' | 'BTC_BOT' | 'ALGO_TRADER' | 'VC_NFT';
+  contractAddress: string;
+  totalValueUSD: number;
+  cardCount: number;
+  pricePerCard: number;
+  totalMinted: number;
+  maxSupply: number;
+  floorPrice: number;
+  volume24h: number;
+  isActive: boolean;
+  status: 'active' | 'presale' | 'paused' | 'ended';
+  mintPrice: number;
+  publicSaleDate: string;
+  description: string;
+  features: string[];
+  royalties: number;
+  allowManualPriceUpdates: boolean;
+  lastManualUpdate?: string;
+  lastManualUpdateBy?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface NFTCollectionHistory {
+  _id: string;
+  collectionId: string;
+  collectionName: string;
+  contractType: string;
+  totalValueUSD: number;
+  pricePerCard: number;
+  cardCount: number;
+  timestamp: string;
+  reason: string;
+  changeType: 'manual_update' | 'automatic_sync' | 'admin_correction' | 'initial_value';
+  updatedBy?: string;
+  valueChange?: number;
+  percentageChange?: number;
+  createdAt: string;
+}
+
+export interface UpdateCollectionValueRequest {
+  totalValueUSD: number;
+  reason?: string;
+}
+
+export interface CollectionHistoryResponse {
+  collection: {
+    id: string;
+    name: string;
+    symbol: string;
+    currentValue: number;
+    currentPricePerCard: number;
+  };
+  history: NFTCollectionHistory[];
+  analytics: any;
+  period: {
+    days: number;
+    from: string;
+    to: string;
+  };
+}
+
 export interface NFTHealthCheck {
   success: boolean;
   details?: {
@@ -101,6 +168,12 @@ export interface NFTProject {
   features: string[];
   mintPrice: number;
   publicSaleDate: string;
+  // New fields from MongoDB collections
+  totalValueUSD?: number;
+  pricePerCard?: number;
+  cardCount?: number;
+  lastManualUpdate?: string;
+  lastManualUpdateBy?: string;
 }
 
 export interface NFTProjectsResponse {
@@ -110,6 +183,7 @@ export interface NFTProjectsResponse {
     totalProjects: number;
     activeProjects: number;
     totalRevenue: number;
+    totalValueUSD?: number; // New field
     currentDistribution: DistributionInfo;
     contracts: ContractAddresses;
     lastUpdated: string;
@@ -211,14 +285,17 @@ class NFTService {
    * Get NFT projects overview with individual stats
    */
   async getProjects(): Promise<ApiResponse<NFTProjectsResponse>> {
-    return this.request('GET', '/projects');
+    // Add cache buster to ensure fresh data
+    const cacheBuster = `?t=${Date.now()}&refresh=true`;
+    return this.request('GET', `/projects${cacheBuster}`);
   }
 
   /**
    * Health check - test NFT service connectivity
    */
   async healthCheck(): Promise<ApiResponse<NFTHealthCheck>> {
-    return this.request('GET', '/health');
+    const cacheBuster = `?t=${Date.now()}`;
+    return this.request('GET', `/health${cacheBuster}`);
   }
 
   /**
@@ -282,6 +359,61 @@ class NFTService {
    */
   async getContracts(): Promise<ApiResponse<ContractAddresses>> {
     return this.request('GET', '/contracts');
+  }
+
+  // ===== COLLECTION MANAGEMENT METHODS =====
+
+  /**
+   * Get all NFT collections
+   */
+  async getCollections(): Promise<ApiResponse<NFTCollection[]>> {
+    return this.request('GET', '/collections');
+  }
+
+  /**
+   * Get single collection details
+   */
+  async getCollection(id: string): Promise<ApiResponse<{
+    collection: NFTCollection;
+    recentHistory: NFTCollectionHistory[];
+  }>> {
+    return this.request('GET', `/collections/${id}`);
+  }
+
+  /**
+   * Update collection total value
+   */
+  async updateCollectionValue(
+    id: string, 
+    data: UpdateCollectionValueRequest
+  ): Promise<ApiResponse<{
+    collection: {
+      id: string;
+      name: string;
+      symbol: string;
+      previousValue: number;
+      newValue: number;
+      newPricePerCard: number;
+      lastUpdate: string;
+      updatedBy: string;
+    };
+  }>> {
+    return this.request('PUT', `/collections/${id}/value`, data);
+  }
+
+  /**
+   * Get collection price history and analytics
+   */
+  async getCollectionHistory(
+    id: string, 
+    days: number = 30, 
+    changeType?: string
+  ): Promise<ApiResponse<CollectionHistoryResponse>> {
+    const params = new URLSearchParams();
+    params.append('days', days.toString());
+    if (changeType) params.append('changeType', changeType);
+    
+    return this.request('GET', `/collections/${id}/history?${params.toString()}`);
   }
 
   /**
