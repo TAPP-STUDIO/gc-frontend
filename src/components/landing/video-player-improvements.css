@@ -1,0 +1,447 @@
+/* ==============================
+   VYLEPŠENÝ VIDEO PŘEHRÁVAČ
+   ============================== */
+
+/* Základní optimalizace video elementu */
+video {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+/* Skrytí nativních video controlů napříč prohlížeči */
+video::-webkit-media-controls {
+  display: none !important;
+}
+
+video::-webkit-media-controls-enclosure {
+  display: none !important;
+}
+
+video::-webkit-media-controls-panel {
+  display: none !important;
+}
+
+video::-webkit-media-controls-play-button {
+  display: none !important;
+}
+
+video::-webkit-media-controls-volume-slider {
+  display: none !important;
+}
+
+video::-webkit-media-controls-mute-button {
+  display: none !important;
+}
+
+video::-webkit-media-controls-timeline {
+  display: none !important;
+}
+
+video::-webkit-media-controls-current-time-display {
+  display: none !important;
+}
+
+/* Progress bar animace a hover efekty */
+.video-progress-container {
+  position: relative;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.video-progress-container:hover .video-progress-track {
+  height: 6px;
+}
+
+.video-progress-track {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  overflow: hidden;
+  transition: height 0.2s ease;
+}
+
+.video-progress-buffered {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.video-progress-fill {
+  position: relative;
+  height: 100%;
+  background: linear-gradient(90deg, #F9D523 0%, #E6C213 100%);
+  border-radius: 4px;
+  transition: width 0.1s ease;
+}
+
+.video-progress-handle {
+  position: absolute;
+  right: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  background: #F9D523;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.video-progress-container:hover .video-progress-handle {
+  opacity: 1;
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Volume slider styling */
+.volume-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  outline: none;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.volume-slider:hover {
+  opacity: 1;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  background: #F9D523;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.volume-slider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: #F9D523;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease;
+}
+
+.volume-slider::-moz-range-thumb:hover {
+  transform: scale(1.2);
+}
+
+.volume-slider::-moz-range-track {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  border: none;
+}
+
+/* Video container focus styles */
+.video-container:focus {
+  outline: 2px solid #F9D523;
+  outline-offset: 4px;
+  border-radius: 16px;
+}
+
+/* Control button hover effects */
+.video-control-btn {
+  padding: 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video-control-btn:hover {
+  background: rgba(249, 213, 35, 0.2);
+  color: #F9D523;
+  transform: scale(1.1);
+}
+
+.video-control-btn:active {
+  transform: scale(0.95);
+}
+
+/* Loading spinner animace */
+.video-loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top: 3px solid #F9D523;
+  border-radius: 50%;
+  animation: video-spin 1s linear infinite;
+}
+
+@keyframes video-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Play button overlay */
+.video-play-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.video-play-overlay:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.video-play-button {
+  width: 64px;
+  height: 64px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.video-play-button:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: scale(1.1);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Controls container */
+.video-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 0, 0, 0.6) 50%,
+    transparent 100%
+  );
+  padding: 16px;
+  transition: opacity 0.3s ease;
+}
+
+.video-controls.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.video-controls.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Time display styling */
+.video-time {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* Fullscreen specifické styly */
+.video-container:fullscreen {
+  background: black;
+}
+
+.video-container:fullscreen video {
+  object-fit: contain;
+}
+
+.video-container:fullscreen .video-controls {
+  padding: 24px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .video-controls {
+    padding: 12px;
+  }
+  
+  .video-play-button {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .video-control-btn {
+    padding: 6px;
+  }
+  
+  .volume-slider {
+    display: none;
+  }
+}
+
+/* Accessibility - vysoký kontrast */
+@media (prefers-contrast: high) {
+  .video-progress-track {
+    background: rgba(255, 255, 255, 0.5);
+  }
+  
+  .video-progress-fill {
+    background: #FFFF00;
+  }
+  
+  .video-control-btn:hover {
+    background: rgba(255, 255, 0, 0.3);
+    color: #FFFF00;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .video-progress-track,
+  .video-progress-handle,
+  .video-control-btn,
+  .video-play-button,
+  .volume-slider::-webkit-slider-thumb {
+    transition: none !important;
+  }
+  
+  .video-loading-spinner {
+    animation: none;
+  }
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .video-controls {
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.95) 0%,
+      rgba(0, 0, 0, 0.7) 50%,
+      transparent 100%
+    );
+  }
+}
+
+/* Safari specifické optimalizace */
+@supports (-webkit-touch-callout: none) {
+  video {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
+  }
+  
+  .video-container {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+}
+
+/* Hardware acceleration pro smooth playback */
+.video-player-optimized {
+  will-change: transform;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Tooltip styly pro keyboard shortcuts */
+.video-shortcuts-tooltip {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(0, 0, 0, 0.8);
+  color: rgba(255, 255, 255, 0.9);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  line-height: 1.4;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 50;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.video-container:hover .video-shortcuts-tooltip {
+  opacity: 1;
+}
+
+/* Gradient overlay pro lepší čitelnost controlů */
+.video-controls-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.4) 40%,
+    transparent 100%
+  );
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+/* Volume control group hover effect */
+.volume-control-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.volume-control-group .volume-slider-container {
+  width: 0;
+  overflow: hidden;
+  transition: width 0.3s ease;
+}
+
+.volume-control-group:hover .volume-slider-container {
+  width: 64px;
+}
+
+/* Custom scrollbar pro případné další prvky */
+.video-custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #F9D523 transparent;
+}
+
+.video-custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.video-custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.video-custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #F9D523;
+  border-radius: 3px;
+}
+
+.video-custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #E6C213;
+}
