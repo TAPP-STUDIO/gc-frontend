@@ -1,27 +1,75 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { VerifiedBadge } from '../ui/premium-button';
 import { useScrollAnimation } from '@/hook';
 
-// Pure 3D Card GIF Component
+// Pure 3D Card GIF Component s Safari optimalizací
 const Card3DGIF = () => {
   const { elementRef, isVisible } = useScrollAnimation({ threshold: 0.2 });
+  const [imageError, setImageError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  const handleImageLoad = () => {
+    setIsLoading(false);
+  };
+  
+  const handleImageError = () => {
+    setImageError(true);
+    setIsLoading(false);
+  };
   
   return (
     <div 
       ref={elementRef}
       className={`relative w-80 h-[500px] lg:w-96 lg:h-[600px] animate-scale ${isVisible ? 'visible' : ''}`}
     >
-      <Image
-        src="/cards/card-rotation.gif"
-        alt="3D NFT Card Rotation"
-        fill
-        className="object-cover rounded-3xl shadow-2xl"
-        priority
-        unoptimized={true}
-      />
+      {isLoading && (
+        <div className="absolute inset-0 bg-gray-800 rounded-3xl flex items-center justify-center">
+          <div className="w-8 h-8 border-2 border-[#F9D523] border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      )}
+      
+      {!imageError ? (
+        <>
+          {/* Primární GIF */}
+          <Image
+            src="/cards/card-rotation.gif"
+            alt="3D NFT Card Rotation"
+            fill
+            className={`object-cover rounded-3xl shadow-2xl transition-opacity duration-500 ${
+              isLoading ? 'opacity-0' : 'opacity-100'
+            }`}
+            priority
+            unoptimized
+            onLoad={handleImageLoad}
+            onError={handleImageError}
+            style={{
+              imageRendering: 'auto',
+              WebkitImageSmoothing: true,
+            }}
+          />
+          
+          {/* Fallback pro Safari - skrytý fallback obrázek */}
+          <Image
+            src="/cards/strat.png"
+            alt="NFT Card Fallback"
+            fill
+            className="object-cover rounded-3xl shadow-2xl opacity-0 pointer-events-none"
+            priority={false}
+          />
+        </>
+      ) : (
+        /* Fallback pokud GIF nejde */
+        <Image
+          src="/cards/strat.png"
+          alt="NFT Card"
+          fill
+          className="object-cover rounded-3xl shadow-2xl"
+          priority
+        />
+      )}
     </div>
   );
 };

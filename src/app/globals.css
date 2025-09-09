@@ -353,6 +353,51 @@ html {
   scroll-padding-top: 100px; /* Offset for fixed navbar */
 }
 
+/* SAFARI VIDEO AND GIF OPTIMIZATIONS */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  /* Safari-specific styles */
+  video {
+    -webkit-transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    -webkit-perspective: 1000;
+  }
+  
+  /* GIF optimizations for Safari */
+  img[src$=".gif"] {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* iOS Safari specific fixes */
+@supports (-webkit-touch-callout: none) {
+  video {
+    object-fit: cover;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* VIDEO PLAYER IMPROVEMENTS */
+video::-webkit-media-controls {
+  display: none !important;
+}
+
+video::-webkit-media-controls-enclosure {
+  display: none !important;
+}
+
+/* Progress bar hover effects */
+.video-progress-bar {
+  transition: height 0.2s ease;
+}
+
+.video-progress-bar:hover {
+  height: 0.5rem;
+}
+
 /* ==============================
    SCROLL ANIMATIONS
    ============================== */
