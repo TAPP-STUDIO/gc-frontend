@@ -11,7 +11,7 @@ import {
   InfoCard,
   DashboardTable 
 } from '@/components/dashboard';
-import { PortfolioChart } from '@/components/charts'; // OPRAVA: Používáme PortfolioChart místo DashboardChart
+import { PortfolioUniversalChart } from '@/components/charts'; // ✅ NOVÝ IMPORT - Sjednocený graf
 
 // Portfolio data
 const portfolioData = {
@@ -214,16 +214,18 @@ export default function PortfolioDashboard() {
 
         {/* Main Grid */}
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-12 lg:gap-20 mb-20">
-          {/* Portfolio Chart - 2 columns */}
+          {/* ✅ HLAVNÍ PORTFOLIO GRAF - NOVÁ IMPLEMENTACE */}
           <div className="lg:col-span-2">
-            <div className="h-80">
-              <PortfolioChart 
-                data={portfolioData.chartData}
-                height={300}
-                showGrid={true}
-                animate={true}
-              />
-            </div>
+            <PortfolioUniversalChart 
+              data={portfolioData.chartData}
+              title="Vývoj portfolia"
+              height={320}
+              currentValue="10 000 $"
+              trend={{ value: 15.8, isPositive: true }}
+              showGrid={true}
+              animate={true}
+              primaryColor="#F9D523"
+            />
           </div>
 
           {/* Info Cards - 1 column */}
@@ -249,17 +251,18 @@ export default function PortfolioDashboard() {
 
         {/* Bottom Section - ÚPRAVA PODLE ÚKOLŮ 2, 3, 4 */}
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 lg:gap-12">
-          {/* Claim Chart - ÚPRAVA: Zvětšení kontejneru pro lepší viditelnost */}
+          {/* ✅ CLAIM CHART - NOVÁ IMPLEMENTACE */}
           <div className="lg:col-span-2">
-            <div className="h-80">
-              <PortfolioChart 
-                data={portfolioData.claimData}
-                height={300}
-                showGrid={true}
-                animate={true}
-                title="Celkem claim"
-              />
-            </div>
+            <PortfolioUniversalChart 
+              data={portfolioData.claimData}
+              title="Celkové výplaty"
+              height={320}
+              currentValue="3 500 $"
+              trend={{ value: 8.2, isPositive: true }}
+              showGrid={true}
+              animate={true}
+              primaryColor="#10B981" // Zelená pro claims
+            />
           </div>
 
           {/* Claim History Table - ÚPRAVA PODLE ÚKOLU 2 */}

@@ -5,9 +5,9 @@ import {
   DashboardButton, 
   DashboardCard, 
   StatCard,
-  DashboardChart,
   DashboardTable 
 } from '@/components/dashboard';
+import { AnalyticsUniversalChart } from '@/components/charts'; // ✅ NOVÝ IMPORT - Sjednocený admin graf
 
 export default function AnalyticsAdminPage() {
   const [selectedTimeRange, setSelectedTimeRange] = useState<'7d' | '30d' | '90d' | '1y'>('30d');
@@ -178,6 +178,26 @@ export default function AnalyticsAdminPage() {
     }
   };
 
+  const getCurrentValue = () => {
+    switch (selectedMetric) {
+      case 'users': return analyticsData.overview.totalUsers.toLocaleString();
+      case 'revenue': return `$${analyticsData.overview.totalRevenue.toLocaleString()}`;
+      case 'nfts': return analyticsData.overview.totalNFTsMinted.toLocaleString();
+      case 'gas': return `${analyticsData.overview.avgGasPrice} gwei`;
+      default: return '';
+    }
+  };
+
+  const getTrend = () => {
+    switch (selectedMetric) {
+      case 'users': return { value: 23.5, isPositive: true };
+      case 'revenue': return { value: 15.2, isPositive: true };
+      case 'nfts': return { value: 28.7, isPositive: true };
+      case 'gas': return { value: 8.2, isPositive: false };
+      default: return { value: 0, isPositive: true };
+    }
+  };
+
   const handleExport = (type: 'csv' | 'json' | 'pdf') => {
     console.log(`Exporting analytics as ${type}`);
     // TODO: Implement actual export functionality
@@ -261,52 +281,44 @@ export default function AnalyticsAdminPage() {
 
       {/* Charts Section - UNIFIED STYLE */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-6">
-        {/* Main Chart */}
+        
+        {/* ✅ HLAVNÍ GRAF - NOVÁ IMPLEMENTACE */}
         <div className="xl:col-span-2">
-          <DashboardCard variant="highlighted" className="h-full">
-            <div className="flex justify-between items-center mb-6">
-              <div className="flex items-center">
-                <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center mr-3">
-                  <svg className="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-semibold text-white">Analytics Trends</h3>
-              </div>
-              
-              <div className="flex space-x-2">
-                {/* Metric Selector */}
-                <select
-                  value={selectedMetric}
-                  onChange={(e) => setSelectedMetric(e.target.value as 'users' | 'revenue' | 'nfts' | 'gas')}
-                  className="bg-white/5 border border-white/20 rounded-lg px-3 py-1 text-white text-sm focus:border-red-400 focus:outline-none backdrop-blur-md"
-                >
-                  <option value="users">Users</option>
-                  <option value="revenue">Revenue</option>
-                  <option value="nfts">NFTs</option>
-                  <option value="gas">Gas Price</option>
-                </select>
-                
-                {/* Time Range Selector */}
-                <select
-                  value={selectedTimeRange}
-                  onChange={(e) => setSelectedTimeRange(e.target.value as '7d' | '30d' | '90d' | '1y')}
-                  className="bg-white/5 border border-white/20 rounded-lg px-3 py-1 text-white text-sm focus:border-red-400 focus:outline-none backdrop-blur-md"
-                >
-                  <option value="7d">7 dní</option>
-                  <option value="30d">30 dní</option>
-                  <option value="90d">90 dní</option>
-                  <option value="1y">1 rok</option>
-                </select>
-              </div>
-            </div>
+          <div className="mb-4 flex justify-end space-x-2">
+            {/* Metric Selector */}
+            <select
+              value={selectedMetric}
+              onChange={(e) => setSelectedMetric(e.target.value as 'users' | 'revenue' | 'nfts' | 'gas')}
+              className="bg-white/5 border border-white/20 rounded-lg px-3 py-1 text-white text-sm focus:border-red-400 focus:outline-none backdrop-blur-md"
+            >
+              <option value="users">Users</option>
+              <option value="revenue">Revenue</option>
+              <option value="nfts">NFTs</option>
+              <option value="gas">Gas Price</option>
+            </select>
             
-            <DashboardChart 
-              data={getChartData()}
-              height={280}
-              lineColor="#EF4444"
-            />
-          </DashboardCard>
+            {/* Time Range Selector */}
+            <select
+              value={selectedTimeRange}
+              onChange={(e) => setSelectedTimeRange(e.target.value as '7d' | '30d' | '90d' | '1y')}
+              className="bg-white/5 border border-white/20 rounded-lg px-3 py-1 text-white text-sm focus:border-red-400 focus:outline-none backdrop-blur-md"
+            >
+              <option value="7d">7 dní</option>
+              <option value="30d">30 dní</option>
+              <option value="90d">90 dní</option>
+              <option value="1y">1 rok</option>
+            </select>
+          </div>
+
+          <AnalyticsUniversalChart 
+            data={getChartData()}
+            title={getChartTitle()}
+            primaryKey="value"
+            height={300}
+            currentValue={getCurrentValue()}
+            trend={getTrend()}
+            primaryColor="#EF4444" // Červená pro admin
+          />
         </div>
 
         {/* Top Users - UNIFIED STYLE */}

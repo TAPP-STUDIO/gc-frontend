@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { TopBar } from '@/components/layout/TopBar';
 import { DashboardCard, DashboardButton, StatCard } from '@/components/dashboard';
-import { PortfolioChart, VolumeChart } from '@/components/charts';
+import { PortfolioUniversalChart } from '@/components/charts'; // ✅ NOVÝ IMPORT - Sjednocený graf
 import { ArrowLeft, TrendingUp, Coins, Calendar, Download, Filter } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -31,8 +31,8 @@ interface BotRecord {
 
 export default function BTCBotPage() {
   const router = useRouter();
-  const [timeframe, setTimeframe] = useState('monthly');
-  const [claimProgress, setClaimProgress] = useState(45); // Percentage for claim progress
+  const [timeframe, setTimeframe] = useState('M');
+  const [claimProgress, setClaimProgress] = useState(62); // Percentage for claim progress
   
   // Mock data - nahraďte skutečnými daty z API
   const [userProfile] = useState<UserProfile>({
@@ -41,18 +41,18 @@ export default function BTCBotPage() {
     kycVerified: true
   });
 
-  const [portfolioValue] = useState(10000);
-  const [totalClaimed] = useState(3500);
-  const [nextClaimDate] = useState('1. 1. 2026');
-  const [claimAmount] = useState(2000);
+  const [portfolioValue] = useState(8750);
+  const [totalClaimed] = useState(4200);
+  const [nextClaimDate] = useState('1. 2. 2026');
+  const [claimAmount] = useState(1800);
 
   const [claimHistory] = useState<ClaimRecord[]>([
-    { id: '1', project: 'BTC BOT', date: '1.1.2026', amount: '2 000 $' },
-    { id: '2', project: 'BTC BOT', date: '1.1.2025', amount: '2 000 $' },
-    { id: '3', project: 'BTC BOT', date: '1.1.2025', amount: '2 000 $' },
-    { id: '4', project: 'BTC BOT', date: '1.1.2025', amount: '2 000 $' },
-    { id: '5', project: 'BTC BOT', date: '1.1.2025', amount: '2 000 $' },
-    { id: '6', project: 'BTC BOT', date: '1.1.2025', amount: '2 000 $' },
+    { id: '1', project: 'BTC BOT', date: '1.1.2026', amount: '1 800 $' },
+    { id: '2', project: 'BTC BOT', date: '1.12.2025', amount: '1 750 $' },
+    { id: '3', project: 'BTC BOT', date: '1.11.2025', amount: '1 900 $' },
+    { id: '4', project: 'BTC BOT', date: '1.10.2025', amount: '2 100 $' },
+    { id: '5', project: 'BTC BOT', date: '1.9.2025', amount: '1 850 $' },
+    { id: '6', project: 'BTC BOT', date: '1.8.2025', amount: '1 950 $' },
   ]);
 
   const [myBots] = useState<BotRecord[]>([
@@ -61,36 +61,53 @@ export default function BTCBotPage() {
     { id: '3', name: 'BTC Grid Bot #3', purchaseDate: '10.11.2024', value: '2 000' },
   ]);
 
-  // Mock chart data
-  const portfolioChartData = [
-    { name: 'Jan', value: 8500 },
-    { name: 'Feb', value: 8800 },
-    { name: 'Mar', value: 9200 },
-    { name: 'Apr', value: 9100 },
-    { name: 'May', value: 9500 },
-    { name: 'Jun', value: 9800 },
-    { name: 'Jul', value: 9600 },
-    { name: 'Aug', value: 9900 },
-    { name: 'Sep', value: 10200 },
-    { name: 'Oct', value: 10100 },
-    { name: 'Nov', value: 10300 },
-    { name: 'Dec', value: 10000 },
-  ];
-
-  const claimChartData = [
-    { name: 'Jan', value: 1800 },
-    { name: 'Feb', value: 2100 },
-    { name: 'Mar', value: 2200 },
-    { name: 'Apr', value: 2300 },
-    { name: 'May', value: 2400 },
-    { name: 'Jun', value: 2600 },
-    { name: 'Jul', value: 2500 },
-    { name: 'Aug', value: 2700 },
-    { name: 'Sep', value: 2800 },
-    { name: 'Oct', value: 2900 },
-    { name: 'Nov', value: 3200 },
-    { name: 'Dec', value: 3500 },
-  ];
+  // ✅ NOVÁ DATA STRUKTURA PRO ČASOVÉ RÁMCE
+  const btcBotData = {
+    portfolio: {
+      M: [ // Měsíční data
+        { name: 'Jan', value: 7000 },
+        { name: 'Feb', value: 7200 },
+        { name: 'Mar', value: 7100 },
+        { name: 'Apr', value: 7400 },
+        { name: 'May', value: 7800 },
+        { name: 'Jun', value: 8000 },
+        { name: 'Jul', value: 7900 },
+        { name: 'Aug', value: 8200 },
+        { name: 'Sep', value: 8400 },
+        { name: 'Oct', value: 8300 },
+        { name: 'Nov', value: 8600 },
+        { name: 'Dec', value: 8750 }
+      ],
+      Y: [ // Roční data
+        { name: '2021', value: 3000 },
+        { name: '2022', value: 4500 },
+        { name: '2023', value: 6200 },
+        { name: '2024', value: 8750 }
+      ]
+    },
+    claims: {
+      M: [ // Měsíční claims
+        { name: 'Jan', value: 800 },
+        { name: 'Feb', value: 1200 },
+        { name: 'Mar', value: 1500 },
+        { name: 'Apr', value: 1800 },
+        { name: 'May', value: 2100 },
+        { name: 'Jun', value: 2400 },
+        { name: 'Jul', value: 2700 },
+        { name: 'Aug', value: 3000 },
+        { name: 'Sep', value: 3300 },
+        { name: 'Oct', value: 3600 },
+        { name: 'Nov', value: 3900 },
+        { name: 'Dec', value: 4200 }
+      ],
+      Y: [ // Roční claims
+        { name: '2021', value: 400 },
+        { name: '2022', value: 1200 },
+        { name: '2023', value: 2800 },
+        { name: '2024', value: 4200 }
+      ]
+    }
+  };
 
   return (
     <div className="min-h-screen">
@@ -119,36 +136,22 @@ export default function BTCBotPage() {
         {/* Top Stats - STEJNÁ STRUKTURA JAKO V HLAVNÍM PORTFOLIO */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           
-          {/* Portfolio Chart - PŘÍMO V DIVU BEZ DASHBOARDCARD */}
+          {/* ✅ PORTFOLIO GRAF - NOVÁ IMPLEMENTACE */}
           <div className="lg:col-span-1">
-            {/* Nadpis a controls mimo graf */}
-            <div className="mb-4">
-              <h2 className="text-xl font-bold text-white mb-2">Hodnota portfolia</h2>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-white/70">Hodnota portfolia</span>
-                <select 
-                  value={timeframe}
-                  onChange={(e) => setTimeframe(e.target.value)}
-                  className="bg-white/10 border border-white/20 rounded-lg px-3 py-1 text-sm text-white"
-                >
-                  <option value="monthly">monthly</option>
-                  <option value="yearly">yearly</option>
-                </select>
-              </div>
-              <div className="text-2xl font-bold text-white mb-4">
-                {portfolioValue.toLocaleString()} $
-              </div>
-            </div>
-            
-            {/* Graf přímo v divu - jako v hlavním portfolio */}
-            <div className="h-64">
-              <PortfolioChart 
-                data={portfolioChartData}
-                height={256}
-                showGrid={true}
-                currentValue={portfolioValue}
-              />
-            </div>
+            <PortfolioUniversalChart 
+              data={btcBotData.portfolio.M} // Default data
+              timeframes={{
+                M: btcBotData.portfolio.M,
+                Y: btcBotData.portfolio.Y
+              }}
+              title="BTC Bot Portfolio"
+              height={280}
+              currentValue={`${portfolioValue.toLocaleString()} $`}
+              trend={{ value: 8.7, isPositive: true }}
+              showFilters={true}
+              primaryColor="#F7931A" // ✅ Bitcoin oranžová
+              onTimeframeChange={(tf) => setTimeframe(tf)}
+            />
           </div>
 
           {/* Claim Stats */}
@@ -159,6 +162,7 @@ export default function BTCBotPage() {
                 <div className="text-3xl font-bold text-white">
                   {totalClaimed.toLocaleString()} $
                 </div>
+                <div className="text-white/60 text-sm mt-1">Lifetime claims</div>
               </div>
             </DashboardCard>
 
@@ -170,11 +174,11 @@ export default function BTCBotPage() {
                   {nextClaimDate}
                 </div>
                 
-                {/* Progress Bar */}
+                {/* Progress Bar - Bitcoin themed */}
                 <div className="mb-4">
                   <div className="w-full bg-white/10 rounded-full h-2">
                     <div 
-                      className="bg-gradient-to-r from-[#F9D523] to-[#B29819] h-2 rounded-full transition-all duration-500"
+                      className="bg-gradient-to-r from-[#F7931A] to-[#D17310] h-2 rounded-full transition-all duration-500"
                       style={{ width: `${claimProgress}%` }}
                     ></div>
                   </div>
@@ -195,29 +199,22 @@ export default function BTCBotPage() {
         {/* Charts Row - STRUKTURA JAKO V HLAVNÍM PORTFOLIO */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           
-          {/* Claim History Chart - GRAF PŘÍMO V DIVU */}
+          {/* ✅ CLAIM HISTORY CHART - NOVÁ IMPLEMENTACE */}
           <div>
-            <h2 className="text-xl font-bold text-white mb-4">Celkem claimnuto</h2>
-            <div className="mb-4">
-              <select 
-                value={timeframe}
-                onChange={(e) => setTimeframe(e.target.value)}
-                className="bg-white/10 border border-white/20 rounded-lg px-3 py-1 text-sm text-white"
-              >
-                <option value="monthly">monthly</option>
-                <option value="yearly">yearly</option>
-              </select>
-            </div>
-            
-            <div className="h-64">
-              <PortfolioChart 
-                data={claimChartData}
-                height={256}
-                showGrid={true}
-                currentValue={totalClaimed}
-                dataKey="value"
-              />
-            </div>
+            <PortfolioUniversalChart 
+              data={btcBotData.claims.M} // Default data
+              timeframes={{
+                M: btcBotData.claims.M,
+                Y: btcBotData.claims.Y
+              }}
+              title="Celkové výplaty"
+              height={280}
+              currentValue={`${totalClaimed.toLocaleString()} $`}
+              trend={{ value: 18.5, isPositive: true }}
+              showFilters={true}
+              primaryColor="#10B981" // Zelená pro claims
+              onTimeframeChange={(tf) => setTimeframe(tf)}
+            />
           </div>
 
           {/* Claim History Table */}
@@ -248,7 +245,7 @@ export default function BTCBotPage() {
               <button className="w-8 h-8 rounded bg-white/10 flex items-center justify-center text-white/70 hover:bg-white/20 transition-colors">
                 &lt;
               </button>
-              <button className="w-8 h-8 rounded bg-[#F9D523] text-black font-medium">1</button>
+              <button className="w-8 h-8 rounded bg-[#F7931A] text-white font-medium">1</button>
               <button className="w-8 h-8 rounded bg-white/10 flex items-center justify-center text-white/70 hover:bg-white/20 transition-colors">2</button>
               <button className="w-8 h-8 rounded bg-white/10 flex items-center justify-center text-white/70 hover:bg-white/20 transition-colors">3</button>
               <button className="w-8 h-8 rounded bg-white/10 flex items-center justify-center text-white/70 hover:bg-white/20 transition-colors">
@@ -276,8 +273,8 @@ export default function BTCBotPage() {
                     <tr key={bot.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
                       <td className="py-3">
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#B29819] to-[#F9D523] flex items-center justify-center">
-                            <span className="text-black font-bold text-xs">B</span>
+                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#F7931A] to-[#D17310] flex items-center justify-center">
+                            <span className="text-white font-bold text-xs">₿</span>
                           </div>
                           <span className="text-sm text-white">{bot.name}</span>
                         </div>

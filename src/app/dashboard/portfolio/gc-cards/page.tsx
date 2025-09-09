@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { TopBar } from '@/components/layout/TopBar';
 import { DashboardCard, DashboardButton, StatCard } from '@/components/dashboard';
-import { PortfolioChart, VolumeChart } from '@/components/charts';
+import { PortfolioUniversalChart } from '@/components/charts'; // ✅ NOVÝ IMPORT - Sjednocený graf
 import { ArrowLeft, TrendingUp, Coins, Calendar, Download, Filter } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -31,7 +31,7 @@ interface CardRecord {
 
 export default function GCCardsPage() {
   const router = useRouter();
-  const [timeframe, setTimeframe] = useState('monthly');
+  const [timeframe, setTimeframe] = useState('M');
   const [claimProgress, setClaimProgress] = useState(45); // Percentage for claim progress
   
   // Mock data - nahraďte skutečnými daty z API
@@ -41,8 +41,8 @@ export default function GCCardsPage() {
     kycVerified: true
   });
 
-  const [portfolioValue] = useState(10000);
-  const [totalClaimed] = useState(3500);
+  const [portfolioValue] = useState(6800);
+  const [totalClaimed] = useState(2850);
   const [nextClaimDate] = useState('1. 1. 2026');
   const [claimAmount] = useState(2000);
 
@@ -61,36 +61,53 @@ export default function GCCardsPage() {
     { id: '3', name: 'Diamond Card Elite', purchaseDate: '10.11.2024', value: '2 200' },
   ]);
 
-  // Mock chart data
-  const portfolioChartData = [
-    { name: 'Jan', value: 8500 },
-    { name: 'Feb', value: 8800 },
-    { name: 'Mar', value: 9200 },
-    { name: 'Apr', value: 9100 },
-    { name: 'May', value: 9500 },
-    { name: 'Jun', value: 9800 },
-    { name: 'Jul', value: 9600 },
-    { name: 'Aug', value: 9900 },
-    { name: 'Sep', value: 10200 },
-    { name: 'Oct', value: 10100 },
-    { name: 'Nov', value: 10300 },
-    { name: 'Dec', value: 10000 },
-  ];
-
-  const claimChartData = [
-    { name: 'Jan', value: 1800 },
-    { name: 'Feb', value: 2100 },
-    { name: 'Mar', value: 2200 },
-    { name: 'Apr', value: 2300 },
-    { name: 'May', value: 2400 },
-    { name: 'Jun', value: 2600 },
-    { name: 'Jul', value: 2500 },
-    { name: 'Aug', value: 2700 },
-    { name: 'Sep', value: 2800 },
-    { name: 'Oct', value: 2900 },
-    { name: 'Nov', value: 3200 },
-    { name: 'Dec', value: 3500 },
-  ];
+  // ✅ NOVÁ DATA STRUKTURA PRO ČASOVÉ RÁMCE
+  const gcCardsData = {
+    portfolio: {
+      M: [ // Měsíční data
+        { name: 'Jan', value: 5000 },
+        { name: 'Feb', value: 5200 },
+        { name: 'Mar', value: 5400 },
+        { name: 'Apr', value: 5300 },
+        { name: 'May', value: 5600 },
+        { name: 'Jun', value: 5800 },
+        { name: 'Jul', value: 6000 },
+        { name: 'Aug', value: 6200 },
+        { name: 'Sep', value: 6100 },
+        { name: 'Oct', value: 6400 },
+        { name: 'Nov', value: 6600 },
+        { name: 'Dec', value: 6800 }
+      ],
+      Y: [ // Roční data
+        { name: '2021', value: 2000 },
+        { name: '2022', value: 3500 },
+        { name: '2023', value: 5200 },
+        { name: '2024', value: 6800 }
+      ]
+    },
+    claims: {
+      M: [ // Měsíční claims
+        { name: 'Jan', value: 500 },
+        { name: 'Feb', value: 650 },
+        { name: 'Mar', value: 800 },
+        { name: 'Apr', value: 950 },
+        { name: 'May', value: 1100 },
+        { name: 'Jun', value: 1300 },
+        { name: 'Jul', value: 1500 },
+        { name: 'Aug', value: 1750 },
+        { name: 'Sep', value: 2000 },
+        { name: 'Oct', value: 2250 },
+        { name: 'Nov', value: 2550 },
+        { name: 'Dec', value: 2850 }
+      ],
+      Y: [ // Roční claims
+        { name: '2021', value: 200 },
+        { name: '2022', value: 800 },
+        { name: '2023', value: 1600 },
+        { name: '2024', value: 2850 }
+      ]
+    }
+  };
 
   return (
     <div className="min-h-screen">
@@ -119,36 +136,22 @@ export default function GCCardsPage() {
         {/* Top Stats - STEJNÁ STRUKTURA JAKO V HLAVNÍM PORTFOLIO */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           
-          {/* Portfolio Chart - PŘÍMO V DIVU BEZ DASHBOARDCARD */}
+          {/* ✅ PORTFOLIO GRAF - NOVÁ IMPLEMENTACE */}
           <div className="lg:col-span-1">
-            {/* Nadpis a controls mimo graf */}
-            <div className="mb-4">
-              <h2 className="text-xl font-bold text-white mb-2">Hodnota portfolia</h2>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-white/70">Hodnota portfolia</span>
-                <select 
-                  value={timeframe}
-                  onChange={(e) => setTimeframe(e.target.value)}
-                  className="bg-white/10 border border-white/20 rounded-lg px-3 py-1 text-sm text-white"
-                >
-                  <option value="monthly">monthly</option>
-                  <option value="yearly">yearly</option>
-                </select>
-              </div>
-              <div className="text-2xl font-bold text-white mb-4">
-                {portfolioValue.toLocaleString()} $
-              </div>
-            </div>
-            
-            {/* Graf přímo v divu - jako v hlavním portfolio */}
-            <div className="h-64">
-              <PortfolioChart 
-                data={portfolioChartData}
-                height={256}
-                showGrid={true}
-                currentValue={portfolioValue}
-              />
-            </div>
+            <PortfolioUniversalChart 
+              data={gcCardsData.portfolio.M} // Default data
+              timeframes={{
+                M: gcCardsData.portfolio.M,
+                Y: gcCardsData.portfolio.Y
+              }}
+              title="GC Cards Portfolio"
+              height={280}
+              currentValue={`${portfolioValue.toLocaleString()} $`}
+              trend={{ value: 15.2, isPositive: true }}
+              showFilters={true}
+              primaryColor="#F9D523" // Zlatá pro GC Cards
+              onTimeframeChange={(tf) => setTimeframe(tf)}
+            />
           </div>
 
           {/* Claim Stats */}
@@ -159,6 +162,7 @@ export default function GCCardsPage() {
                 <div className="text-3xl font-bold text-white">
                   {totalClaimed.toLocaleString()} $
                 </div>
+                <div className="text-white/60 text-sm mt-1">Lifetime claims</div>
               </div>
             </DashboardCard>
 
@@ -195,29 +199,22 @@ export default function GCCardsPage() {
         {/* Charts Row - STRUKTURA JAKO V HLAVNÍM PORTFOLIO */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           
-          {/* Claim History Chart - GRAF PŘÍMO V DIVU */}
+          {/* ✅ CLAIM HISTORY CHART - NOVÁ IMPLEMENTACE */}
           <div>
-            <h2 className="text-xl font-bold text-white mb-4">Celkem claimnuto</h2>
-            <div className="mb-4">
-              <select 
-                value={timeframe}
-                onChange={(e) => setTimeframe(e.target.value)}
-                className="bg-white/10 border border-white/20 rounded-lg px-3 py-1 text-sm text-white"
-              >
-                <option value="monthly">monthly</option>
-                <option value="yearly">yearly</option>
-              </select>
-            </div>
-            
-            <div className="h-64">
-              <PortfolioChart 
-                data={claimChartData}
-                height={256}
-                showGrid={true}
-                currentValue={totalClaimed}
-                dataKey="value"
-              />
-            </div>
+            <PortfolioUniversalChart 
+              data={gcCardsData.claims.M} // Default data
+              timeframes={{
+                M: gcCardsData.claims.M,
+                Y: gcCardsData.claims.Y
+              }}
+              title="Celkové výplaty"
+              height={280}
+              currentValue={`${totalClaimed.toLocaleString()} $`}
+              trend={{ value: 22.3, isPositive: true }}
+              showFilters={true}
+              primaryColor="#10B981" // Zelená pro claims
+              onTimeframeChange={(tf) => setTimeframe(tf)}
+            />
           </div>
 
           {/* Claim History Table */}

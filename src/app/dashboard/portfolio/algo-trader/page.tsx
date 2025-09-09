@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { TopBar } from '@/components/layout/TopBar';
 import { DashboardCard, DashboardButton, StatCard } from '@/components/dashboard';
-import { PortfolioChart, VolumeChart } from '@/components/charts';
+import { PortfolioUniversalChart } from '@/components/charts'; // ✅ NOVÝ IMPORT - Sjednocený graf
 import { ArrowLeft, TrendingUp, Coins, Calendar, Download, Filter } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -31,8 +31,8 @@ interface AlgorithmRecord {
 
 export default function AlgoTraderPage() {
   const router = useRouter();
-  const [timeframe, setTimeframe] = useState('monthly');
-  const [claimProgress, setClaimProgress] = useState(45); // Percentage for claim progress
+  const [timeframe, setTimeframe] = useState('M');
+  const [claimProgress, setClaimProgress] = useState(73); // Percentage for claim progress
   
   // Mock data - nahraďte skutečnými daty z API
   const [userProfile] = useState<UserProfile>({
@@ -41,56 +41,74 @@ export default function AlgoTraderPage() {
     kycVerified: true
   });
 
-  const [portfolioValue] = useState(10000);
-  const [totalClaimed] = useState(3500);
-  const [nextClaimDate] = useState('1. 1. 2026');
-  const [claimAmount] = useState(2000);
+  const [portfolioValue] = useState(12500);
+  const [totalClaimed] = useState(5800);
+  const [nextClaimDate] = useState('15. 1. 2026');
+  const [claimAmount] = useState(2400);
 
   const [claimHistory] = useState<ClaimRecord[]>([
-    { id: '1', project: 'Algo Trader', date: '1.1.2026', amount: '2 000 $' },
-    { id: '2', project: 'Algo Trader', date: '1.1.2025', amount: '2 000 $' },
-    { id: '3', project: 'Algo Trader', date: '1.1.2025', amount: '2 000 $' },
-    { id: '4', project: 'Algo Trader', date: '1.1.2025', amount: '2 000 $' },
-    { id: '5', project: 'Algo Trader', date: '1.1.2025', amount: '2 000 $' },
-    { id: '6', project: 'Algo Trader', date: '1.1.2025', amount: '2 000 $' },
+    { id: '1', project: 'Algo Trader', date: '1.1.2026', amount: '2 400 $' },
+    { id: '2', project: 'Algo Trader', date: '15.12.2025', amount: '2 200 $' },
+    { id: '3', project: 'Algo Trader', date: '1.12.2025', amount: '2 350 $' },
+    { id: '4', project: 'Algo Trader', date: '15.11.2025', amount: '2 100 $' },
+    { id: '5', project: 'Algo Trader', date: '1.11.2025', amount: '2 050 $' },
+    { id: '6', project: 'Algo Trader', date: '15.10.2025', amount: '1 950 $' },
   ]);
 
   const [myAlgorithms] = useState<AlgorithmRecord[]>([
     { id: '1', name: 'Mean Reversion Strategy', purchaseDate: '1.1.2025', value: '4 500' },
     { id: '2', name: 'Momentum Trading Algo', purchaseDate: '20.12.2024', value: '3 200' },
     { id: '3', name: 'Arbitrage Algorithm', purchaseDate: '5.11.2024', value: '2 800' },
+    { id: '4', name: 'ML Sentiment Analysis', purchaseDate: '22.10.2024', value: '4 200' },
   ]);
 
-  // Mock chart data
-  const portfolioChartData = [
-    { name: 'Jan', value: 8500 },
-    { name: 'Feb', value: 8800 },
-    { name: 'Mar', value: 9200 },
-    { name: 'Apr', value: 9100 },
-    { name: 'May', value: 9500 },
-    { name: 'Jun', value: 9800 },
-    { name: 'Jul', value: 9600 },
-    { name: 'Aug', value: 9900 },
-    { name: 'Sep', value: 10200 },
-    { name: 'Oct', value: 10100 },
-    { name: 'Nov', value: 10300 },
-    { name: 'Dec', value: 10000 },
-  ];
-
-  const claimChartData = [
-    { name: 'Jan', value: 1800 },
-    { name: 'Feb', value: 2100 },
-    { name: 'Mar', value: 2200 },
-    { name: 'Apr', value: 2300 },
-    { name: 'May', value: 2400 },
-    { name: 'Jun', value: 2600 },
-    { name: 'Jul', value: 2500 },
-    { name: 'Aug', value: 2700 },
-    { name: 'Sep', value: 2800 },
-    { name: 'Oct', value: 2900 },
-    { name: 'Nov', value: 3200 },
-    { name: 'Dec', value: 3500 },
-  ];
+  // ✅ NOVÁ DATA STRUKTURA PRO ČASOVÉ RÁMCE
+  const algoTraderData = {
+    portfolio: {
+      M: [ // Měsíční data
+        { name: 'Jan', value: 8500 },
+        { name: 'Feb', value: 9200 },
+        { name: 'Mar', value: 9800 },
+        { name: 'Apr', value: 10200 },
+        { name: 'May', value: 10800 },
+        { name: 'Jun', value: 11200 },
+        { name: 'Jul', value: 11600 },
+        { name: 'Aug', value: 11900 },
+        { name: 'Sep', value: 12100 },
+        { name: 'Oct', value: 12300 },
+        { name: 'Nov', value: 12400 },
+        { name: 'Dec', value: 12500 }
+      ],
+      Y: [ // Roční data
+        { name: '2021', value: 4000 },
+        { name: '2022', value: 7200 },
+        { name: '2023', value: 9800 },
+        { name: '2024', value: 12500 }
+      ]
+    },
+    claims: {
+      M: [ // Měsíční claims
+        { name: 'Jan', value: 1200 },
+        { name: 'Feb', value: 1600 },
+        { name: 'Mar', value: 2100 },
+        { name: 'Apr', value: 2600 },
+        { name: 'May', value: 3100 },
+        { name: 'Jun', value: 3600 },
+        { name: 'Jul', value: 4100 },
+        { name: 'Aug', value: 4600 },
+        { name: 'Sep', value: 5000 },
+        { name: 'Oct', value: 5300 },
+        { name: 'Nov', value: 5600 },
+        { name: 'Dec', value: 5800 }
+      ],
+      Y: [ // Roční claims
+        { name: '2021', value: 600 },
+        { name: '2022', value: 2200 },
+        { name: '2023', value: 3800 },
+        { name: '2024', value: 5800 }
+      ]
+    }
+  };
 
   return (
     <div className="min-h-screen">
@@ -119,36 +137,22 @@ export default function AlgoTraderPage() {
         {/* Top Stats - STEJNÁ STRUKTURA JAKO V HLAVNÍM PORTFOLIO */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           
-          {/* Portfolio Chart - PŘÍMO V DIVU BEZ DASHBOARDCARD */}
+          {/* ✅ PORTFOLIO GRAF - NOVÁ IMPLEMENTACE */}
           <div className="lg:col-span-1">
-            {/* Nadpis a controls mimo graf */}
-            <div className="mb-4">
-              <h2 className="text-xl font-bold text-white mb-2">Hodnota portfolia</h2>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-white/70">Hodnota portfolia</span>
-                <select 
-                  value={timeframe}
-                  onChange={(e) => setTimeframe(e.target.value)}
-                  className="bg-white/10 border border-white/20 rounded-lg px-3 py-1 text-sm text-white"
-                >
-                  <option value="monthly">monthly</option>
-                  <option value="yearly">yearly</option>
-                </select>
-              </div>
-              <div className="text-2xl font-bold text-white mb-4">
-                {portfolioValue.toLocaleString()} $
-              </div>
-            </div>
-            
-            {/* Graf přímo v divu - jako v hlavním portfolio */}
-            <div className="h-64">
-              <PortfolioChart 
-                data={portfolioChartData}
-                height={256}
-                showGrid={true}
-                currentValue={portfolioValue}
-              />
-            </div>
+            <PortfolioUniversalChart 
+              data={algoTraderData.portfolio.M} // Default data
+              timeframes={{
+                M: algoTraderData.portfolio.M,
+                Y: algoTraderData.portfolio.Y
+              }}
+              title="Algo Trader Portfolio"
+              height={280}
+              currentValue={`${portfolioValue.toLocaleString()} $`}
+              trend={{ value: 12.1, isPositive: true }}
+              showFilters={true}
+              primaryColor="#8B5CF6" // ✅ AI fialová pro Algo Trader
+              onTimeframeChange={(tf) => setTimeframe(tf)}
+            />
           </div>
 
           {/* Claim Stats */}
@@ -159,6 +163,7 @@ export default function AlgoTraderPage() {
                 <div className="text-3xl font-bold text-white">
                   {totalClaimed.toLocaleString()} $
                 </div>
+                <div className="text-white/60 text-sm mt-1">Lifetime claims</div>
               </div>
             </DashboardCard>
 
@@ -170,11 +175,11 @@ export default function AlgoTraderPage() {
                   {nextClaimDate}
                 </div>
                 
-                {/* Progress Bar */}
+                {/* Progress Bar - AI themed */}
                 <div className="mb-4">
                   <div className="w-full bg-white/10 rounded-full h-2">
                     <div 
-                      className="bg-gradient-to-r from-[#F9D523] to-[#B29819] h-2 rounded-full transition-all duration-500"
+                      className="bg-gradient-to-r from-[#8B5CF6] to-[#7C3AED] h-2 rounded-full transition-all duration-500"
                       style={{ width: `${claimProgress}%` }}
                     ></div>
                   </div>
@@ -195,29 +200,22 @@ export default function AlgoTraderPage() {
         {/* Charts Row - STRUKTURA JAKO V HLAVNÍM PORTFOLIO */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           
-          {/* Claim History Chart - GRAF PŘÍMO V DIVU */}
+          {/* ✅ CLAIM HISTORY CHART - NOVÁ IMPLEMENTACE */}
           <div>
-            <h2 className="text-xl font-bold text-white mb-4">Celkem claimnuto</h2>
-            <div className="mb-4">
-              <select 
-                value={timeframe}
-                onChange={(e) => setTimeframe(e.target.value)}
-                className="bg-white/10 border border-white/20 rounded-lg px-3 py-1 text-sm text-white"
-              >
-                <option value="monthly">monthly</option>
-                <option value="yearly">yearly</option>
-              </select>
-            </div>
-            
-            <div className="h-64">
-              <PortfolioChart 
-                data={claimChartData}
-                height={256}
-                showGrid={true}
-                currentValue={totalClaimed}
-                dataKey="value"
-              />
-            </div>
+            <PortfolioUniversalChart 
+              data={algoTraderData.claims.M} // Default data
+              timeframes={{
+                M: algoTraderData.claims.M,
+                Y: algoTraderData.claims.Y
+              }}
+              title="Celkové výplaty"
+              height={280}
+              currentValue={`${totalClaimed.toLocaleString()} $`}
+              trend={{ value: 26.8, isPositive: true }}
+              showFilters={true}
+              primaryColor="#10B981" // Zelená pro claims
+              onTimeframeChange={(tf) => setTimeframe(tf)}
+            />
           </div>
 
           {/* Claim History Table */}
@@ -248,7 +246,7 @@ export default function AlgoTraderPage() {
               <button className="w-8 h-8 rounded bg-white/10 flex items-center justify-center text-white/70 hover:bg-white/20 transition-colors">
                 &lt;
               </button>
-              <button className="w-8 h-8 rounded bg-[#F9D523] text-black font-medium">1</button>
+              <button className="w-8 h-8 rounded bg-[#8B5CF6] text-white font-medium">1</button>
               <button className="w-8 h-8 rounded bg-white/10 flex items-center justify-center text-white/70 hover:bg-white/20 transition-colors">2</button>
               <button className="w-8 h-8 rounded bg-white/10 flex items-center justify-center text-white/70 hover:bg-white/20 transition-colors">3</button>
               <button className="w-8 h-8 rounded bg-white/10 flex items-center justify-center text-white/70 hover:bg-white/20 transition-colors">
@@ -276,8 +274,8 @@ export default function AlgoTraderPage() {
                     <tr key={algorithm.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
                       <td className="py-3">
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#B29819] to-[#F9D523] flex items-center justify-center">
-                            <span className="text-black font-bold text-xs">A</span>
+                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#8B5CF6] to-[#7C3AED] flex items-center justify-center">
+                            <span className="text-white font-bold text-xs">AI</span>
                           </div>
                           <span className="text-sm text-white">{algorithm.name}</span>
                         </div>

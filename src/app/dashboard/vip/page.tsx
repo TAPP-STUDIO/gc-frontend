@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { TopBar } from '@/components/layout/TopBar';
 import { DashboardCard } from '@/components/dashboard';
 import { DashboardButton } from '@/components/dashboard/DashboardButton';
-import { PortfolioChart } from '@/components/charts';
+import { VIPUniversalChart } from '@/components/charts'; // ✅ NOVÝ IMPORT - Sjednocený VIP graf
 
 // Mock data pro VIP portfolio graf
 const vipPortfolioData = [
@@ -138,14 +138,6 @@ export default function VipPage() {
     }, 2000);
   };
 
-  // Filter dat podle timeframe
-  const getFilteredData = () => {
-    if (timeframe === 'yearly') {
-      return vipPortfolioDataYearly;
-    }
-    return vipPortfolioData;
-  };
-
   return (
     <div className="min-h-screen">
       {/* TopBar */}
@@ -205,65 +197,19 @@ export default function VipPage() {
         {/* Main Content Grid - Graf a VIP Claim */}
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
           
-          {/* VIP Portfolio Graf - Hlavní graf */}
+          {/* ✅ VIP PORTFOLIO GRAF - NOVÁ IMPLEMENTACE */}
           <div className="xl:col-span-2">
-            <DashboardCard>
-              <div className="p-6 border-b border-white/10">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <h2 className="text-xl font-bold text-white mb-2">VIP Portfolio Performance</h2>
-                    <p className="text-white/70 text-sm">Celkové portfolio všech VIP akcionářů</p>
-                  </div>
-                  
-                  {/* Timeframe selector */}
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => setTimeframe('monthly')}
-                      className={`px-3 py-1 rounded-lg text-sm transition-all ${
-                        timeframe === 'monthly' 
-                          ? 'bg-[#F9D523] text-black font-medium' 
-                          : 'bg-white/10 text-white/70 hover:bg-white/20'
-                      }`}
-                    >
-                      Monthly
-                    </button>
-                    <button
-                      onClick={() => setTimeframe('yearly')}
-                      className={`px-3 py-1 rounded-lg text-sm transition-all ${
-                        timeframe === 'yearly' 
-                          ? 'bg-[#F9D523] text-black font-medium' 
-                          : 'bg-white/10 text-white/70 hover:bg-white/20'
-                      }`}
-                    >
-                      Yearly
-                    </button>
-                  </div>
-                </div>
-                
-                {/* Aktuální hodnota */}
-                <div className="mb-6">
-                  <div className="text-3xl font-bold text-white mb-1">
-                    ${vipStats.currentPortfolioValue.toLocaleString()}
-                  </div>
-                  <div className="flex items-center text-sm">
-                    <span className="text-green-400 mr-2">↗ +12.3%</span>
-                    <span className="text-white/70">vs last month</span>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Graf */}
-              <div className="p-6">
-                <div className="h-80">
-                  <PortfolioChart 
-                    data={getFilteredData()}
-                    height={320}
-                    title=""
-                    className="h-full"
-                  />
-                </div>
-              </div>
-            </DashboardCard>
+            <VIPUniversalChart 
+              data={vipPortfolioData} // Default data
+              timeframes={{
+                monthly: vipPortfolioData,
+                yearly: vipPortfolioDataYearly
+              }}
+              height={320}
+              currentValue={`$${vipStats.currentPortfolioValue.toLocaleString()}`}
+              trend={{ value: 18.3, isPositive: true }}
+              onTimeframeChange={(tf) => setTimeframe(tf)}
+            />
           </div>
 
           {/* VIP Claim Section */}
@@ -276,15 +222,15 @@ export default function VipPage() {
                 <p className="text-white/70 text-sm mb-4">Odmeny pro VIP členy</p>
                 
                 <div className="mb-4">
-                  <div className="text-2xl font-bold text-[#F9D523] mb-1">2,500 $</div>
+                  <div className="text-2xl font-bold text-[#8B5CF6] mb-1">2,500 $</div>
                   <div className="text-white/70 text-xs">Dostupná odmena</div>
                 </div>
                 
-                {/* Progress Bar */}
+                {/* Progress Bar - VIP themed */}
                 <div className="mb-4">
                   <div className="w-full bg-white/10 rounded-full h-2">
                     <div 
-                      className="bg-gradient-to-r from-[#F9D523] to-[#B29819] h-2 rounded-full transition-all duration-500"
+                      className="bg-gradient-to-r from-[#8B5CF6] to-[#F9D523] h-2 rounded-full transition-all duration-500"
                       style={{ width: '85%' }}
                     ></div>
                   </div>
@@ -297,7 +243,7 @@ export default function VipPage() {
                   className={`w-full transition-all duration-300 ${
                     claimCooldown 
                       ? 'bg-gray-500 cursor-not-allowed opacity-50' 
-                      : 'bg-gradient-to-r from-purple-500 to-[#F9D523] hover:from-purple-600 hover:to-[#E6C547] hover:shadow-[0_0_20px_rgba(249,213,35,0.4)]'
+                      : 'bg-gradient-to-r from-[#8B5CF6] to-[#F9D523] hover:from-purple-600 hover:to-[#E6C547] hover:shadow-[0_0_20px_rgba(139,92,246,0.4)]'
                   }`}
                   onClick={handleVipClaim}
                   disabled={claimCooldown}
@@ -323,19 +269,19 @@ export default function VipPage() {
                 <h3 className="text-lg font-bold text-white mb-4">VIP Benefits</h3>
                 <div className="space-y-3">
                   <div className="flex items-center text-sm">
-                    <div className="w-2 h-2 bg-[#F9D523] rounded-full mr-3"></div>
+                    <div className="w-2 h-2 bg-[#8B5CF6] rounded-full mr-3"></div>
                     <span className="text-white/90">Higher claim rewards</span>
                   </div>
                   <div className="flex items-center text-sm">
-                    <div className="w-2 h-2 bg-[#F9D523] rounded-full mr-3"></div>
+                    <div className="w-2 h-2 bg-[#8B5CF6] rounded-full mr-3"></div>
                     <span className="text-white/90">Exclusive events access</span>
                   </div>
                   <div className="flex items-center text-sm">
-                    <div className="w-2 h-2 bg-[#F9D523] rounded-full mr-3"></div>
+                    <div className="w-2 h-2 bg-[#8B5CF6] rounded-full mr-3"></div>
                     <span className="text-white/90">Priority support</span>
                   </div>
                   <div className="flex items-center text-sm">
-                    <div className="w-2 h-2 bg-[#F9D523] rounded-full mr-3"></div>
+                    <div className="w-2 h-2 bg-[#8B5CF6] rounded-full mr-3"></div>
                     <span className="text-white/90">Early access to features</span>
                   </div>
                 </div>
@@ -368,11 +314,11 @@ export default function VipPage() {
                 {vipMembers.map((member) => (
                   <tr 
                     key={member.id} 
-                    className="border-b border-white/5 hover:bg-white/5 hover:border-l-4 hover:border-l-[#F9D523] hover:translate-x-1 transition-all duration-300 cursor-pointer"
+                    className="border-b border-white/5 hover:bg-white/5 hover:border-l-4 hover:border-l-[#8B5CF6] hover:translate-x-1 transition-all duration-300 cursor-pointer"
                   >
                     <td className="py-4 px-6">
                       <div className="flex items-center">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#F9D523] to-[#B29819] flex items-center justify-center text-black font-bold text-sm mr-3">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#8B5CF6] to-[#F9D523] flex items-center justify-center text-white font-bold text-sm mr-3">
                           {member.name.split(' ').map(n => n[0]).join('')}
                         </div>
                         <div>
@@ -386,14 +332,14 @@ export default function VipPage() {
                     </td>
                     
                     <td className="py-4 px-6">
-                      <span className="inline-flex px-2 py-1 rounded-full text-xs font-medium bg-[#F9D523]/20 text-[#F9D523] border border-[#F9D523]/30">
+                      <span className="inline-flex px-2 py-1 rounded-full text-xs font-medium bg-[#8B5CF6]/20 text-[#8B5CF6] border border-[#8B5CF6]/30">
                         {member.level}
                       </span>
                     </td>
                     
                     <td className="py-4 px-6 text-white">{member.cardsOwned}</td>
                     
-                    <td className="py-4 px-6 text-[#F9D523] font-medium">${member.totalInvestment.toLocaleString()}</td>
+                    <td className="py-4 px-6 text-[#8B5CF6] font-medium">${member.totalInvestment.toLocaleString()}</td>
                     
                     <td className="py-4 px-6 text-white/70">{new Date(member.joinDate).toLocaleDateString('cs-CZ')}</td>
                     
