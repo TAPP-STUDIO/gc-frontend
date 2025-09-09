@@ -135,7 +135,7 @@ export function NotificationDetailModal({ isOpen, onClose, notification }: Notif
         </div>
 
         {/* Message */}
-        <div className="glass-card p-4">
+        <div className="backdrop-blur-lg border border-white/10 rounded-2xl p-6 bg-[#001718]/80 shadow-xl">
           <p className="text-white/80 leading-relaxed whitespace-pre-wrap">
             {notification.message}
           </p>
@@ -242,14 +242,14 @@ export function NotificationList({
 }: NotificationListProps) {
   if (loading) {
     return (
-      <div className="space-y-3">
+      <div className="space-y-4">
         {[...Array(5)].map((_, i) => (
-          <div key={i} className="glass-card p-4 animate-pulse">
-            <div className="flex space-x-3">
-              <div className="w-8 h-8 bg-white/10 rounded-full" />
-              <div className="flex-1 space-y-2">
-                <div className="h-4 bg-white/10 rounded w-3/4" />
-                <div className="h-3 bg-white/10 rounded w-1/2" />
+          <div key={i} className="backdrop-blur-lg border border-white/10 rounded-2xl p-6 bg-[#001718]/80 shadow-xl animate-pulse">
+            <div className="flex space-x-4">
+              <div className="w-10 h-10 bg-white/10 rounded-xl" />
+              <div className="flex-1 space-y-3">
+                <div className="h-4 bg-white/10 rounded-lg w-3/4" />
+                <div className="h-3 bg-white/10 rounded-lg w-1/2" />
               </div>
             </div>
           </div>
@@ -274,29 +274,33 @@ export function NotificationList({
           key={notification.id}
           onClick={() => onNotificationClick(notification)}
           className={`
-            glass-card p-4 cursor-pointer transition-all hover:bg-white/10
-            ${!notification.read ? 'border-l-4 border-[#F9D523]' : ''}
+            backdrop-blur-lg border border-white/10 rounded-2xl p-6 cursor-pointer
+            bg-[#001718]/80 shadow-xl
+            transition-all duration-300 hover:bg-[#001718] hover:border-[#F9D523]/50 hover:shadow-[0_0_30px_rgba(249,213,35,0.15)]
+            ${!notification.read ? 'border-l-4 border-l-[#F9D523] bg-[#1A3A3A]/40' : ''}
+            group
           `}
         >
-          <div className="flex items-start space-x-3">
-            <div className="flex-shrink-0 mt-1">
+          <div className="flex items-start space-x-4">
+            <div className="flex-shrink-0 mt-1 w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
               {getIcon(notification.type)}
             </div>
             <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between mb-1">
-                <h4 className={`text-sm font-medium ${!notification.read ? 'text-white' : 'text-white/80'}`}>
+              <div className="flex items-center justify-between mb-2">
+                <h4 className={`text-base font-semibold ${!notification.read ? 'text-white' : 'text-white/90'}`}>
                   {notification.title}
                 </h4>
-                <span className="text-xs text-white/50">
+                <span className="text-xs text-white/50 ml-4 flex-shrink-0">
                   {formatRelativeTime(notification.createdAt)}
                 </span>
               </div>
-              <p className="text-sm text-white/60 line-clamp-2">
+              <p className="text-sm text-white/70 line-clamp-2 leading-relaxed mb-3">
                 {notification.message}
               </p>
               {!notification.read && (
-                <div className="mt-2">
+                <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-[#F9D523] rounded-full" />
+                  <span className="text-xs text-[#F9D523] font-medium">Nepřečtené</span>
                 </div>
               )}
             </div>
