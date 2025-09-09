@@ -1,0 +1,45 @@
+import { createWeb3Modal } from '@web3modal/wagmi/react'
+import { defaultWagmiConfig } from '@web3modal/wagmi/react/config'
+import { WagmiProvider } from 'wagmi'
+import { arbitrum, mainnet, polygon, optimism, base } from 'wagmi/chains'
+
+// Get projectId from https://cloud.reown.com
+export const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!
+
+if (!projectId) {
+  throw new Error('NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID is not set')
+}
+
+// Create a metadata object
+const metadata = {
+  name: 'Gavlik Capital',
+  description: 'Gavlik Capital - Crypto Investment Platform',
+  url: process.env.NEXT_PUBLIC_APP_URL || 'https://gavlikcapital.com',
+  icons: ['https://gavlikcapital.com/favicon.ico']
+}
+
+// Create wagmi config
+export const config = defaultWagmiConfig({
+  chains: [mainnet, polygon, arbitrum, optimism, base],
+  projectId,
+  metadata,
+  ssr: true,
+  storage: typeof window !== 'undefined' ? localStorage : undefined
+})
+
+// Create modal
+createWeb3Modal({
+  wagmiConfig: config,
+  projectId,
+  enableAnalytics: true,
+  enableOnramp: false,
+  enableSwaps: false,
+  enableEmail: false,
+  enableSocials: [],
+  themeMode: 'dark',
+  themeVariables: {
+    '--w3m-color-mix': '#dc2626',
+    '--w3m-color-mix-strength': 20,
+    '--w3m-accent': '#dc2626'
+  }
+})
