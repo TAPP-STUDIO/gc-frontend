@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import Logo from '../logo/logo';
 import { PremiumCTA, GlassCTA } from '../ui/premium-button';
 
@@ -11,13 +12,52 @@ export const Navbar = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const scrollToSection = (sectionId: string) => {
+    if (sectionId === '#') return;
+    
+    // Odstranit # z ID
+    const cleanId = sectionId.replace('#', '');
+    
+    // Najít element podle ID nebo data-section
+    let element = document.getElementById(cleanId);
+    
+    // Pokud element nebyl nalezen podle ID, zkusit data-section
+    if (!element) {
+      element = document.querySelector(`[data-section="${cleanId}"]`);
+    }
+    
+    // Pokud stále nenalezen, zkusit podle textu v nadpisu (fallback)
+    if (!element) {
+      const headings = document.querySelectorAll('h1, h2, h3');
+      headings.forEach((heading) => {
+        const text = heading.textContent?.toLowerCase();
+        if (text?.includes(cleanId.toLowerCase().replace('-', ' '))) {
+          element = heading.closest('section') || heading as Element;
+        }
+      });
+    }
+    
+    if (element) {
+      const navbar = document.querySelector('nav');
+      const navbarHeight = navbar ? navbar.offsetHeight : 80;
+      const elementPosition = element.offsetTop - navbarHeight - 20;
+      
+      window.scrollTo({
+        top: elementPosition,
+        behavior: 'smooth'
+      });
+      
+      // Zavřít mobile menu
+      setIsMobileMenuOpen(false);
+    }
+  };
+
   const menuItems = [
     { name: 'Cards', href: '#cards' },
     { name: 'Ecosystem', href: '#ecosystem' },
     { name: 'Roadmap', href: '#roadmap' },
     { name: 'VIP club', href: '#vip-club' },
     { name: 'FAQ', href: '#faq' },
-    { name: 'Dokumentace', href: '#', external: false },
     { name: 'Discord', href: 'https://discord.gg/tcvTy6y5', external: true }
   ];
 
@@ -43,13 +83,20 @@ export const Navbar = () => {
                   >
                     {item.name}
                   </a>
-                ) : (
-                  <a
+                ) : item.href.startsWith('/') ? (
+                  <Link
                     href={item.href}
                     className="text-white/80 hover:text-[#F9D523] hover:scale-105 transition-all duration-300 text-sm font-medium whitespace-nowrap"
                   >
                     {item.name}
-                  </a>
+                  </Link>
+                ) : (
+                  <button
+                    onClick={() => scrollToSection(item.href)}
+                    className="text-white/80 hover:text-[#F9D523] hover:scale-105 transition-all duration-300 text-sm font-medium whitespace-nowrap"
+                  >
+                    {item.name}
+                  </button>
                 )}
               </React.Fragment>
             ))}
@@ -104,14 +151,21 @@ export const Navbar = () => {
                     >
                       {item.name}
                     </a>
-                  ) : (
-                    <a
+                  ) : item.href.startsWith('/') ? (
+                    <Link
                       href={item.href}
                       className="block px-3 py-2 text-white/80 hover:text-[#F9D523] hover:bg-white/10 rounded-xl transition-all duration-300 text-base font-medium backdrop-blur-sm hover:scale-105"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       {item.name}
-                    </a>
+                    </Link>
+                  ) : (
+                    <button
+                      onClick={() => scrollToSection(item.href)}
+                      className="block w-full text-left px-3 py-2 text-white/80 hover:text-[#F9D523] hover:bg-white/10 rounded-xl transition-all duration-300 text-base font-medium backdrop-blur-sm hover:scale-105"
+                    >
+                      {item.name}
+                    </button>
                   )}
                 </div>
               ))}

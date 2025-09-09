@@ -343,6 +343,16 @@ body {
   }
 }
 
+/* SMOOTH SCROLLING BEHAVIOR */
+html {
+  scroll-behavior: smooth;
+}
+
+/* IMPROVE SCROLLING ON WEBKIT BROWSERS */
+* {
+  scroll-padding-top: 100px; /* Offset for fixed navbar */
+}
+
 /* ==============================
    SCROLL ANIMATIONS
    ============================== */

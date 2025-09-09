@@ -48,7 +48,7 @@ export const FAQ = () => {
   };
 
   return (
-    <section className="py-20 lg:py-32 bg-black relative overflow-visible">
+    <section id="faq" className="py-16 lg:py-24 bg-black relative overflow-visible">
       {/* SVG Background - načítá od začátku */}
       <div className="absolute inset-0 z-0 overflow-visible">
         <div className="absolute inset-0 transform scale-100 origin-top-center">

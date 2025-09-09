@@ -110,7 +110,7 @@ export const InfoSection = () => {
   }, []);
 
   return (
-    <section className="relative min-h-screen py-16 lg:py-24 bg-black overflow-visible">
+    <section id="cards" className="relative min-h-screen py-16 lg:py-24 bg-black overflow-visible">
       {/* Background - vše inline bez globals.css */}
       <div 
         className="absolute inset-0 z-0"

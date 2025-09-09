@@ -54,7 +54,7 @@ export const Roadmap = () => {
   ];
 
   return (
-    <section className="relative min-h-screen py-16 lg:py-24 overflow-hidden">
+    <section id="roadmap" className="relative min-h-screen py-16 lg:py-24 overflow-hidden">
       {/* Background Image - lehčí overlays pro viditelnost */}
       <div className="absolute inset-0 z-0">
         <Image
