@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useWallet } from '@/contexts/WalletContext';
 import { TopBar } from '@/components/layout/TopBar';
 import { 
   DashboardButton, 
@@ -104,12 +105,6 @@ const claimChartDatasets = {
 
 // Portfolio data - zachovat původní obsah
 const portfolioData = {
-  stats: {
-    totalCards: 22,
-    gcCards: 7,
-    btcBot: 2,
-    algoTrader: 13
-  },
   claimHistory: [
     { 
       project: 'GC Cards', 
@@ -145,18 +140,26 @@ const portfolioData = {
 export default function PortfolioDashboard() {
   const [selectedTimeframe, setSelectedTimeframe] = useState('M');
   const [claimFilter, setClaimFilter] = useState('all');
-  // Removed chartType state - using two separate charts
   const router = useRouter();
+  const { user, walletAddress } = useWallet();
 
-  // Mock user data - zachovat původní
+  // User profile from wallet context
   const userProfile = {
-    name: "Jan Novák",
-    email: "jan.novak@email.cz",
-    address: "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb3",
-    kycVerified: true,
+    name: user?.username || user?.firstName || 'Uživatel',
+    email: user?.email || 'Není nastaveno',
+    address: walletAddress || 'Není připojeno',
+    kycVerified: user?.role === 'user', // Assuming verified users have 'user' role
+  };
+  
+  // Portfolio stats from real user data
+  const portfolioStats = {
+    totalCards: user?.nftHoldings?.length || 0,
+    gcCards: user?.nftHoldings?.filter(nft => nft.project === 'GC Cards')?.length || 0,
+    btcBot: user?.nftHoldings?.filter(nft => nft.project === 'BTC Bot')?.length || 0,
+    algoTrader: user?.nftHoldings?.filter(nft => nft.project === 'Algo Trader')?.length || 0
   };
 
-  // Handlers pro navigaci na detail projektů - zachovat původní
+  // Handlers pro navigaci na detail projektů
   const handleViewProject = (projectType: string) => {
     switch(projectType) {
       case 'gc-cards':
@@ -173,14 +176,12 @@ export default function PortfolioDashboard() {
     }
   };
 
-  // Filtrace historie claimů - zachovat původní logiku
+  // Filtrace historie claimů
   const filteredClaimHistory = claimFilter === 'all' 
     ? portfolioData.claimHistory 
     : portfolioData.claimHistory.filter(claim => 
         claim.project.toLowerCase().includes(claimFilter.toLowerCase())
       );
-
-  // Funkce pro získání dat podle časového rámce (už nepotřebujeme chartType)
 
   // Funkce pro získání popisu časového rámce
   const getTimeframeLabel = () => {
@@ -195,7 +196,7 @@ export default function PortfolioDashboard() {
 
   return (
     <div className="min-h-screen">
-      {/* TopBar - zachovat původní */}
+      {/* TopBar */}
       <TopBar 
         title="Moje portfolio"
         userProfile={userProfile}
@@ -203,14 +204,11 @@ export default function PortfolioDashboard() {
       />
       
       <div className="p-4 sm:p-6 lg:p-8">
-        
-
-
-        {/* Value Cards Grid - sjednocený glassmorphism background */}
+        {/* Value Cards Grid - using real data */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <ValueCard 
             label="Počet karet" 
-            value={portfolioData.stats.totalCards}
+            value={portfolioStats.totalCards}
             variant="default"
             className=""
           >
@@ -219,7 +217,7 @@ export default function PortfolioDashboard() {
 
           <ValueCard 
             label="GC cards" 
-            value={portfolioData.stats.gcCards}
+            value={portfolioStats.gcCards}
             variant="default"
             onClick={() => handleViewProject('gc-cards')}
             className="group cursor-pointer hover:shadow-lg hover:shadow-white/5 transition-all duration-300"
@@ -239,7 +237,7 @@ export default function PortfolioDashboard() {
 
           <ValueCard 
             label="BTC Bot" 
-            value={portfolioData.stats.btcBot}
+            value={portfolioStats.btcBot}
             variant="default"
             onClick={() => handleViewProject('btc-bot')}
             className="group cursor-pointer hover:shadow-lg hover:shadow-white/5 transition-all duration-300"
@@ -259,7 +257,7 @@ export default function PortfolioDashboard() {
 
           <ValueCard 
             label="Algo Trader" 
-            value={portfolioData.stats.algoTrader}
+            value={portfolioStats.algoTrader}
             variant="default"
             onClick={() => handleViewProject('algo-trader')}
             className="group cursor-pointer hover:shadow-lg hover:shadow-white/5 transition-all duration-300"
@@ -284,7 +282,7 @@ export default function PortfolioDashboard() {
           <div className="lg:col-span-2">
             <ChartCard 
               title={`Vývoj portfolia (${getTimeframeLabel()})`}
-              value="10 000 $"
+              value={`${user?.portfolioValue?.toLocaleString() || '0'} $`}
               controls={
                 <div className="flex flex-col gap-4">
                   {/* Časové období */}
@@ -341,8 +339,8 @@ export default function PortfolioDashboard() {
               }
             >
               <div className="space-y-2">
-                <p className="text-2xl font-bold text-white">10 000 $</p>
-                <p className="text-xs text-white/50">Naposledy aktualizováno: 1.1.2026</p>
+                <p className="text-2xl font-bold text-white">${user?.portfolioValue?.toLocaleString() || '0'}</p>
+                <p className="text-xs text-white/50">Naposledy aktualizováno: {new Date().toLocaleDateString('cs-CZ')}</p>
               </div>
             </InfoCard>
 
@@ -356,7 +354,7 @@ export default function PortfolioDashboard() {
             >
               <div className="space-y-3">
                 <p className="text-sm text-white/70">Dostupné k vyzvednutí</p>
-                <p className="text-xl font-bold text-[#F9D523]">2 500 $</p>
+                <p className="text-xl font-bold text-[#F9D523]">${((user?.portfolioValue || 0) * 0.25).toLocaleString()}</p>
                 <DashboardButton variant="primary" size="sm" className="w-full">
                   Vyzvednout odměnu
                 </DashboardButton>
@@ -464,7 +462,7 @@ export default function PortfolioDashboard() {
                   </p>
                 </div>
                 
-                {/* Claim Filter - původní dropdown styl */}
+                {/* Claim Filter */}
                 <div className="flex gap-2">
                   <select 
                     value={claimFilter}
@@ -511,7 +509,6 @@ export default function PortfolioDashboard() {
             </div>
           </DashboardCard>
         </div>
-
       </div>
     </div>
   );

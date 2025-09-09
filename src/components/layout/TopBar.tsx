@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useWallet } from '@/contexts/WalletContext';
 import { Bell, User, Settings, ChevronDown } from "lucide-react";
 
 interface TopBarProps {
@@ -28,6 +29,32 @@ export const TopBar: React.FC<TopBarProps> = ({
 }) => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const router = useRouter();
+  const { disconnectWallet } = useWallet();
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowProfileMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      setShowProfileMenu(false);
+      await disconnectWallet();
+      // Redirect will be handled by the dashboard layout
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
 
   const handleNotificationClick = () => {
     if (onNotificationClick) {
@@ -69,7 +96,7 @@ export const TopBar: React.FC<TopBarProps> = ({
           </button>
 
           {/* Profile Dropdown */}
-          <div className="relative">
+          <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setShowProfileMenu(!showProfileMenu)}
               className="flex items-center gap-3 h-10 px-3 rounded-lg bg-white/5 backdrop-blur-sm 
@@ -131,6 +158,7 @@ export const TopBar: React.FC<TopBarProps> = ({
                   <hr className="my-2 border-white/10" />
 
                   <button
+                    onClick={handleLogout}
                     className="flex items-center gap-3 px-3 py-2 rounded-lg text-red-400 
                              hover:bg-red-500/10 transition-all duration-200 w-full text-left"
                   >

@@ -103,7 +103,7 @@ export const Navbar = () => {
             
             {/* Premium Sign Up Button */}
             <PremiumCTA 
-              href="/dashboard"
+              href="/auth/login"
               size="sm"
               className="ml-4"
             >
@@ -171,7 +171,7 @@ export const Navbar = () => {
               ))}
               <div className="pt-4 border-t border-white/10 mt-4">
                 <GlassCTA
-                  href="/dashboard"
+                  href="/auth/login"
                   size="md"
                   className="w-full text-center"
                   onClick={() => setIsMobileMenuOpen(false)}
