@@ -282,6 +282,77 @@ class NFTService {
   }
 
   /**
+   * Delete history record
+   */
+  async deleteHistoryRecord(
+    collectionId: string,
+    historyId: string
+  ): Promise<ApiResponse<{ message: string }>> {
+    return this.request('DELETE', `/collections/${collectionId}/history/${historyId}`);
+  }
+
+  /**
+   * Update history record
+   */
+  async updateHistoryRecord(
+    collectionId: string,
+    historyId: string,
+    data: Partial<{
+      totalValueUSD: number;
+      reason: string;
+      changeType: 'manual_update' | 'automatic_sync' | 'admin_correction' | 'initial_value';
+    }>
+  ): Promise<ApiResponse<{
+    historyRecord: {
+      id: string;
+      totalValueUSD: number;
+      pricePerCard: number;
+      reason: string;
+      changeType: string;
+      timestamp: string;
+      updatedBy: string;
+      updatedAt: string;
+    };
+  }>> {
+    return this.request('PUT', `/collections/${collectionId}/history/${historyId}`, data);
+  }
+
+  /**
+   * Update project/collection details
+   */
+  async updateProject(
+    projectId: string,
+    data: Partial<{
+      collectionName: string;
+      symbol: string;
+      totalValueUSD: number;
+      cardCount: number;
+      floorPrice: number;
+      volume24h: number;
+      mintPrice: number;
+      royalties: number;
+      description: string;
+      features: string[];
+      status: 'active' | 'presale' | 'paused';
+      reason: string;
+    }>
+  ): Promise<ApiResponse<{
+    project: {
+      id: string;
+      name: string;
+      symbol: string;
+      totalValueUSD: number;
+      pricePerCard: number;
+      cardCount: number;
+      lastUpdate: string;
+      updatedBy: string;
+    };
+    updatedFields: string[];
+  }>> {
+    return this.request('PUT', `/projects/${projectId}`, data);
+  }
+
+  /**
    * Get NFT projects overview with individual stats
    */
   async getProjects(): Promise<ApiResponse<NFTProjectsResponse>> {

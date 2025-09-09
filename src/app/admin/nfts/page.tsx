@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { DashboardCard, StatCard, DashboardButton } from '@/components/dashboard';
 import { nftService, NFTProjectsResponse, NFTProject, NFTHealthCheck } from '@/services/nft.service';
+import EditProjectModal from '@/components/modals/EditProjectModal';
 
 export default function NFTsAdminPage() {
   const [projectsData, setProjectsData] = useState<NFTProjectsResponse | null>(null);
@@ -10,6 +11,9 @@ export default function NFTsAdminPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [editingProject, setEditingProject] = useState<NFTProject | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [modalLoading, setModalLoading] = useState(false);
 
   // Load initial data only once
   useEffect(() => {
@@ -58,13 +62,41 @@ export default function NFTsAdminPage() {
     setRefreshing(false);
   };
 
+  const handleSaveProject = async (projectId: string, data: any) => {
+    try {
+      setModalLoading(true);
+      const result = await nftService.updateProject(projectId, data);
+      
+      if (result.success) {
+        // Refresh data to show updated values
+        await loadData();
+        setIsEditModalOpen(false);
+        setEditingProject(null);
+      } else {
+        throw new Error(result.error || 'Failed to update project');
+      }
+    } catch (error: any) {
+      console.error('Failed to save project:', error);
+      setError(error.message || 'Failed to save project changes');
+      throw error; // Re-throw to let modal handle it
+    } finally {
+      setModalLoading(false);
+    }
+  };
+
   const handleProjectAction = async (action: string, projectId?: string) => {
     console.log(`Admin action: ${action} for project: ${projectId}`);
     
     switch (action) {
       case 'manage':
-        // TODO: Open project management dialog
-        alert(`Manage project ${projectId} - coming soon...`);
+        // Find the project and open edit modal
+        const project = projectsData?.projects.find(p => p.id === projectId);
+        if (project) {
+          setEditingProject(project);
+          setIsEditModalOpen(true);
+        } else {
+          setError(`Project ${projectId} not found`);
+        }
         break;
       case 'mint':
         // TODO: Open mint dialog for specific project
@@ -468,6 +500,18 @@ export default function NFTsAdminPage() {
           Posledně aktualizováno: {new Date(projectsData.overview.lastUpdated).toLocaleString('cs-CZ')}
         </div>
       )}
+
+      {/* Edit Project Modal */}
+      <EditProjectModal
+        isOpen={isEditModalOpen}
+        onClose={() => {
+          setIsEditModalOpen(false);
+          setEditingProject(null);
+        }}
+        project={editingProject}
+        onSave={handleSaveProject}
+        loading={modalLoading}
+      />
     </div>
   );
 }
