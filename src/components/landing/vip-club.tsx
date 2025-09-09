@@ -55,7 +55,7 @@ export const VipClub = () => {
           <div 
             ref={featuresRef}
             className="space-y-3 lg:space-y-4 animate-container py-2">
-          >
+          
             {vipFeatures.map((feature, index) => (
               <div
                 key={index}
@@ -64,11 +64,11 @@ export const VipClub = () => {
                 }`}
                 style={{ transitionDelay: `${index * 150}ms` }}
               >
-                {/* Stejný styl jako v Cards sekci - border kolem check ikonky */}
+                {/* Vrácené a zvětšené check ikonky */}
                 <div className="flex-shrink-0 mt-1">
-                  <div className="w-6 h-6 rounded-full border-2 border-white/30 flex items-center justify-center group-hover:border-white/50 transition-all duration-300">
+                  <div className="w-8 h-8 rounded-full border-2 border-white/30 flex items-center justify-center group-hover:border-white/50 transition-all duration-300">
                     <svg
-                      className="w-4 h-4 text-white flex-shrink-0"
+                      className="w-5 h-5 text-white flex-shrink-0"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"

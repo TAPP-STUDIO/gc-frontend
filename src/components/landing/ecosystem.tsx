@@ -76,34 +76,34 @@ export const Ecosystem = () => {
           </div>
         </div>
 
-        {/* Cards Grid - jen simple scale hover */}
+        {/* Cards Grid - ještě více kompaktní */}
         <div 
           ref={cardsRef}
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 max-w-7xl mx-auto animate-container overflow-visible"
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 max-w-4xl mx-auto animate-container overflow-visible"
         >
           {ecosystemItems.map((item, index) => (
             <div
               key={item.id}
-              className={`relative text-center animate-scale overflow-visible py-4 px-4 ${
+              className={`relative text-center animate-scale overflow-visible py-3 px-3 ${
                 visibleItems.has(index) ? 'visible' : ''
               }`}
               style={{ transitionDelay: `${index * 200}ms` }}
             >
               {/* Project Title */}
-              <div className="mb-4">
-                <h3 className="text-xl md:text-2xl font-medium text-white">
+              <div className="mb-3">
+                <h3 className="text-lg md:text-xl font-medium text-white">
                   {item.name}
                 </h3>
               </div>
 
-              {/* Clean Card Container - žádné efekty okolo */}
-              <div className="relative w-full max-w-sm mx-auto mb-4">
-                <div className="relative aspect-[2/3] rounded-3xl overflow-hidden transition-all duration-300 cursor-pointer hover:scale-[1.02] group">
+              {/* Ještě menší Card Container */}
+              <div className="relative w-full max-w-68 mx-auto mb-4">
+                <div className="relative aspect-[4/5] rounded-xl overflow-hidden transition-all duration-300 cursor-pointer hover:scale-[1.02] group">
                   <Image
                     src={item.image}
                     alt={item.name}
                     fill
-                    className="object-cover"
+                    className="object-contain"
                     priority
                   />
                 </div>
@@ -112,11 +112,11 @@ export const Ecosystem = () => {
               {/* Button */}
               <div className="flex justify-center">
                 {item.button.type === 'link' ? (
-                  <button className="unified-button unified-button-lg">
+                  <button className="unified-button unified-button-md">
                     <span>{item.button.text}</span>
                   </button>
                 ) : (
-                  <div className="unified-button unified-button-lg cursor-default">
+                  <div className="unified-button unified-button-md cursor-default">
                     <span>{item.button.text}</span>
                   </div>
                 )}
