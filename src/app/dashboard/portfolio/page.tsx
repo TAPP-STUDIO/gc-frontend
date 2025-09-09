@@ -8,12 +8,101 @@ import {
   DashboardCard, 
   StatCard, 
   ValueCard,
+  ChartCard,
   InfoCard,
   DashboardTable 
 } from '@/components/dashboard';
-import { PortfolioUniversalChart } from '@/components/charts'; // ✅ NOVÝ IMPORT - Sjednocený graf
+import { ProjectsChart } from '@/components/charts';
 
-// Portfolio data
+// Portfolio data s časovými rámci - stejná struktura jako projects
+const portfolioChartDatasets = {
+  D: [ // Denní data (posledních 7 dní) - portfolio hodnoty
+    { name: 'Po', portfolio: 9800 },
+    { name: 'Út', portfolio: 9850 },
+    { name: 'St', portfolio: 9780 },
+    { name: 'Čt', portfolio: 9920 },
+    { name: 'Pá', portfolio: 9880 },
+    { name: 'So', portfolio: 9950 },
+    { name: 'Ne', portfolio: 10000 }
+  ],
+  W: [ // Týdenní data (posledních 8 týdnů)
+    { name: 'T1', portfolio: 8200 },
+    { name: 'T2', portfolio: 8350 },
+    { name: 'T3', portfolio: 8450 },
+    { name: 'T4', portfolio: 8580 },
+    { name: 'T5', portfolio: 8680 },
+    { name: 'T6', portfolio: 8780 },
+    { name: 'T7', portfolio: 8850 },
+    { name: 'T8', portfolio: 10000 }
+  ],
+  M: [ // Měsíční data (posledních 12 měsíců)
+    { name: 'Jan', portfolio: 2000 },
+    { name: 'Feb', portfolio: 2500 },
+    { name: 'Mar', portfolio: 3200 },
+    { name: 'Apr', portfolio: 2800 },
+    { name: 'May', portfolio: 4200 },
+    { name: 'Jun', portfolio: 5100 },
+    { name: 'Jul', portfolio: 6800 },
+    { name: 'Aug', portfolio: 7500 },
+    { name: 'Sep', portfolio: 8200 },
+    { name: 'Oct', portfolio: 9100 },
+    { name: 'Nov', portfolio: 9800 },
+    { name: 'Dec', portfolio: 10000 }
+  ],
+  Y: [ // Roční data (posledních 5 let)
+    { name: '2020', portfolio: 1200 },
+    { name: '2021', portfolio: 2800 },
+    { name: '2022', portfolio: 5800 },
+    { name: '2023', portfolio: 7800 },
+    { name: '2024', portfolio: 10000 }
+  ]
+};
+
+// Claim data s časovými rámci
+const claimChartDatasets = {
+  D: [ // Denní data
+    { name: 'Po', claims: 180 },
+    { name: 'Út', claims: 220 },
+    { name: 'St', claims: 150 },
+    { name: 'Čt', claims: 280 },
+    { name: 'Pá', claims: 190 },
+    { name: 'So', claims: 210 },
+    { name: 'Ne', claims: 250 }
+  ],
+  W: [ // Týdenní data
+    { name: 'T1', claims: 1200 },
+    { name: 'T2', claims: 1350 },
+    { name: 'T3', claims: 1450 },
+    { name: 'T4', claims: 1580 },
+    { name: 'T5', claims: 1680 },
+    { name: 'T6', claims: 1780 },
+    { name: 'T7', claims: 1850 },
+    { name: 'T8', claims: 1900 }
+  ],
+  M: [ // Měsíční data - původní data
+    { name: 'Jan', claims: 500 },
+    { name: 'Feb', claims: 800 },
+    { name: 'Mar', claims: 1200 },
+    { name: 'Apr', claims: 1500 },
+    { name: 'May', claims: 2100 },
+    { name: 'Jun', claims: 2400 },
+    { name: 'Jul', claims: 2800 },
+    { name: 'Aug', claims: 3100 },
+    { name: 'Sep', claims: 3300 },
+    { name: 'Oct', claims: 3450 },
+    { name: 'Nov', claims: 3480 },
+    { name: 'Dec', claims: 3500 }
+  ],
+  Y: [ // Roční data
+    { name: '2020', claims: 800 },
+    { name: '2021', claims: 1700 },
+    { name: '2022', claims: 2900 },
+    { name: '2023', claims: 3350 },
+    { name: '2024', claims: 3500 }
+  ]
+};
+
+// Portfolio data - zachovat původní obsah
 const portfolioData = {
   stats: {
     totalCards: 22,
@@ -21,34 +110,6 @@ const portfolioData = {
     btcBot: 2,
     algoTrader: 13
   },
-  chartData: [
-    { name: 'Jan', value: 2000 },
-    { name: 'Feb', value: 2500 },
-    { name: 'Mar', value: 3200 },
-    { name: 'Apr', value: 2800 },
-    { name: 'May', value: 4200 },
-    { name: 'Jun', value: 5100 },
-    { name: 'Jul', value: 6800 },
-    { name: 'Aug', value: 7500 },
-    { name: 'Sep', value: 8200 },
-    { name: 'Oct', value: 9100 },
-    { name: 'Nov', value: 9800 },
-    { name: 'Dec', value: 10000 }
-  ],
-  claimData: [
-    { name: 'Jan', value: 500 },
-    { name: 'Feb', value: 800 },
-    { name: 'Mar', value: 1200 },
-    { name: 'Apr', value: 1500 },
-    { name: 'May', value: 2100 },
-    { name: 'Jun', value: 2400 },
-    { name: 'Jul', value: 2800 },
-    { name: 'Aug', value: 3100 },
-    { name: 'Sep', value: 3300 },
-    { name: 'Oct', value: 3450 },
-    { name: 'Nov', value: 3480 },
-    { name: 'Dec', value: 3500 }
-  ],
   claimHistory: [
     { 
       project: 'GC Cards', 
@@ -84,9 +145,10 @@ const portfolioData = {
 export default function PortfolioDashboard() {
   const [selectedTimeframe, setSelectedTimeframe] = useState('M');
   const [claimFilter, setClaimFilter] = useState('all');
+  // Removed chartType state - using two separate charts
   const router = useRouter();
 
-  // Mock user data - nahradit skutečnými daty
+  // Mock user data - zachovat původní
   const userProfile = {
     name: "Jan Novák",
     email: "jan.novak@email.cz",
@@ -94,7 +156,7 @@ export default function PortfolioDashboard() {
     kycVerified: true,
   };
 
-  // Handlers pro navigaci na detail projektů
+  // Handlers pro navigaci na detail projektů - zachovat původní
   const handleViewProject = (projectType: string) => {
     switch(projectType) {
       case 'gc-cards':
@@ -111,16 +173,29 @@ export default function PortfolioDashboard() {
     }
   };
 
-  // Filtrace historie claimů
+  // Filtrace historie claimů - zachovat původní logiku
   const filteredClaimHistory = claimFilter === 'all' 
     ? portfolioData.claimHistory 
     : portfolioData.claimHistory.filter(claim => 
         claim.project.toLowerCase().includes(claimFilter.toLowerCase())
       );
 
+  // Funkce pro získání dat podle časového rámce (už nepotřebujeme chartType)
+
+  // Funkce pro získání popisu časového rámce
+  const getTimeframeLabel = () => {
+    const labels = {
+      D: 'tento týden',
+      W: 'posledních 8 týdnů', 
+      M: 'posledních 12 měsíců',
+      Y: 'posledních 5 let'
+    };
+    return labels[selectedTimeframe as keyof typeof labels] || labels.M;
+  };
+
   return (
     <div className="min-h-screen">
-      {/* Transparentní TopBar */}
+      {/* TopBar - zachovat původní */}
       <TopBar 
         title="Moje portfolio"
         userProfile={userProfile}
@@ -128,27 +203,18 @@ export default function PortfolioDashboard() {
       />
       
       <div className="p-4 sm:p-6 lg:p-8">
-        {/* Value Cards Grid - ÚPRAVA PODLE ÚKOLU 1 */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
-          {/* ÚPRAVA: Odstranění žlutého orámování, změna textu na "Zobrazit" */}
+        
+
+
+        {/* Value Cards Grid - sjednocený glassmorphism background */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <ValueCard 
             label="Počet karet" 
             value={portfolioData.stats.totalCards}
             variant="default"
-            onClick={() => handleViewProject('all')}
-            className="group cursor-pointer"
+            className=""
           >
-            <DashboardButton 
-              variant="secondary" 
-              size="sm"
-              className="mt-3"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleViewProject('all');
-              }}
-            >
-              Zobrazit
-            </DashboardButton>
+            <p className="text-xs text-white/70 mt-2">Vlastněno</p>
           </ValueCard>
 
           <ValueCard 
@@ -156,7 +222,7 @@ export default function PortfolioDashboard() {
             value={portfolioData.stats.gcCards}
             variant="default"
             onClick={() => handleViewProject('gc-cards')}
-            className="group cursor-pointer"
+            className="group cursor-pointer hover:shadow-lg hover:shadow-white/5 transition-all duration-300"
           >
             <DashboardButton 
               variant="secondary" 
@@ -176,7 +242,7 @@ export default function PortfolioDashboard() {
             value={portfolioData.stats.btcBot}
             variant="default"
             onClick={() => handleViewProject('btc-bot')}
-            className="group cursor-pointer"
+            className="group cursor-pointer hover:shadow-lg hover:shadow-white/5 transition-all duration-300"
           >
             <DashboardButton 
               variant="secondary" 
@@ -196,7 +262,7 @@ export default function PortfolioDashboard() {
             value={portfolioData.stats.algoTrader}
             variant="default"
             onClick={() => handleViewProject('algo-trader')}
-            className="group cursor-pointer"
+            className="group cursor-pointer hover:shadow-lg hover:shadow-white/5 transition-all duration-300"
           >
             <DashboardButton 
               variant="secondary" 
@@ -212,23 +278,59 @@ export default function PortfolioDashboard() {
           </ValueCard>
         </div>
 
-        {/* Main Grid */}
+        {/* Main Grid - DVA GRAFY vedle sebe */}
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-12 lg:gap-20 mb-20">
-          {/* ✅ HLAVNÍ PORTFOLIO GRAF - NOVÁ IMPLEMENTACE */}
+          {/* LEFT - Portfolio Graf */}
           <div className="lg:col-span-2">
-            <PortfolioUniversalChart 
-              data={portfolioData.chartData}
-              title="Vývoj portfolia"
-              height={320}
-              currentValue="10 000 $"
-              trend={{ value: 15.8, isPositive: true }}
-              showGrid={true}
-              animate={true}
-              primaryColor="#F9D523"
-            />
+            <ChartCard 
+              title={`Vývoj portfolia (${getTimeframeLabel()})`}
+              value="10 000 $"
+              controls={
+                <div className="flex flex-col gap-4">
+                  {/* Časové období */}
+                  <div className="flex gap-1">
+                    {['D', 'W', 'M', 'Y'].map((period) => (
+                      <button
+                        key={period}
+                        onClick={() => setSelectedTimeframe(period)}
+                        className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
+                          selectedTimeframe === period 
+                            ? 'bg-white/20 text-white border border-white/30 shadow-lg' 
+                            : 'bg-white/5 text-white/70 hover:bg-white/10 border border-white/10'
+                        }`}
+                      >
+                        {period}
+                      </button>
+                    ))}
+                  </div>
+                  
+                  {/* Legenda */}
+                  <div className="flex items-center space-x-4 text-sm">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-3 h-3 rounded-full bg-[#F9D523]" />
+                      <span className="text-white/70">Portfolio</span>
+                    </div>
+                  </div>
+                </div>
+              }
+            >
+              {/* Portfolio Graf */}
+              <ProjectsChart 
+                data={portfolioChartDatasets[selectedTimeframe as keyof typeof portfolioChartDatasets] || portfolioChartDatasets.M}
+                height={320}
+                showProjects={true}
+                showStocks={false}
+                projectsKey="portfolio"
+                stocksKey="stocks"
+                showGrid={true}
+                showTooltip={true}
+                animate={true}
+                className="w-full"
+              />
+            </ChartCard>
           </div>
 
-          {/* Info Cards - 1 column */}
+          {/* RIGHT - Info Card */}
           <div className="space-y-3 lg:space-y-4">
             <InfoCard 
               title="Aktuální hodnota"
@@ -241,6 +343,20 @@ export default function PortfolioDashboard() {
               <div className="space-y-2">
                 <p className="text-2xl font-bold text-white">10 000 $</p>
                 <p className="text-xs text-white/50">Naposledy aktualizováno: 1.1.2026</p>
+              </div>
+            </InfoCard>
+
+            <InfoCard 
+              title="Vyzvednout odměnu"
+              icon={
+                <svg className="w-5 h-5 text-[#F9D523]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c1.1 0 2 .9 2 2v1M9 9h1m4 0h.01M9 17h1m4 0h.01M4 9v8a2 2 0 002 2h8a2 2 0 002-2V9M4 9V7a2 2 0 012-2h8a2 2 0 012 2v2M4 9h12" />
+                </svg>
+              }
+            >
+              <div className="space-y-3">
+                <p className="text-sm text-white/70">Dostupné k vyzvednutí</p>
+                <p className="text-xl font-bold text-[#F9D523]">2 500 $</p>
                 <DashboardButton variant="primary" size="sm" className="w-full">
                   Vyzvednout odměnu
                 </DashboardButton>
@@ -249,37 +365,111 @@ export default function PortfolioDashboard() {
           </div>
         </div>
 
-        {/* Bottom Section - ÚPRAVA PODLE ÚKOLŮ 2, 3, 4 */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 lg:gap-12">
-          {/* ✅ CLAIM CHART - NOVÁ IMPLEMENTACE */}
+        {/* Bottom Section - DRUHÝ GRAF pro Claims */}
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 lg:gap-12 mb-8">
+          {/* LEFT - Claims Graf */}
           <div className="lg:col-span-2">
-            <PortfolioUniversalChart 
-              data={portfolioData.claimData}
-              title="Celkové výplaty"
-              height={320}
-              currentValue="3 500 $"
-              trend={{ value: 8.2, isPositive: true }}
-              showGrid={true}
-              animate={true}
-              primaryColor="#10B981" // Zelená pro claims
-            />
+            <ChartCard 
+              title={`Historie claimů (${getTimeframeLabel()})`}
+              value="3 500 $"
+              controls={
+                <div className="flex flex-col gap-4">
+                  {/* Časové období */}
+                  <div className="flex gap-1">
+                    {['D', 'W', 'M', 'Y'].map((period) => (
+                      <button
+                        key={period}
+                        onClick={() => setSelectedTimeframe(period)}
+                        className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
+                          selectedTimeframe === period 
+                            ? 'bg-white/20 text-white border border-white/30 shadow-lg' 
+                            : 'bg-white/5 text-white/70 hover:bg-white/10 border border-white/10'
+                        }`}
+                      >
+                        {period}
+                      </button>
+                    ))}
+                  </div>
+                  
+                  {/* Legenda */}
+                  <div className="flex items-center space-x-4 text-sm">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-3 h-3 rounded-full bg-[#10B981]" />
+                      <span className="text-white/70">Výplaty</span>
+                    </div>
+                  </div>
+                </div>
+              }
+            >
+              {/* Claims Graf */}
+              <ProjectsChart 
+                data={claimChartDatasets[selectedTimeframe as keyof typeof claimChartDatasets] || claimChartDatasets.M}
+                height={320}
+                showProjects={true}
+                showStocks={false}
+                projectsKey="claims"
+                stocksKey="stocks"
+                showGrid={true}
+                showTooltip={true}
+                animate={true}
+                className="w-full"
+              />
+            </ChartCard>
           </div>
 
-          {/* Claim History Table - ÚPRAVA PODLE ÚKOLU 2 */}
+          {/* RIGHT - Stats Cards */}
+          <div className="space-y-4">
+            <StatCard
+              title="Celkem vyplaceno"
+              value="3 500 $"
+              trend={{ value: 8.2, isPositive: true }}
+            />
+            
+            <StatCard
+              title="Průměrná výplata"
+              value="875 $"
+              trend={{ value: 4.1, isPositive: true }}
+            />
+            
+            <InfoCard 
+              title="Další výplata"
+              icon={
+                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              }
+            >
+              <div className="space-y-2">
+                <p className="text-3xl font-bold text-white">1.2.2025</p>
+                <p className="text-xs text-[#4ADE80] font-medium">Odhadovaná částka: 890 $</p>
+              </div>
+            </InfoCard>
+          </div>
+        </div>
+
+        {/* Bottom Section - Claim History Table */}
+        <div className="space-y-4">
           <DashboardCard 
             variant="default" 
-            padding="none"
-            className="group cursor-pointer transition-all duration-300 hover:border-[#F9D523]/50 hover:shadow-[0_0_30px_rgba(249,213,35,0.15)]"
+            className="p-0"
           >
             <div className="p-6 border-b border-white/10">
-              <div className="flex justify-between items-center">
-                <h3 className="text-lg font-semibold text-white">Historie claimů</h3>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                  <h3 className="text-lg font-semibold text-white mb-1">
+                    Historie claimů
+                  </h3>
+                  <p className="text-sm text-white/70">
+                    Přehled všech výplat a claimů
+                  </p>
+                </div>
+                
+                {/* Claim Filter - původní dropdown styl */}
                 <div className="flex gap-2">
-                  {/* ÚPRAVA: Funkční filtrování */}
                   <select 
                     value={claimFilter}
                     onChange={(e) => setClaimFilter(e.target.value)}
-                    className="px-3 py-1 bg-white/5 border border-white/10 rounded text-xs text-white focus:outline-none focus:border-white/30"
+                    className="px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:border-[#F9D523]/50 focus:bg-white/10 transition-all"
                   >
                     <option value="all">Všechny projekty</option>
                     <option value="gc cards">GC Cards</option>
@@ -310,17 +500,18 @@ export default function PortfolioDashboard() {
                   { 
                     key: 'claim', 
                     label: 'Částka',
-                    render: (value, item) => (
-                      <span className="text-white font-semibold">{value} $</span>
+                    render: (value) => (
+                      <span className="text-[#F9D523] font-semibold">{value} $</span>
                     )
                   }
                 ]}
                 data={filteredClaimHistory}
-                className=""
+                className="w-full"
               />
             </div>
           </DashboardCard>
         </div>
+
       </div>
     </div>
   );
