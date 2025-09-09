@@ -110,7 +110,7 @@ export const InfoSection = () => {
   }, []);
 
   return (
-    <section className="relative min-h-screen py-20 lg:py-32 bg-black overflow-visible">
+    <section id="cards" className="relative min-h-screen py-16 lg:py-24 bg-black overflow-visible">
       {/* Background - vše inline bez globals.css */}
       <div 
         className="absolute inset-0 z-0"
@@ -159,12 +159,12 @@ export const InfoSection = () => {
             {/* Benefits List */}
             <div 
               ref={benefitsRef}
-              className="space-y-6 animate-container py-4"
+              className="space-y-4 animate-container py-2"
             >
               {benefits.map((benefit, index) => (
                 <div 
                   key={index} 
-                  className={`flex items-start gap-4 group animate-slide-up py-2 px-1 ${
+                  className={`flex items-start gap-4 group animate-slide-up py-1 px-1 ${
                     visibleItems.has(index) ? 'visible' : ''
                   }`}
                   style={{ transitionDelay: `${index * 100}ms` }}
@@ -183,7 +183,7 @@ export const InfoSection = () => {
                       </svg>
                     </div>
                   </div>
-                  <p className="text-white/90 text-lg md:text-xl leading-relaxed font-medium">
+                  <p className="text-white/90 text-lg md:text-xl leading-snug font-medium">
                     {benefit}
                   </p>
                 </div>
@@ -219,7 +219,7 @@ export const InfoSection = () => {
                   poster="/backgrounds/info.png"
                   preload="metadata"
                 >
-                  <source src="/videos/intro.mp4" type="video/mp4" />
+                  <source src="https://admin.gavlikcapital.com/front/dist/video/nft_video.mp4" type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
 

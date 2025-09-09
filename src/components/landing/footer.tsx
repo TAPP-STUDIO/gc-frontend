@@ -16,6 +16,30 @@ export const Footer = () => {
     setEmail('');
   };
 
+  const scrollToSection = (sectionId: string) => {
+    if (sectionId.startsWith('/') || sectionId.startsWith('http')) {
+      // External link nebo internal route - neděláme nic, necháme normální chování
+      return;
+    }
+    
+    // Odstranit # z ID
+    const cleanId = sectionId.replace('#', '');
+    
+    // Najít element podle ID
+    const element = document.getElementById(cleanId);
+    
+    if (element) {
+      const navbar = document.querySelector('nav');
+      const navbarHeight = navbar ? navbar.offsetHeight : 80;
+      const elementPosition = element.offsetTop - navbarHeight - 20;
+      
+      window.scrollTo({
+        top: elementPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   const navigationLinks = [
     { name: 'Cards', href: '#cards' },
     { name: 'Ecosystem', href: '#ecosystem' },
@@ -25,9 +49,9 @@ export const Footer = () => {
   ];
 
   const productLinks = [
-    { name: 'GC Cards', href: '#gc-cards' },
-    { name: 'BTC Bot', href: '#btc-bot' },
-    { name: 'Algo Trader', href: '#algo-trader' },
+    { name: 'GC Cards', href: '#cards' },
+    { name: 'BTC Bot', href: '#ecosystem' },
+    { name: 'Algo Trader', href: '#ecosystem' },
     { name: 'OpenSea Collection', href: 'https://opensea.io', external: true }
   ];
 
@@ -36,7 +60,8 @@ export const Footer = () => {
     { name: 'Privacy Policy', href: '/legal/privacy' },
     { name: 'Cookie Policy', href: '/legal/cookies' },
     { name: 'Risk Disclaimer', href: '/legal/risk-disclaimer' },
-    { name: 'Whitepaper', href: '/whitepaper.pdf', external: true }
+    { name: 'Whitepaper', href: '/whitepaper.pdf', external: true },
+    { name: 'Admin Administrace', href: '/admin', external: false }
   ];
 
   const socialLinks = [
@@ -151,12 +176,12 @@ export const Footer = () => {
               <ul className="space-y-3">
                 {navigationLinks.map((link) => (
                   <li key={link.name}>
-                    <a
-                      href={link.href}
-                      className="text-white/70 hover:text-[#F9D523] transition-colors duration-200 text-base"
+                    <button
+                      onClick={() => scrollToSection(link.href)}
+                      className="text-white/70 hover:text-[#F9D523] transition-colors duration-200 text-base text-left"
                     >
                       {link.name}
-                    </a>
+                    </button>
                   </li>
                 ))}
               </ul>
@@ -183,12 +208,12 @@ export const Footer = () => {
                         </svg>
                       </a>
                     ) : (
-                      <a
-                        href={link.href}
-                        className="text-white/70 hover:text-[#F9D523] transition-colors duration-200 text-base"
+                      <button
+                        onClick={() => scrollToSection(link.href)}
+                        className="text-white/70 hover:text-[#F9D523] transition-colors duration-200 text-base text-left"
                       >
                         {link.name}
-                      </a>
+                      </button>
                     )}
                   </li>
                 ))}
@@ -197,7 +222,7 @@ export const Footer = () => {
 
             {/* Legal Links */}
             <div className="lg:col-span-2">
-              <h4 className="text-white font-medium text-lg mb-6">Legal</h4>
+              <h4 className="text-white font-medium text-lg mb-6">Legal & Admin</h4>
               <ul className="space-y-3">
                 {legalLinks.map((link) => (
                   <li key={link.name}>
