@@ -419,3 +419,71 @@ export function MiniChart({
     </div>
   );
 }
+
+// Performance metrics chart
+interface PerformanceMetric {
+  name: string;
+  returns: number;
+  volatility: number;
+  sharpe: number;
+}
+
+interface PerformanceChartProps {
+  metrics: PerformanceMetric[];
+  height?: number;
+  className?: string;
+}
+
+export function PerformanceChart({ 
+  metrics, 
+  height = 300, 
+  className = '' 
+}: PerformanceChartProps) {
+  const colors = ['#F9D523', '#3B82F6', '#EF4444', '#10B981', '#8B5CF6'];
+
+  return (
+    <div className={`bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 ${className}`}>
+      <h3 className="text-lg font-semibold text-white mb-4">Performance Metriky</h3>
+      
+      <ResponsiveContainer width="100%" height={height}>
+        <BarChart data={metrics} layout="horizontal">
+          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+          <XAxis 
+            type="number"
+            axisLine={false}
+            tickLine={false}
+            tick={{ fill: 'rgba(255,255,255,0.6)', fontSize: 12 }}
+          />
+          <YAxis 
+            type="category"
+            dataKey="name"
+            axisLine={false}
+            tickLine={false}
+            tick={{ fill: 'rgba(255,255,255,0.6)', fontSize: 12 }}
+            width={80}
+          />
+          <Tooltip
+            contentStyle={{
+              backgroundColor: 'rgba(0,0,0,0.8)',
+              border: '1px solid rgba(255,255,255,0.2)',
+              borderRadius: '8px',
+              color: 'white'
+            }}
+            formatter={(value: number, name: string) => {
+              const formatters = {
+                returns: (v: number) => `${v.toFixed(1)}%`,
+                volatility: (v: number) => `${v.toFixed(1)}%`,
+                sharpe: (v: number) => v.toFixed(2)
+              };
+              const formatter = formatters[name as keyof typeof formatters] || ((v: number) => v.toString());
+              return [formatter(value), name === 'returns' ? 'Výnos' : name === 'volatility' ? 'Volatilita' : 'Sharpe Ratio'];
+            }}
+          />
+          <Bar dataKey="returns" fill={colors[0]} name="returns" />
+          <Bar dataKey="volatility" fill={colors[1]} name="volatility" />
+          <Bar dataKey="sharpe" fill={colors[2]} name="sharpe" />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
