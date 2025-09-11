@@ -2,7 +2,7 @@
 
 import React from "react";
 import { TopBar } from "@/components/layout/TopBar";
-import { User, Shield, Activity, Calendar, Award, TrendingUp } from "lucide-react";
+import { User, Shield, Activity, Award, TrendingUp } from "lucide-react";
 
 export default function ProfilePage() {
   // Mock data - nahradit skutečnými daty

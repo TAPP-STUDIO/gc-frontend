@@ -1,18 +1,18 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { TopBar } from '@/components/layout/TopBar';
 import { 
   DashboardCard, 
   DashboardButton, 
-  StatCard, 
   ValueCard,
   ChartCard,
   InfoCard,
-  DashboardTable 
+  DashboardTable,
+  TableColumn
 } from '@/components/dashboard';
 import { ProjectsChart } from '@/components/charts';
-import { ArrowLeft, TrendingUp, Coins, Calendar, Download, Filter, Grid3X3, List } from 'lucide-react';
+import { ArrowLeft, Grid3X3, List } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 interface UserProfile {
@@ -40,7 +40,7 @@ interface CardRecord {
 export default function GCCardsPage() {
   const router = useRouter();
   const [selectedTimeframe, setSelectedTimeframe] = useState('M');
-  const [claimProgress, setClaimProgress] = useState(45); // Percentage for claim progress
+  const [claimProgress] = useState(45); // Percentage for claim progress
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid'); // New: View mode toggle
   
   // Mock data - nahraďte skutečnými daty z API
@@ -171,23 +171,23 @@ export default function GCCardsPage() {
   };
 
   // Table columns for claims history
-  const claimColumns = [
+  const claimColumns: TableColumn<ClaimRecord>[] = [
     { 
-      key: 'project', 
+      key: 'project' as keyof ClaimRecord, 
       label: 'Projekt',
       render: (value: string) => (
         <span className="font-medium text-white">{value}</span>
       )
     },
     { 
-      key: 'date', 
+      key: 'date' as keyof ClaimRecord, 
       label: 'Datum',
       render: (value: string) => (
         <span className="text-white/70 text-sm">{value}</span>
       )
     },
     { 
-      key: 'amount', 
+      key: 'amount' as keyof ClaimRecord, 
       label: 'Částka',
       render: (value: string) => (
         <span className="text-[#F9D523] font-semibold">{value} $</span>

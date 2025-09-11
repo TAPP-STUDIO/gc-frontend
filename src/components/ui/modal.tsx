@@ -180,7 +180,7 @@ interface DetailModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
-  data: Record<string, any>;
+  data: Record<string, string | number | boolean>;
   tabs?: Array<{ key: string; label: string; content: React.ReactNode }>;
   actions?: React.ReactNode;
   className?: string;

@@ -274,18 +274,22 @@ export default function AdminDashboard() {
               { 
                 key: 'minted', 
                 label: 'Minted',
-                render: (value, item) => (
-                  <div>
-                    <span className="text-white">{value.toLocaleString()}</span>
-                    <span className="text-[#7FDBDB]/50 text-xs"> / {item.maxSupply.toLocaleString()}</span>
-                    <div className="w-full bg-[#1E3A3A] rounded-full h-1 mt-1">
-                      <div 
-                        className="bg-gradient-to-r from-red-500 to-red-400 h-1 rounded-full"
-                        style={{ width: `${(value / item.maxSupply) * 100}%` }}
-                      />
+                render: (value, item) => {
+                  const mintedValue = Number(value);
+                  const maxSupplyValue = Number(item.maxSupply);
+                  return (
+                    <div>
+                      <span className="text-white">{mintedValue.toLocaleString()}</span>
+                      <span className="text-[#7FDBDB]/50 text-xs"> / {maxSupplyValue.toLocaleString()}</span>
+                      <div className="w-full bg-[#1E3A3A] rounded-full h-1 mt-1">
+                        <div 
+                          className="bg-gradient-to-r from-red-500 to-red-400 h-1 rounded-full"
+                          style={{ width: `${(mintedValue / maxSupplyValue) * 100}%` }}
+                        />
+                      </div>
                     </div>
-                  </div>
-                )
+                  );
+                }
               },
               { 
                 key: 'floorPrice', 

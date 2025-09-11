@@ -11,6 +11,7 @@ interface DashboardButtonProps {
   disabled?: boolean;
   className?: string;
   icon?: React.ReactNode;
+  type?: 'button' | 'submit' | 'reset';
 }
 
 export const DashboardButton: React.FC<DashboardButtonProps> = ({
@@ -20,7 +21,8 @@ export const DashboardButton: React.FC<DashboardButtonProps> = ({
   onClick,
   disabled = false,
   className,
-  icon
+  icon,
+  type = 'button'
 }) => {
   const baseStyles = 'relative inline-flex items-center justify-center font-medium rounded-xl overflow-hidden cursor-pointer transform-gpu';
   
@@ -76,6 +78,7 @@ export const DashboardButton: React.FC<DashboardButtonProps> = ({
 
   return (
     <button
+      type={type}
       onClick={onClick}
       disabled={disabled}
       className={cn(

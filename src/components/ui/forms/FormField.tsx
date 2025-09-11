@@ -8,7 +8,7 @@ interface FormFieldProps {
   type?: 'text' | 'email' | 'password' | 'number' | 'textarea' | 'select' | 'file' | 'checkbox' | 'radio';
   placeholder?: string;
   value?: string | number | boolean;
-  onChange?: (value: any) => void;
+  onChange?: (value: string | number | boolean) => void;
   onBlur?: () => void;
   error?: string;
   required?: boolean;
@@ -48,7 +48,9 @@ export const FormField: React.FC<FormFieldProps> = ({
 }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [touched, setTouched] = useState(false);
-  const [internalValue, setInternalValue] = useState(value || '');
+  const [internalValue, setInternalValue] = useState<string | number | boolean>(
+    value !== undefined ? value : (type === 'checkbox' ? false : '')
+  );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const newValue = type === 'checkbox' ? (e.target as HTMLInputElement).checked 
@@ -64,7 +66,7 @@ export const FormField: React.FC<FormFieldProps> = ({
     onBlur?.();
   };
 
-  const validateField = (val: any): string | null => {
+  const validateField = (val: string | number | boolean): string | null => {
     if (!validation) return null;
     
     const rules = validation.split('|');
@@ -72,18 +74,18 @@ export const FormField: React.FC<FormFieldProps> = ({
       if (rule === 'required' && (!val || val === '')) {
         return `${label} is required`;
       }
-      if (rule === 'email' && val && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(val)) {
+      if (rule === 'email' && val && typeof val === 'string' && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(val)) {
         return 'Please enter a valid email address';
       }
       if (rule.startsWith('min:')) {
         const min = parseInt(rule.split(':')[1]);
-        if (val && val.toString().length < min) {
+        if (val && typeof val !== 'boolean' && val.toString().length < min) {
           return `${label} must be at least ${min} characters`;
         }
       }
       if (rule.startsWith('max:')) {
         const max = parseInt(rule.split(':')[1]);
-        if (val && val.toString().length > max) {
+        if (val && typeof val !== 'boolean' && val.toString().length > max) {
           return `${label} must be no more than ${max} characters`;
         }
       }
@@ -93,7 +95,8 @@ export const FormField: React.FC<FormFieldProps> = ({
 
   const validationError = touched ? validateField(internalValue) : null;
   const displayError = error || validationError;
-  const isValid = !displayError && touched && internalValue;
+  const isValid = !displayError && touched && 
+    (type === 'checkbox' ? true : internalValue !== '' && internalValue !== false);
 
   const baseInputStyles = `
     w-full px-4 py-3 rounded-lg transition-all duration-300

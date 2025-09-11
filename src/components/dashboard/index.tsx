@@ -213,7 +213,7 @@ export const DashboardChart: React.FC<ChartProps> = ({
 interface TableColumn<T> {
   key: keyof T;
   label: string;
-  render?: (value: any, item: T) => React.ReactNode;
+  render?: (value: T[keyof T], item: T) => React.ReactNode;
 }
 
 interface TableProps<T> {
@@ -262,3 +262,6 @@ export function DashboardTable<T>({ columns, data, className = '' }: TableProps<
     </div>
   );
 }
+
+// Export the TableColumn type
+export type { TableColumn };

@@ -13,7 +13,6 @@ import {
   Globe, 
   CreditCard,
   Eye,
-  EyeOff,
   Save,
   Key,
   Smartphone,
@@ -77,7 +76,7 @@ export default function SettingsPage() {
     newPassword: '',
     confirmPassword: '',
     twoFactorEnabled: false,
-    backupCodes: [],
+    backupCodes: [] as string[],
     sessionTimeout: 30,
     loginNotifications: true
   });
@@ -105,7 +104,7 @@ export default function SettingsPage() {
       // await updateProfile(profileData);
       success('Profil aktualizován', 'Vaše změny byly úspěšně uloženy');
     } catch (err) {
-      error('Chyba při ukládání', 'Nepodařilo se aktualizovat profil');
+      error('Chyba při ukládání', 'Nepodařilo se aktualizovat profil: ' + err);
     } finally {
       setLoading(false);
     }
@@ -128,7 +127,7 @@ export default function SettingsPage() {
       success('Heslo změněno', 'Vaše heslo bylo úspěšně aktualizováno');
       setSecurityData({ ...securityData, currentPassword: '', newPassword: '', confirmPassword: '' });
     } catch (err) {
-      error('Chyba při změně hesla', 'Nepodařilo se změnit heslo');
+      error('Chyba při změně hesla', 'Nepodařilo se změnit heslo: ' + err);
     } finally {
       setLoading(false);
     }

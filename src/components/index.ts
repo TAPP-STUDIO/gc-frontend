@@ -1,6 +1,6 @@
 // Main components index - export all components
 export { default as TopBar } from './layout/TopBar';
-export { default as Sidebar } from './layout/Sidebar';
+export { default as Sidebar } from './sidebar/sidebar';
 export { DashboardCard, DashboardButton, StatCard } from './dashboard';
 export { Modal } from './ui/modal';
 export { ToastProvider, useToast } from './ui/toast';
@@ -36,11 +36,15 @@ export {
   PortfolioChart, 
   VolumeChart, 
   AllocationChart, 
-  PriceChart, 
   PerformanceChart, 
-  RealtimeChart, 
   MiniChart, 
-  ChartContainer 
+  ChartContainer,
+  ProjectsChart,
+  UniversalChart,
+  ProjectsUniversalChart,
+  PortfolioUniversalChart,
+  VIPUniversalChart,
+  AnalyticsUniversalChart
 } from './charts';
 
 // Profile components

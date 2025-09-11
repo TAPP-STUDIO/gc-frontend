@@ -10,7 +10,6 @@ import {
   VolumeChart,
   ChartContainer 
 } from '@/components/charts';
-import { usePortfolio, useApi } from '@/hook';
 import { Calendar, Download, Filter, BarChart3, TrendingUp, PieChart } from 'lucide-react';
 
 // Mock analytics data
@@ -194,7 +193,7 @@ export default function AnalyticsPage() {
           <StatCard
             title="Celkový výnos"
             value={formatPercentage(analyticsData.overview.totalReturn)}
-            trend="up"
+            trend={{ value: 12.5, isPositive: true }}
             className="col-span-2 sm:col-span-1"
           />
           <StatCard
@@ -208,12 +207,12 @@ export default function AnalyticsPage() {
           <StatCard
             title="Max Drawdown"
             value={formatPercentage(analyticsData.overview.maxDrawdown)}
-            trend="down"
+            trend={{ value: 8.3, isPositive: false }}
           />
           <StatCard
             title="Úspěšnost"
             value={formatPercentage(analyticsData.overview.winRate)}
-            trend="up"
+            trend={{ value: 5.2, isPositive: true }}
           />
           <StatCard
             title="Průměrná doba držení"
@@ -257,7 +256,10 @@ export default function AnalyticsPage() {
           <div className="lg:col-span-2">
             <ChartContainer loading={loading}>
               <PortfolioChart
-                data={analyticsData.benchmarkComparison}
+                data={analyticsData.benchmarkComparison.map(item => ({
+                  ...item,
+                  value: item.portfolio
+                }))}
                 valueKey="portfolio"
                 compareKey={showBenchmark ? "sp500" : undefined}
                 showComparison={showBenchmark}
@@ -283,7 +285,10 @@ export default function AnalyticsPage() {
           {/* Trading Volume */}
           <ChartContainer loading={loading}>
             <VolumeChart
-              data={analyticsData.tradingVolume}
+              data={analyticsData.tradingVolume.map(item => ({
+                ...item,
+                value: item.volume
+              }))}
               height={300}
             />
           </ChartContainer>

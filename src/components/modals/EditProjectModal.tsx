@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { DashboardButton } from '@/components/dashboard';
 import { NFTProject, nftService, NFTCollectionHistory } from '@/services/nft.service';
 
@@ -8,7 +8,7 @@ export interface EditProjectModalProps {
   isOpen: boolean;
   onClose: () => void;
   project: NFTProject | null;
-  onSave: (projectId: string, data: any) => Promise<void>;
+  onSave: (projectId: string, data: Record<string, unknown>) => Promise<void>;
   loading?: boolean;
 }
 
@@ -44,9 +44,33 @@ export default function EditProjectModal({
   const [historyEditData, setHistoryEditData] = useState<{
     totalValueUSD: number;
     reason: string;
-    changeType: string;
+    changeType: 'manual_update' | 'automatic_sync' | 'admin_correction' | 'initial_value';
   }>({ totalValueUSD: 0, reason: '', changeType: 'manual_update' });
 
+  // Load history callback - defined before useEffect that uses it
+  const loadHistory = useCallback(async () => {
+    if (!project?.id) return;
+    
+    try {
+      setHistoryLoading(true);
+      // We need to find the collection by symbol to get its MongoDB _id
+      const collectionsResponse = await nftService.getCollections();
+      if (collectionsResponse.success && collectionsResponse.data) {
+        const collection = collectionsResponse.data.find(c => c.symbol.toLowerCase() === project.id.toLowerCase());
+        if (collection) {
+          const historyResponse = await nftService.getCollectionHistory(collection._id, 30);
+          if (historyResponse.success && historyResponse.data) {
+            setHistory(historyResponse.data.history);
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Failed to load history:', error);
+    } finally {
+      setHistoryLoading(false);
+    }
+  }, [project?.id]);
+  
   // Reset form when project changes
   useEffect(() => {
     if (project) {
@@ -77,30 +101,7 @@ export default function EditProjectModal({
     if (activeTab === 'history' && project && project.id) {
       loadHistory();
     }
-  }, [activeTab, project]);
-  
-  const loadHistory = async () => {
-    if (!project?.id) return;
-    
-    try {
-      setHistoryLoading(true);
-      // We need to find the collection by symbol to get its MongoDB _id
-      const collectionsResponse = await nftService.getCollections();
-      if (collectionsResponse.success && collectionsResponse.data) {
-        const collection = collectionsResponse.data.find(c => c.symbol.toLowerCase() === project.id.toLowerCase());
-        if (collection) {
-          const historyResponse = await nftService.getCollectionHistory(collection._id, 30);
-          if (historyResponse.success && historyResponse.data) {
-            setHistory(historyResponse.data.history);
-          }
-        }
-      }
-    } catch (error) {
-      console.error('Failed to load history:', error);
-    } finally {
-      setHistoryLoading(false);
-    }
-  };
+  }, [activeTab, project, loadHistory]);
   
   const handleDeleteHistory = async (historyId: string) => {
     if (!project?.id || !window.confirm('Opravdu chcete smazat tento záznam historie?')) return;
@@ -161,7 +162,7 @@ export default function EditProjectModal({
     setHistoryEditData({ totalValueUSD: 0, reason: '', changeType: 'manual_update' });
   };
 
-  const handleInputChange = (field: string, value: any) => {
+  const handleInputChange = (field: string, value: string | number) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
@@ -567,7 +568,7 @@ export default function EditProjectModal({
                                 value={historyEditData.changeType}
                                 onChange={(e) => setHistoryEditData(prev => ({
                                   ...prev,
-                                  changeType: e.target.value
+                                  changeType: e.target.value as 'manual_update' | 'automatic_sync' | 'admin_correction' | 'initial_value'
                                 }))}
                                 className="w-full bg-[#1a1a1a] border border-[#333333] rounded px-2 py-1 text-white text-sm focus:border-[#F9D523] focus:outline-none"
                               >

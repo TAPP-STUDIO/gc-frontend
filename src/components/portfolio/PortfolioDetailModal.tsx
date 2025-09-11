@@ -1,18 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Modal, DetailModal } from '@/components/ui/modal';
+import { Modal } from '@/components/ui/modal';
 import { DashboardButton } from '@/components/dashboard';
 import { useToast } from '@/components/ui/toast';
 import { 
-  TrendingUp, 
   DollarSign, 
-  Calendar, 
   ExternalLink, 
   Share2,
-  Download,
-  Eye,
-  Settings,
   BarChart3,
   Clock,
   Trophy,
@@ -86,7 +81,7 @@ export function PortfolioDetailModal({ isOpen, onClose, item }: PortfolioDetailM
     try {
       // Implement claim logic
       success('Claim successful', `Claimed ${item.monthlyReturn} USD`);
-    } catch (err) {
+    } catch {
       error('Claim failed', 'Please try again later');
     }
   };

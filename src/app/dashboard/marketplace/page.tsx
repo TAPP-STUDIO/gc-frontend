@@ -2,18 +2,15 @@
 
 import React, { useState } from 'react';
 import { TopBar } from '@/components/layout/TopBar';
-import { DashboardButton, DashboardCard, StatCard } from '@/components/dashboard';
+import { DashboardButton, StatCard } from '@/components/dashboard';
 import { CreateListingModal, MakeOfferModal } from '@/components/marketplace/CreateListingModal';
-import { useMarketplace, useMarketplaceStats } from '@/hook/useMarketplace';
 import { useToast } from '@/components/ui/toast';
 import { 
   Plus, 
-  Filter, 
   Grid, 
   List, 
   Search,
   TrendingUp,
-  Eye,
   ShoppingCart,
   Gavel
 } from 'lucide-react';
@@ -121,7 +118,6 @@ const mockUserNFTs = [
     id: 'user-2',
     tokenId: 8888,
     type: 'BTC Bot',
-    subtype: null,
     premium: false,
     owned: true
   }
@@ -132,7 +128,7 @@ export default function MarketplacePage() {
   const [sortBy, setSortBy] = useState<string>('price_desc');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedNFT, setSelectedNFT] = useState<any>(null);
+  const [selectedNFT, setSelectedNFT] = useState<{ id: string; price: number; type: string; tokenId: number } | null>(null);
   
   // Modals
   const [isCreateListingOpen, setIsCreateListingOpen] = useState(false);
@@ -178,17 +174,17 @@ export default function MarketplacePage() {
       }
     });
 
-  const handleBuyNFT = async (nft: any) => {
+  const handleBuyNFT = async (nft: { id: string; price: number; type: string; tokenId: number }) => {
     try {
       // await buyNFT(nft.id, nft.price);
       success('NFT zakoupeno', `Úspěšně jste zakoupili ${nft.type} #${nft.tokenId}`);
       console.log('Buy NFT:', nft.id);
     } catch (err) {
-      error('Chyba při nákupu', 'Nepodařilo se zakoupit NFT');
+      error('Chyba při nákupu', 'Nepodařilo se zakoupit NFT: ' + (err as Error).message);
     }
   };
 
-  const handleMakeOffer = (nft: any) => {
+  const handleMakeOffer = (nft: { id: string; price: number; type: string; tokenId: number }) => {
     setSelectedNFT(nft);
     setIsMakeOfferOpen(true);
   };

@@ -79,7 +79,7 @@ export default function LoginPage() {
                 <div className="flex-shrink-0 w-6 h-6 bg-[#F9D523]/20 rounded-full flex items-center justify-center mt-0.5">
                   <span className="text-[#F9D523] text-xs font-bold">1</span>
                 </div>
-                <p>Klikněte na "Connect Wallet" a vyberte svou peněženku</p>
+                <p>Klikněte na &quot;Connect Wallet&quot; a vyberte svou peněženku</p>
               </div>
               
               <div className="flex items-start space-x-3">

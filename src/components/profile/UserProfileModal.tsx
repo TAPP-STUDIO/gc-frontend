@@ -4,27 +4,31 @@ import React, { useState } from 'react';
 import { Modal } from '@/components/ui/modal';
 import { useToast } from '@/components/ui/toast';
 import { DashboardButton } from '@/components/dashboard';
-import { useUserProfile } from '@/hook/useApi';
 import { 
   User, 
-  Mail, 
   Shield, 
   Bell, 
   Palette, 
-  Globe, 
   CreditCard,
-  Eye,
-  EyeOff,
   Save,
   Upload,
   Copy,
   ExternalLink
 } from 'lucide-react';
 
+interface User {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  bio?: string;
+  address?: string;
+}
+
 interface UserProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
-  user: any;
+  user: User;
 }
 
 export function UserProfileModal({ isOpen, onClose, user }: UserProfileModalProps) {
@@ -80,7 +84,7 @@ export function UserProfileModal({ isOpen, onClose, user }: UserProfileModalProp
     try {
       // await updateProfile(profileData);
       success('Profil aktualizován', 'Vaše změny byly úspěšně uloženy');
-    } catch (err) {
+    } catch {
       error('Chyba při ukládání', 'Nepodařilo se aktualizovat profil');
     } finally {
       setLoading(false);
@@ -103,7 +107,7 @@ export function UserProfileModal({ isOpen, onClose, user }: UserProfileModalProp
       // await changePassword(securityData.currentPassword, securityData.newPassword);
       success('Heslo změněno', 'Vaše heslo bylo úspěšně aktualizováno');
       setSecurityData({ ...securityData, currentPassword: '', newPassword: '', confirmPassword: '' });
-    } catch (err) {
+    } catch {
       error('Chyba při změně hesla', 'Nepodařilo se změnit heslo');
     } finally {
       setLoading(false);

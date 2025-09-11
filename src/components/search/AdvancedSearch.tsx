@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Search, Filter, X, ChevronDown, Calendar, DollarSign, Tag } from 'lucide-react';
+import { Search, Filter, X, ChevronDown, Calendar } from 'lucide-react';
 import { DashboardButton } from '@/components/dashboard';
 
 export interface SearchFilter {
@@ -12,12 +12,12 @@ export interface SearchFilter {
   min?: number;
   max?: number;
   placeholder?: string;
-  defaultValue?: any;
+  defaultValue?: string | number | boolean | string[] | number[];
 }
 
 export interface SearchState {
   query: string;
-  filters: Record<string, any>;
+  filters: Record<string, string | number | boolean | string[] | number[]>;
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
 }
@@ -84,7 +84,7 @@ export function AdvancedSearch({
     setSearchState(prev => ({ ...prev, query }));
   };
 
-  const handleFilterChange = (filterId: string, value: any) => {
+  const handleFilterChange = (filterId: string, value: string | number | boolean | string[] | number[]) => {
     setSearchState(prev => ({
       ...prev,
       filters: { ...prev.filters, [filterId]: value }
@@ -121,7 +121,7 @@ export function AdvancedSearch({
     setActiveFilters(new Set());
   };
 
-  const getFilterValueDisplay = (filter: SearchFilter, value: any) => {
+  const getFilterValueDisplay = (filter: SearchFilter, value: string | number | boolean | string[] | number[]) => {
     if (filter.type === 'select' && filter.options) {
       const option = filter.options.find(opt => opt.value === value);
       return option?.label || value;
@@ -247,8 +247,8 @@ export function AdvancedSearch({
 // Individual filter field component
 interface FilterFieldProps {
   filter: SearchFilter;
-  value: any;
-  onChange: (value: any) => void;
+  value: string | number | boolean | string[] | number[];
+  onChange: (value: string | number | boolean | string[] | number[]) => void;
 }
 
 function FilterField({ filter, value, onChange }: FilterFieldProps) {
@@ -258,8 +258,13 @@ function FilterField({ filter, value, onChange }: FilterFieldProps) {
   ]);
 
   useEffect(() => {
-    if (filter.type === 'range' && Array.isArray(value)) {
-      setRangeValues(value);
+    if (filter.type === 'range' && Array.isArray(value) && value.length === 2) {
+      // Ensure values are numbers before setting
+      const numericValues: [number, number] = [
+        typeof value[0] === 'number' ? value[0] : Number(value[0]),
+        typeof value[1] === 'number' ? value[1] : Number(value[1])
+      ];
+      setRangeValues(numericValues);
     }
   }, [value, filter.type]);
 
@@ -279,7 +284,7 @@ function FilterField({ filter, value, onChange }: FilterFieldProps) {
           </label>
           <input
             type="text"
-            value={value || ''}
+            value={typeof value === 'string' ? value : ''}
             onChange={(e) => onChange(e.target.value)}
             placeholder={filter.placeholder}
             className="input-glass w-full"
@@ -294,7 +299,7 @@ function FilterField({ filter, value, onChange }: FilterFieldProps) {
             {filter.label}
           </label>
           <select
-            value={value || ''}
+            value={typeof value === 'string' ? value : ''}
             onChange={(e) => onChange(e.target.value)}
             className="input-glass w-full"
           >
@@ -316,7 +321,7 @@ function FilterField({ filter, value, onChange }: FilterFieldProps) {
           </label>
           <MultiSelect
             options={filter.options || []}
-            value={value || []}
+            value={(Array.isArray(value) && typeof value[0] === 'string' ? value : []) as string[]}
             onChange={onChange}
             placeholder="Vyberte..."
           />
@@ -367,7 +372,7 @@ function FilterField({ filter, value, onChange }: FilterFieldProps) {
             <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/40 w-4 h-4" />
             <input
               type="date"
-              value={value || ''}
+              value={typeof value === 'string' ? value : ''}
               onChange={(e) => onChange(e.target.value)}
               className="input-glass w-full pl-10"
             />
@@ -381,7 +386,7 @@ function FilterField({ filter, value, onChange }: FilterFieldProps) {
           <label className="flex items-center space-x-3 cursor-pointer">
             <input
               type="checkbox"
-              checked={value || false}
+              checked={typeof value === 'boolean' ? value : false}
               onChange={(e) => onChange(e.target.checked)}
               className="w-4 h-4 text-[#F9D523] bg-transparent border-white/30 rounded focus:ring-[#F9D523] focus:ring-2"
             />

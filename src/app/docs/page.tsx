@@ -113,7 +113,7 @@ export default function DocsPage() {
         {/* Documentation Sections */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {documentationSections.map((section) => (
-            <DashboardCard key={section.id} title={section.title}>
+            <DashboardCard key={section.id}>
               <div className="mb-4">
                 <div className="flex items-center gap-3 mb-3">
                   {section.icon}

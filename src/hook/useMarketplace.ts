@@ -1,6 +1,5 @@
 'use client';
 
-import { useState, useCallback } from 'react';
 import { useApi, useMutation } from './useApi';
 import { marketplaceService } from '@/services/marketplace.service';
 
@@ -16,7 +15,7 @@ export interface NFTListing {
   listing_date: string;
   status: 'active' | 'sold' | 'cancelled';
   image?: string;
-  attributes?: Record<string, any>;
+  attributes?: Record<string, string | number | boolean>;
 }
 
 export interface MarketplaceFilters {
@@ -28,8 +27,12 @@ export interface MarketplaceFilters {
 }
 
 export function useMarketplace(filters?: MarketplaceFilters) {
+  const filtersParam = filters ? Object.fromEntries(
+    Object.entries(filters).filter(([, value]) => value !== undefined)
+  ) : {};
+  
   const { data, loading, error, refresh } = useApi<NFTListing[]>(
-    `/api/marketplace?${new URLSearchParams(filters as any).toString()}`,
+    `/api/marketplace?${new URLSearchParams(filtersParam as Record<string, string>).toString()}`,
     [filters]
   );
 

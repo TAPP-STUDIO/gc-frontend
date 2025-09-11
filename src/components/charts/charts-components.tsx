@@ -1,28 +1,16 @@
 'use client';
 
 // ===================================
-// UNIVERSAL CHART EXPORTS - NOVÉ SJEDNOCENÉ KOMPONENTY
+// CHART COMPONENTS
 // ===================================
 
-export { 
-  UniversalChart,
-  ProjectsUniversalChart,
-  PortfolioUniversalChart, 
-  VIPUniversalChart,
-  AnalyticsUniversalChart
-} from './UniversalChart';
-
-// ===================================
-// LEGACY CHART COMPONENTS - Zachováno pro zpětnou kompatibilitu
-// ===================================
-
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
 interface ChartData {
   name: string;
   value: number;
-  [key: string]: any;
+  [key: string]: string | number;
 }
 
 interface BaseChartProps {
@@ -134,7 +122,16 @@ export function PortfolioChart({
 }
 
 // Projects Chart - LEGACY VERSION (zachovat pro projects page kde je reference)
-interface ProjectsChartProps extends BaseChartProps {
+interface ProjectsChartProps {
+  data: Array<{ 
+    name: string; 
+    [key: string]: string | number; 
+  }>;
+  height?: number;
+  className?: string;
+  showGrid?: boolean;
+  showTooltip?: boolean;
+  animate?: boolean;
   showProjects?: boolean;
   showStocks?: boolean;
   projectsKey?: string;

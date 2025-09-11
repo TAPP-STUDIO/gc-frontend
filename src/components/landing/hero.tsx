@@ -47,7 +47,6 @@ const Card3DGIF = () => {
             onError={handleImageError}
             style={{
               imageRendering: 'auto',
-              WebkitImageSmoothing: true,
             }}
           />
           

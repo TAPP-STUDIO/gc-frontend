@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 import { TopBar } from '@/components/layout/TopBar';
 import { DashboardButton } from '@/components/dashboard';
 import { NotificationDetailModal, NotificationList } from '@/components/notifications/NotificationModal';
-import { useNotifications } from '@/hook/useApi';
+import type { Notification } from '@/components/notifications/NotificationModal';
+
 import { 
   Bell, 
   CheckCircle2, 
@@ -14,12 +15,12 @@ import {
 } from 'lucide-react';
 
 // Mock data - replace with real API calls
-const mockNotifications = [
+const mockNotifications: Notification[] = [
   {
     id: '1',
     title: 'Dividenda byla vyplacena',
     message: 'Byla vám vyplacena dividenda ve výši $125.50 z projektu GC Cards ETH. Částka byla připsána na váš účet.',
-    type: 'dividend' as const,
+    type: 'dividend',
     read: false,
     createdAt: '2025-09-08T10:30:00Z',
     actionUrl: '/dashboard/portfolio/gc-cards',
@@ -33,7 +34,7 @@ const mockNotifications = [
     id: '2',
     title: 'Nová zpráva od týmu',
     message: 'Tým GC vás informuje o nadcházejících změnách v portfoliu a nových investičních příležitostech.',
-    type: 'info' as const,
+    type: 'info',
     read: false,
     createdAt: '2025-09-08T09:15:00Z',
     actionUrl: '/dashboard/messages/2'
@@ -42,7 +43,7 @@ const mockNotifications = [
     id: '3',
     title: 'Transakce úspěšně dokončena',
     message: 'Váš nákup NFT "BTC Bot #1234" byl úspěšně dokončen za $1,850.',
-    type: 'success' as const,
+    type: 'success',
     read: true,
     createdAt: '2025-09-07T16:45:00Z',
     metadata: {
@@ -55,7 +56,7 @@ const mockNotifications = [
     id: '4',
     title: 'Upozornění: Nízký zůstatek',
     message: 'Váš zůstatek na účtu je nižší než $100. Doporučujeme dobití účtu pro pokračování v tradingu.',
-    type: 'warning' as const,
+    type: 'warning',
     read: true,
     createdAt: '2025-09-07T14:20:00Z',
     actionUrl: '/dashboard/profile/settings'
@@ -64,16 +65,16 @@ const mockNotifications = [
     id: '5',
     title: 'Systémová údržba',
     message: 'Dne 10.9.2025 od 02:00 do 04:00 bude probíhat plánovaná údržba systému. Během této doby může být omezena funkcionalita.',
-    type: 'system' as const,
+    type: 'system',
     read: true,
     createdAt: '2025-09-06T12:00:00Z'
   }
 ];
 
-type FilterType = 'all' | 'unread' | 'dividend' | 'transaction' | 'system';
+type FilterType = 'all' | 'unread' | 'dividend' | 'success' | 'system';
 
 export default function MessagesPage() {
-  const [selectedNotification, setSelectedNotification] = useState<any>(null);
+  const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [filter, setFilter] = useState<FilterType>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -91,7 +92,7 @@ export default function MessagesPage() {
     kycVerified: true,
   };
 
-  const handleNotificationClick = (notification: any) => {
+  const handleNotificationClick = (notification: Notification) => {
     setSelectedNotification(notification);
     setIsDetailModalOpen(true);
   };
@@ -125,7 +126,7 @@ export default function MessagesPage() {
     { value: 'all', label: 'Všechna', count: notifications.length },
     { value: 'unread', label: 'Nepřečtená', count: unreadCount },
     { value: 'dividend', label: 'Dividendy', count: notifications.filter(n => n.type === 'dividend').length },
-    { value: 'transaction', label: 'Transakce', count: notifications.filter(n => n.type === 'transaction').length },
+    { value: 'success', label: 'Transakce', count: notifications.filter(n => n.type === 'success').length },
     { value: 'system', label: 'Systém', count: notifications.filter(n => n.type === 'system').length },
   ];
 

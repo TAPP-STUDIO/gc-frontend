@@ -6,29 +6,12 @@ export interface EthereumRequestParams {
   params?: unknown[];
 }
 
-// Extend Window interface for Ethereum provider
-declare global {
-  interface Window {
-    ethereum?: {
-      isMetaMask?: boolean;
-      isCoinbaseWallet?: boolean;
-      isConnected?: () => boolean;
-      request: (args: EthereumRequestParams) => Promise<unknown>;
-      on?: (event: string, callback: (...args: unknown[]) => void) => void;
-      removeListener?: (event: string, callback: (...args: unknown[]) => void) => void;
-      selectedAddress?: string;
-      chainId?: string;
-    };
-    web3?: unknown;
-  }
-}
-
 // Ethereum Provider Interface
 export interface EthereumProvider {
   isMetaMask?: boolean;
   isCoinbaseWallet?: boolean;
   isConnected?: () => boolean;
-  request(args: EthereumRequestParams): Promise<unknown>;
+  request: (args: EthereumRequestParams) => Promise<unknown>;
   on?: (event: string, callback: (...args: unknown[]) => void) => void;
   removeListener?: (event: string, callback: (...args: unknown[]) => void) => void;
   selectedAddress?: string;

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useWallet } from '@/contexts/WalletContext';
 import { Bell, User, Settings, ChevronDown } from "lucide-react";
@@ -106,7 +107,13 @@ export const TopBar: React.FC<TopBarProps> = ({
               <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#B29819] to-[#F9D523] 
                             flex items-center justify-center flex-shrink-0">
                 {userProfile.avatar ? (
-                  <img src={userProfile.avatar} alt={displayName} className="w-full h-full rounded-full" />
+                  <Image 
+                    src={userProfile.avatar} 
+                    alt={displayName} 
+                    width={28}
+                    height={28}
+                    className="w-full h-full rounded-full" 
+                  />
                 ) : (
                   <User className="w-4 h-4 text-black" />
                 )}

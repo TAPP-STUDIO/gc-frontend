@@ -5,7 +5,7 @@ import { useToast } from '@/components/ui/toast';
 
 export interface WebSocketMessage {
   type: string;
-  data: any;
+  data: unknown;
   timestamp: number;
   id?: string;
 }
@@ -26,7 +26,7 @@ export interface UseWebSocketReturn {
   isConnected: boolean;
   isConnecting: boolean;
   error: string | null;
-  sendMessage: (type: string, data: any) => void;
+  sendMessage: (type: string, data: unknown) => void;
   disconnect: () => void;
   reconnect: () => void;
   lastMessage: WebSocketMessage | null;
@@ -159,7 +159,7 @@ export function useWebSocket(config: WebSocketConfig): UseWebSocketReturn {
     setIsConnecting(false);
   }, [cleanup]);
 
-  const sendMessage = useCallback((type: string, data: any) => {
+  const sendMessage = useCallback((type: string, data: unknown) => {
     if (wsRef.current?.readyState === WebSocket.OPEN) {
       const message: WebSocketMessage = {
         type,
@@ -200,7 +200,7 @@ export function useWebSocket(config: WebSocketConfig): UseWebSocketReturn {
 
 // Real-time hooks for specific features
 export function useMarketplaceUpdates() {
-  const [marketData, setMarketData] = useState<any[]>([]);
+  const [marketData, setMarketData] = useState<Record<string, unknown>[]>([]);
   const [priceUpdates, setPriceUpdates] = useState<Record<string, number>>({});
   
   const handleMessage = useCallback((message: WebSocketMessage) => {
@@ -208,25 +208,28 @@ export function useMarketplaceUpdates() {
       case 'market_update':
         setMarketData(prev => {
           const updated = [...prev];
-          const index = updated.findIndex(item => item.id === message.data.id);
+          const messageData = message.data as { id: string; [key: string]: unknown };
+          const index = updated.findIndex(item => (item as { id: string }).id === messageData.id);
           if (index >= 0) {
-            updated[index] = { ...updated[index], ...message.data };
+            updated[index] = { ...updated[index], ...messageData };
           } else {
-            updated.push(message.data);
+            updated.push(messageData);
           }
           return updated;
         });
         break;
         
       case 'price_update':
+        const priceData = message.data as { tokenId: string; price: number };
         setPriceUpdates(prev => ({
           ...prev,
-          [message.data.tokenId]: message.data.price
+          [priceData.tokenId]: priceData.price
         }));
         break;
         
       case 'nft_sold':
-        setMarketData(prev => prev.filter(item => item.id !== message.data.id));
+        const soldData = message.data as { id: string };
+        setMarketData(prev => prev.filter(item => (item as { id: string }).id !== soldData.id));
         break;
     }
   }, []);
@@ -239,11 +242,13 @@ export function useMarketplaceUpdates() {
     }
   });
 
+  const sendMessage = ws.sendMessage;
+
   useEffect(() => {
     if (ws.isConnected) {
-      ws.sendMessage('subscribe', { channel: 'marketplace' });
+      sendMessage('subscribe', { channel: 'marketplace' });
     }
-  }, [ws.isConnected, ws.sendMessage]);
+  }, [ws.isConnected, sendMessage]);
 
   return {
     ...ws,
@@ -253,27 +258,29 @@ export function useMarketplaceUpdates() {
 }
 
 export function useNotificationUpdates() {
-  const [notifications, setNotifications] = useState<any[]>([]);
+  const [notifications, setNotifications] = useState<Array<Record<string, unknown>>>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const { success, warning } = useToast();
 
   const handleMessage = useCallback((message: WebSocketMessage) => {
     switch (message.type) {
       case 'new_notification':
-        setNotifications(prev => [message.data, ...prev]);
+        const newNotifData = message.data as { priority?: string; title: string; message: string };
+        setNotifications(prev => [newNotifData, ...prev]);
         setUnreadCount(prev => prev + 1);
         
         // Show toast for important notifications
-        if (message.data.priority === 'high') {
-          warning(message.data.title, message.data.message);
+        if (newNotifData.priority === 'high') {
+          warning(newNotifData.title, newNotifData.message);
         } else {
-          success(message.data.title, message.data.message);
+          success(newNotifData.title, newNotifData.message);
         }
         break;
         
       case 'notification_read':
+        const readData = message.data as { id: string };
         setNotifications(prev => prev.map(notif => 
-          notif.id === message.data.id 
+          (notif as { id: string }).id === readData.id 
             ? { ...notif, read: true }
             : notif
         ));
@@ -281,8 +288,9 @@ export function useNotificationUpdates() {
         break;
         
       case 'notifications_sync':
-        setNotifications(message.data.notifications);
-        setUnreadCount(message.data.unreadCount);
+        const syncData = message.data as { notifications: Array<Record<string, unknown>>; unreadCount: number };
+        setNotifications(syncData.notifications);
+        setUnreadCount(syncData.unreadCount);
         break;
     }
   }, [success, warning]);
@@ -292,19 +300,21 @@ export function useNotificationUpdates() {
     onMessage: handleMessage
   });
 
+  const sendMessage = ws.sendMessage;
+
   useEffect(() => {
     if (ws.isConnected) {
-      ws.sendMessage('subscribe', { channel: 'notifications' });
+      sendMessage('subscribe', { channel: 'notifications' });
     }
-  }, [ws.isConnected, ws.sendMessage]);
+  }, [ws.isConnected, sendMessage]);
 
   const markAsRead = useCallback((notificationId: string) => {
-    ws.sendMessage('mark_read', { notificationId });
-  }, [ws.sendMessage]);
+    sendMessage('mark_read', { notificationId });
+  }, [sendMessage]);
 
   const markAllAsRead = useCallback(() => {
-    ws.sendMessage('mark_all_read', {});
-  }, [ws.sendMessage]);
+    sendMessage('mark_all_read', {});
+  }, [sendMessage]);
 
   return {
     ...ws,
@@ -316,17 +326,17 @@ export function useNotificationUpdates() {
 }
 
 export function useTradingUpdates() {
-  const [trades, setTrades] = useState<any[]>([]);
-  const [orderBook, setOrderBook] = useState<{ bids: any[], asks: any[] }>({ bids: [], asks: [] });
+  const [trades, setTrades] = useState<Array<Record<string, unknown>>>([]);
+  const [orderBook, setOrderBook] = useState<{ bids: Array<Record<string, unknown>>; asks: Array<Record<string, unknown>> }>({ bids: [], asks: [] });
   
   const handleMessage = useCallback((message: WebSocketMessage) => {
     switch (message.type) {
       case 'new_trade':
-        setTrades(prev => [message.data, ...prev.slice(0, 99)]); // Keep last 100 trades
+        setTrades(prev => [message.data as Record<string, unknown>, ...prev.slice(0, 99)]); // Keep last 100 trades
         break;
         
       case 'orderbook_update':
-        setOrderBook(message.data);
+        setOrderBook(message.data as { bids: Array<Record<string, unknown>>; asks: Array<Record<string, unknown>> });
         break;
         
       case 'order_filled':
@@ -341,11 +351,13 @@ export function useTradingUpdates() {
     onMessage: handleMessage
   });
 
+  const sendMessage = ws.sendMessage;
+
   useEffect(() => {
     if (ws.isConnected) {
-      ws.sendMessage('subscribe', { channel: 'trading' });
+      sendMessage('subscribe', { channel: 'trading' });
     }
-  }, [ws.isConnected, ws.sendMessage]);
+  }, [ws.isConnected, sendMessage]);
 
   return {
     ...ws,
@@ -357,7 +369,7 @@ export function useTradingUpdates() {
 // WebSocket context for global state management
 export interface WebSocketContextType {
   isConnected: boolean;
-  sendMessage: (type: string, data: any) => void;
+  sendMessage: (type: string, data: unknown) => void;
   subscribe: (channel: string) => void;
   unsubscribe: (channel: string) => void;
 }
@@ -380,36 +392,39 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
     }
   });
 
+  const sendMessage = ws.sendMessage;
+  const isConnected = ws.isConnected;
+
   // Re-subscribe to channels when connection is established
   useEffect(() => {
-    if (ws.isConnected) {
+    if (isConnected) {
       subscribedChannels.forEach(channel => {
-        ws.sendMessage('subscribe', { channel });
+        sendMessage('subscribe', { channel });
       });
     }
-  }, [ws.isConnected, ws.sendMessage, subscribedChannels]);
+  }, [isConnected, sendMessage, subscribedChannels]);
 
   const subscribe = useCallback((channel: string) => {
-    if (ws.isConnected) {
-      ws.sendMessage('subscribe', { channel });
+    if (isConnected) {
+      sendMessage('subscribe', { channel });
       setSubscribedChannels(prev => new Set([...prev, channel]));
     }
-  }, [ws.isConnected, ws.sendMessage]);
+  }, [isConnected, sendMessage]);
 
   const unsubscribe = useCallback((channel: string) => {
-    if (ws.isConnected) {
-      ws.sendMessage('unsubscribe', { channel });
+    if (isConnected) {
+      sendMessage('unsubscribe', { channel });
       setSubscribedChannels(prev => {
         const newSet = new Set(prev);
         newSet.delete(channel);
         return newSet;
       });
     }
-  }, [ws.isConnected, ws.sendMessage]);
+  }, [isConnected, sendMessage]);
 
   const contextValue: WebSocketContextType = {
-    isConnected: ws.isConnected,
-    sendMessage: ws.sendMessage,
+    isConnected,
+    sendMessage,
     subscribe,
     unsubscribe
   };

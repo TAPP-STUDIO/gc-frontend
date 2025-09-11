@@ -5,13 +5,14 @@ import { PrivyProvider, usePrivy, useWallets } from '@privy-io/react-auth'
 import { WagmiProvider } from '@privy-io/wagmi'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { privyConfig, privyAppId, supportedChains } from '@/config/privy'
+import type { Chain } from 'viem'
 import { createConfig, http } from 'wagmi'
 import { walletAuthService, WalletUser } from '@/services/walletAuth.service'
 import toast from 'react-hot-toast'
 
 // Create wagmi config for Privy
 const wagmiConfig = createConfig({
-  chains: supportedChains,
+  chains: supportedChains as readonly [Chain, ...Chain[]],
   transports: {
     [supportedChains[0].id]: http(),
     [supportedChains[1].id]: http(),
@@ -56,7 +57,7 @@ const WalletContext = createContext<WalletContextType | undefined>(undefined)
 
 // Inner component that uses Privy hooks
 function WalletProviderInner({ children }: { children: ReactNode }) {
-  const { ready, authenticated, login, logout: privyLogout, user: privyUser } = usePrivy()
+  const { ready, authenticated, login, logout: privyLogout } = usePrivy()
   const { wallets } = useWallets()
   
   const [user, setUser] = useState<WalletUser | null>(null)
@@ -143,9 +144,10 @@ function WalletProviderInner({ children }: { children: ReactNode }) {
         }
         
         console.log('✅ Wallet authentication successful')
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error('❌ Wallet authentication failed:', error)
-        toast.error(error.message || 'Failed to authenticate wallet')
+        const errorMessage = error instanceof Error ? error.message : 'Failed to authenticate wallet'
+        toast.error(errorMessage)
       } finally {
         setIsLoading(false)
       }
@@ -175,9 +177,10 @@ function WalletProviderInner({ children }: { children: ReactNode }) {
       const updatedUser = await walletAuthService.updateProfile(updates)
       setUser(updatedUser)
       toast.success('Profile updated successfully')
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('❌ Profile update failed:', error)
-      toast.error(error.message || 'Failed to update profile')
+      const errorMessage = error instanceof Error ? error.message : 'Failed to update profile'
+      toast.error(errorMessage)
       throw error
     }
   }

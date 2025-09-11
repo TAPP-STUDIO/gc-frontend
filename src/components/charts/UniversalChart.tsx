@@ -454,8 +454,7 @@ export const ProjectsUniversalChart: React.FC<Omit<UniversalChartProps, 'primary
   showProjects?: boolean;
   showStocks?: boolean;
 }> = ({ 
-  showProjects = true, 
-  showStocks = false,
+  // Remove unused props
   ...props 
 }) => {
   return (

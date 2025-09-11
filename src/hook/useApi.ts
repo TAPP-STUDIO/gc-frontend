@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { apiService, ApiResponse } from '@/services/api.service';
+import { ApiResponse } from '@/services/api.service';
 
 interface UseApiState<T> {
   data: T | null;
@@ -13,7 +13,7 @@ interface UseApiState<T> {
 // Generic API hook
 export function useApi<T>(
   endpoint: string,
-  dependencies: any[] = [],
+  dependencies: ReadonlyArray<unknown> = [],
   immediate: boolean = true
 ): UseApiState<T> {
   const [data, setData] = useState<T | null>(null);
@@ -42,7 +42,7 @@ export function useApi<T>(
     if (immediate) {
       fetchData();
     }
-  }, [fetchData, immediate, ...dependencies]);
+  }, [fetchData, immediate, dependencies]);
 
   return {
     data,

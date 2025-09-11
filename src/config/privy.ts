@@ -13,7 +13,6 @@ export const privyConfig: PrivyClientConfig = {
   appearance: {
     theme: 'dark',
     showWalletLoginFirst: true,
-    loginMethods: ['wallet', 'email', 'sms'],
   },
   supportedChains: [mainnet],
   defaultChain: mainnet,
@@ -33,5 +32,5 @@ export const privyConfig: PrivyClientConfig = {
 }
 
 // Export chains for wagmi usage
-export const supportedChains = [mainnet, polygon, arbitrum, optimism, base]
+export const supportedChains = [mainnet, polygon, arbitrum, optimism, base] as const
 export const defaultChain = mainnet

@@ -1,21 +1,30 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Modal } from '@/components/ui/modal';
 import { useToast } from '@/components/ui/toast';
 import { useMarketplace } from '@/hook/useMarketplace';
 import { marketplaceService } from '@/services/marketplace.service';
 import { DashboardButton } from '@/components/dashboard';
-import { Loader2, Upload, X } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
+
+interface NFT {
+  id: string;
+  tokenId: number;
+  type: string;
+  subtype?: string;
+  premium?: boolean;
+  attributes?: Record<string, unknown>;
+}
 
 interface CreateListingModalProps {
   isOpen: boolean;
   onClose: () => void;
-  userNFTs?: any[];
+  userNFTs?: NFT[];
 }
 
 export function CreateListingModal({ isOpen, onClose, userNFTs = [] }: CreateListingModalProps) {
-  const [selectedNFT, setSelectedNFT] = useState<any>(null);
+  const [selectedNFT, setSelectedNFT] = useState<NFT | null>(null);
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
@@ -53,7 +62,7 @@ export function CreateListingModal({ isOpen, onClose, userNFTs = [] }: CreateLis
       } else {
         error('Chyba při vytváření', response.error || 'Nepodařilo se vytvořit nabídku');
       }
-    } catch (err) {
+    } catch {
       error('Chyba', 'Nastala neočekávaná chyba');
     } finally {
       setLoading(false);
@@ -203,10 +212,18 @@ export function CreateListingModal({ isOpen, onClose, userNFTs = [] }: CreateLis
   );
 }
 
+interface Listing {
+  id: string;
+  tokenId: number;
+  type: string;
+  subtype?: string;
+  price: number;
+}
+
 interface MakeOfferModalProps {
   isOpen: boolean;
   onClose: () => void;
-  listing: any;
+  listing: Listing | null;
 }
 
 export function MakeOfferModal({ isOpen, onClose, listing }: MakeOfferModalProps) {
@@ -217,6 +234,11 @@ export function MakeOfferModal({ isOpen, onClose, listing }: MakeOfferModalProps
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!listing) {
+      error('Chyba', 'Nabídka není k dispozici');
+      return;
+    }
     
     if (!offerPrice) {
       error('Chybná cena', 'Prosím zadejte nabízenou cenu');
@@ -250,7 +272,7 @@ export function MakeOfferModal({ isOpen, onClose, listing }: MakeOfferModalProps
       } else {
         error('Chyba při odesílání', response.error || 'Nepodařilo se odeslat nabídku');
       }
-    } catch (err) {
+    } catch {
       error('Chyba', 'Nastala neočekávaná chyba');
     } finally {
       setLoading(false);

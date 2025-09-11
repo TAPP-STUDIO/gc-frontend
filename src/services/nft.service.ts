@@ -107,7 +107,7 @@ export interface CollectionHistoryResponse {
     currentPricePerCard: number;
   };
   history: NFTCollectionHistory[];
-  analytics: any;
+  analytics: Record<string, unknown>;
   period: {
     days: number;
     from: string;
@@ -256,7 +256,7 @@ class NFTService {
   private async request<T>(
     method: 'GET' | 'POST' | 'PUT' | 'DELETE',
     endpoint: string,
-    data?: any
+    data?: unknown
   ): Promise<ApiResponse<T>> {
     try {
       const response = await this.api({

@@ -5,7 +5,6 @@ import {
   DashboardButton, 
   DashboardCard, 
   StatCard,
-  DashboardTable 
 } from '@/components/dashboard';
 
 export default function UsersAdminPage() {

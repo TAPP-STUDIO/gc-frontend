@@ -185,9 +185,9 @@ export default function WalletTestPage() {
             </h2>
             
             <ol className="list-decimal list-inside space-y-2 text-blue-800 dark:text-blue-200">
-              <li>Click "Connect Wallet" to open Web3Modal</li>
+              <li>Click &quot;Connect Wallet&quot; to open Web3Modal</li>
               <li>Connect your preferred wallet (MetaMask, WalletConnect, etc.)</li>
-              <li>Click "Sign In" to authenticate with signature</li>
+              <li>Click &quot;Sign In&quot; to authenticate with signature</li>
               <li>Sign the authentication message in your wallet</li>
               <li>Your profile should appear below with portfolio data</li>
               <li>Test profile updates using the form</li>

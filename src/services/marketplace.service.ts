@@ -1,6 +1,47 @@
 import axios from 'axios';
 import { ApiResponse } from './api.service';
 
+export interface NFTListing {
+  id: string;
+  tokenId: number;
+  type: string;
+  subtype?: string;
+  price: number;
+  seller: string;
+  description: string;
+  premium: boolean;
+  listing_date: string;
+  status: 'active' | 'sold' | 'cancelled';
+  image?: string;
+  attributes?: Record<string, unknown>;
+}
+
+export interface MarketplaceOffer {
+  id: string;
+  listingId: string;
+  price: number;
+  message?: string;
+  offerer: string;
+  status: 'pending' | 'accepted' | 'rejected' | 'cancelled';
+  createdAt: string;
+}
+
+export interface MarketplaceStats {
+  totalVolume: number;
+  totalListings: number;
+  floorPrice: number;
+  avgPrice: number;
+}
+
+export interface RecentTrade {
+  id: string;
+  tokenId: number;
+  price: number;
+  buyer: string;
+  seller: string;
+  timestamp: string;
+}
+
 export interface CreateListingData {
   tokenId: number;
   type: string;
@@ -8,7 +49,7 @@ export interface CreateListingData {
   price: number;
   description: string;
   premium?: boolean;
-  attributes?: Record<string, any>;
+  attributes?: Record<string, unknown>;
 }
 
 export interface MakeOfferData {
@@ -28,7 +69,7 @@ class MarketplaceService {
   private async request<T>(
     method: 'GET' | 'POST' | 'PUT' | 'DELETE',
     endpoint: string,
-    data?: any
+    data?: unknown
   ): Promise<ApiResponse<T>> {
     try {
       const response = await axios({
@@ -64,13 +105,13 @@ class MarketplaceService {
   }
 
   // Get all marketplace listings
-  async getListings(filters?: Record<string, any>): Promise<ApiResponse<any[]>> {
-    const queryParams = filters ? `?${new URLSearchParams(filters).toString()}` : '';
+  async getListings(filters?: Record<string, string | number | boolean>): Promise<ApiResponse<NFTListing[]>> {
+    const queryParams = filters ? `?${new URLSearchParams(filters as Record<string, string>).toString()}` : '';
     return this.request('GET', `/marketplace/listings${queryParams}`);
   }
 
   // Get single listing
-  async getListing(id: string): Promise<ApiResponse<any>> {
+  async getListing(id: string): Promise<ApiResponse<NFTListing>> {
     return this.request('GET', `/marketplace/listings/${id}`);
   }
 
@@ -80,7 +121,7 @@ class MarketplaceService {
   }
 
   // Update listing
-  async updateListing(id: string, data: Partial<CreateListingData>): Promise<ApiResponse<any>> {
+  async updateListing(id: string, data: Partial<CreateListingData>): Promise<ApiResponse<NFTListing>> {
     return this.request('PUT', `/marketplace/listings/${id}`, data);
   }
 
@@ -115,32 +156,32 @@ class MarketplaceService {
   }
 
   // Get user's listings
-  async getMyListings(): Promise<ApiResponse<any[]>> {
+  async getMyListings(): Promise<ApiResponse<NFTListing[]>> {
     return this.request('GET', '/marketplace/my-listings');
   }
 
   // Get user's offers
-  async getMyOffers(): Promise<ApiResponse<any[]>> {
+  async getMyOffers(): Promise<ApiResponse<MarketplaceOffer[]>> {
     return this.request('GET', '/marketplace/my-offers');
   }
 
   // Get marketplace statistics
-  async getStats(): Promise<ApiResponse<any>> {
+  async getStats(): Promise<ApiResponse<MarketplaceStats>> {
     return this.request('GET', '/marketplace/stats');
   }
 
   // Get recent trades
-  async getRecentTrades(): Promise<ApiResponse<any[]>> {
+  async getRecentTrades(): Promise<ApiResponse<RecentTrade[]>> {
     return this.request('GET', '/marketplace/recent-trades');
   }
 
   // Search listings
-  async searchListings(query: string): Promise<ApiResponse<any[]>> {
+  async searchListings(query: string): Promise<ApiResponse<NFTListing[]>> {
     return this.request('GET', `/marketplace/search?q=${encodeURIComponent(query)}`);
   }
 
   // Get user's portfolio NFTs (for listing)
-  async getPortfolioNFTs(): Promise<ApiResponse<any[]>> {
+  async getPortfolioNFTs(): Promise<ApiResponse<NFTListing[]>> {
     return this.request('GET', '/user/nfts');
   }
 

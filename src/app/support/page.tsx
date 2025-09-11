@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { TopBar } from '@/components/layout/TopBar';
 import { DashboardCard, DashboardButton } from '@/components/dashboard';
-import { MessageCircle, Mail, Phone, Clock, FileText, AlertCircle, CheckCircle, Users } from 'lucide-react';
+import { MessageCircle, Mail, Phone, Clock, FileText, AlertCircle, CheckCircle } from 'lucide-react';
 
 interface UserProfile {
   name: string;
@@ -136,7 +136,8 @@ export default function SupportPage() {
         {/* Support Ticket Form */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           <div className="lg:col-span-2">
-            <DashboardCard title="Vytvořit support tiket">
+            <DashboardCard>
+              <h3 className="text-lg font-semibold text-white mb-4">Vytvořit support tiket</h3>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
@@ -225,7 +226,8 @@ export default function SupportPage() {
 
           {/* Status & Quick Info */}
           <div className="space-y-6">
-            <DashboardCard title="Status systému">
+            <DashboardCard>
+              <h3 className="text-lg font-semibold text-white mb-4">Status systému</h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-white/70 text-sm">Platforma</span>
@@ -251,7 +253,8 @@ export default function SupportPage() {
               </div>
             </DashboardCard>
 
-            <DashboardCard title="Průměrná doba odezvy">
+            <DashboardCard>
+              <h3 className="text-lg font-semibold text-white mb-4">Průměrná doba odezvy</h3>
               <div className="space-y-4">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-[#F9D523] mb-2">2.3h</div>
@@ -267,7 +270,8 @@ export default function SupportPage() {
         </div>
 
         {/* FAQ Section */}
-        <DashboardCard title="Často kladené otázky">
+        <DashboardCard>
+          <h3 className="text-lg font-semibold text-white mb-4">Často kladené otázky</h3>
           <div className="space-y-4">
             {faqItems.map((item, index) => (
               <details key={index} className="group">

@@ -1,18 +1,18 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { TopBar } from '@/components/layout/TopBar';
 import { 
   DashboardCard, 
   DashboardButton, 
-  StatCard, 
   ValueCard,
   ChartCard,
   InfoCard,
-  DashboardTable 
+  DashboardTable,
+  TableColumn
 } from '@/components/dashboard';
-import { PortfolioUniversalChart } from '@/components/charts';
-import { ArrowLeft, TrendingUp, Crown, Calendar, Download, Filter, Grid3X3, List, Users, Award } from 'lucide-react';
+import { UniversalChart } from '@/components/charts';
+import { ArrowLeft, TrendingUp, Crown, Grid3X3, List, Award } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 interface UserProfile {
@@ -45,7 +45,7 @@ interface VipClaim {
 export default function VipPage() {
   const router = useRouter();
   const [selectedTimeframe, setSelectedTimeframe] = useState('M');
-  const [claimProgress, setClaimProgress] = useState(85); // Percentage for VIP claim progress
+  const [claimProgress] = useState(85); // Percentage for VIP claim progress
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid'); // View mode toggle
   const [claimCooldown, setClaimCooldown] = useState(false);
   
@@ -143,86 +143,86 @@ export default function VipPage() {
   // VIP Portfolio chart datasets with timeframes
   const vipPortfolioDatasets = {
     D: [ // Daily data (last 7 days)
-      { name: 'Po', portfolio: 92500 },
-      { name: 'Út', portfolio: 93200 },
-      { name: 'St', portfolio: 93800 },
-      { name: 'Čt', portfolio: 94200 },
-      { name: 'Pá', portfolio: 94600 },
-      { name: 'So', portfolio: 94800 },
-      { name: 'Ne', portfolio: 95000 }
+      { name: 'Po', value: 92500 },
+      { name: 'Út', value: 93200 },
+      { name: 'St', value: 93800 },
+      { name: 'Čt', value: 94200 },
+      { name: 'Pá', value: 94600 },
+      { name: 'So', value: 94800 },
+      { name: 'Ne', value: 95000 }
     ],
     W: [ // Weekly data (last 8 weeks)
-      { name: 'T1', portfolio: 88000 },
-      { name: 'T2', portfolio: 89500 },
-      { name: 'T3', portfolio: 90200 },
-      { name: 'T4', portfolio: 91800 },
-      { name: 'T5', portfolio: 92500 },
-      { name: 'T6', portfolio: 93200 },
-      { name: 'T7', portfolio: 94100 },
-      { name: 'T8', portfolio: 95000 }
+      { name: 'T1', value: 88000 },
+      { name: 'T2', value: 89500 },
+      { name: 'T3', value: 90200 },
+      { name: 'T4', value: 91800 },
+      { name: 'T5', value: 92500 },
+      { name: 'T6', value: 93200 },
+      { name: 'T7', value: 94100 },
+      { name: 'T8', value: 95000 }
     ],
     M: [ // Monthly data
-      { name: 'Jan', portfolio: 45000 },
-      { name: 'Feb', portfolio: 52000 },
-      { name: 'Mar', portfolio: 48000 },
-      { name: 'Apr', portfolio: 61000 },
-      { name: 'May', portfolio: 58000 },
-      { name: 'Jun', portfolio: 67000 },
-      { name: 'Jul', portfolio: 73000 },
-      { name: 'Aug', portfolio: 69000 },
-      { name: 'Sep', portfolio: 78000 },
-      { name: 'Oct', portfolio: 82000 },
-      { name: 'Nov', portfolio: 89000 },
-      { name: 'Dec', portfolio: 95000 }
+      { name: 'Jan', value: 45000 },
+      { name: 'Feb', value: 52000 },
+      { name: 'Mar', value: 48000 },
+      { name: 'Apr', value: 61000 },
+      { name: 'May', value: 58000 },
+      { name: 'Jun', value: 67000 },
+      { name: 'Jul', value: 73000 },
+      { name: 'Aug', value: 69000 },
+      { name: 'Sep', value: 78000 },
+      { name: 'Oct', value: 82000 },
+      { name: 'Nov', value: 89000 },
+      { name: 'Dec', value: 95000 }
     ],
     Y: [ // Yearly data
-      { name: '2021', portfolio: 23000 },
-      { name: '2022', portfolio: 45000 },
-      { name: '2023', portfolio: 67000 },
-      { name: '2024', portfolio: 95000 }
+      { name: '2021', value: 23000 },
+      { name: '2022', value: 45000 },
+      { name: '2023', value: 67000 },
+      { name: '2024', value: 95000 }
     ]
   };
 
   // VIP Claims chart datasets
   const vipClaimsDatasets = {
     D: [ // Daily VIP claims
-      { name: 'Po', claims: 2500 },
-      { name: 'Út', claims: 3200 },
-      { name: 'St', claims: 2800 },
-      { name: 'Čt', claims: 3500 },
-      { name: 'Pá', claims: 3100 },
-      { name: 'So', claims: 2900 },
-      { name: 'Ne', claims: 3400 }
+      { name: 'Po', value: 2500 },
+      { name: 'Út', value: 3200 },
+      { name: 'St', value: 2800 },
+      { name: 'Čt', value: 3500 },
+      { name: 'Pá', value: 3100 },
+      { name: 'So', value: 2900 },
+      { name: 'Ne', value: 3400 }
     ],
     W: [ // Weekly VIP claims  
-      { name: 'T1', claims: 18000 },
-      { name: 'T2', claims: 19500 },
-      { name: 'T3', claims: 21200 },
-      { name: 'T4', claims: 22800 },
-      { name: 'T5', claims: 24500 },
-      { name: 'T6', claims: 26100 },
-      { name: 'T7', claims: 27800 },
-      { name: 'T8', claims: 29500 }
+      { name: 'T1', value: 18000 },
+      { name: 'T2', value: 19500 },
+      { name: 'T3', value: 21200 },
+      { name: 'T4', value: 22800 },
+      { name: 'T5', value: 24500 },
+      { name: 'T6', value: 26100 },
+      { name: 'T7', value: 27800 },
+      { name: 'T8', value: 29500 }
     ],
     M: [ // Monthly VIP claims
-      { name: 'Jan', claims: 15000 },
-      { name: 'Feb', claims: 18200 },
-      { name: 'Mar', claims: 21500 },
-      { name: 'Apr', claims: 24800 },
-      { name: 'May', claims: 28100 },
-      { name: 'Jun', claims: 31200 },
-      { name: 'Jul', claims: 34500 },
-      { name: 'Aug', claims: 37800 },
-      { name: 'Sep', claims: 41100 },
-      { name: 'Oct', claims: 44200 },
-      { name: 'Nov', claims: 47500 },
-      { name: 'Dec', claims: 50800 }
+      { name: 'Jan', value: 15000 },
+      { name: 'Feb', value: 18200 },
+      { name: 'Mar', value: 21500 },
+      { name: 'Apr', value: 24800 },
+      { name: 'May', value: 28100 },
+      { name: 'Jun', value: 31200 },
+      { name: 'Jul', value: 34500 },
+      { name: 'Aug', value: 37800 },
+      { name: 'Sep', value: 41100 },
+      { name: 'Oct', value: 44200 },
+      { name: 'Nov', value: 47500 },
+      { name: 'Dec', value: 50800 }
     ],
     Y: [ // Yearly VIP claims
-      { name: '2021', claims: 12000 },
-      { name: '2022', claims: 28000 },
-      { name: '2023', claims: 38500 },
-      { name: '2024', claims: 50800 }
+      { name: '2021', value: 12000 },
+      { name: '2022', value: 28000 },
+      { name: '2023', value: 38500 },
+      { name: '2024', value: 50800 }
     ]
   };
 
@@ -258,10 +258,10 @@ export default function VipPage() {
 
   const averageInvestment = Math.round(totalInvestment / totalMembers);
   const activeMembers = vipMembers.filter(member => member.status === 'active').length;
-  const totalCards = vipMembers.reduce((sum, member) => sum + member.cardsOwned, 0);
+  // const totalCards = vipMembers.reduce((sum, member) => sum + member.cardsOwned, 0);
 
   // Table columns for VIP claims history
-  const claimColumns = [
+  const claimColumns: TableColumn<VipClaim>[] = [
     { 
       key: 'member', 
       label: 'Člen',
@@ -379,15 +379,17 @@ export default function VipPage() {
               }
             >
               {/* VIP Portfolio Graf */}
-              <PortfolioUniversalChart 
+              <UniversalChart 
                 data={vipPortfolioDatasets[selectedTimeframe as keyof typeof vipPortfolioDatasets] || vipPortfolioDatasets.M}
                 height={320}
                 primaryColor="#8B5CF6"
-                primaryKey="portfolio"
+                title="VIP Portfolio"
+                primaryLabel="VIP Portfolio"
                 showGrid={true}
                 showTooltip={true}
                 animate={true}
                 className="w-full"
+                valueFormatter={(value) => `${value.toLocaleString()} $`}
               />
             </ChartCard>
           </div>
@@ -518,15 +520,17 @@ export default function VipPage() {
               }
             >
               {/* VIP Claims Graf */}
-              <PortfolioUniversalChart 
+              <UniversalChart 
                 data={vipClaimsDatasets[selectedTimeframe as keyof typeof vipClaimsDatasets] || vipClaimsDatasets.M}
                 height={320}
                 primaryColor="#8B5CF6"
-                primaryKey="claims"
+                title="VIP Claims"
+                primaryLabel="VIP Claims"
                 showGrid={true}
                 showTooltip={true}
                 animate={true}
                 className="w-full"
+                valueFormatter={(value) => `${value.toLocaleString()} $`}
               />
             </ChartCard>
           </div>

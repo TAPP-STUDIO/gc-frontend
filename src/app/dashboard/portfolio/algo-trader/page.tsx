@@ -1,18 +1,18 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { TopBar } from '@/components/layout/TopBar';
 import { 
   DashboardCard, 
   DashboardButton, 
-  StatCard, 
   ValueCard,
   ChartCard,
   InfoCard,
-  DashboardTable 
+  DashboardTable,
+  TableColumn 
 } from '@/components/dashboard';
 import { ProjectsChart } from '@/components/charts';
-import { ArrowLeft, TrendingUp, Coins, Calendar, Download, Filter, Grid3X3, List } from 'lucide-react';
+import { ArrowLeft, Grid3X3, List } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 interface UserProfile {
@@ -40,7 +40,7 @@ interface AlgorithmRecord {
 export default function AlgoTraderPage() {
   const router = useRouter();
   const [selectedTimeframe, setSelectedTimeframe] = useState('M');
-  const [claimProgress, setClaimProgress] = useState(73); // Percentage for claim progress
+  const [claimProgress] = useState(73); // Percentage for claim progress
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid'); // New: View mode toggle
   
   // Mock data - nahraďte skutečnými daty z API
@@ -171,7 +171,7 @@ export default function AlgoTraderPage() {
   };
 
   // Table columns for claims history
-  const claimColumns = [
+  const claimColumns: TableColumn<ClaimRecord>[] = [
     { 
       key: 'project', 
       label: 'Projekt',

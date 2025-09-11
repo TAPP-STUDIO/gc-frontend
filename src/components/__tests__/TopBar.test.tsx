@@ -1,1 +1,141 @@
-import { render, screen, fireEvent } from '@testing-library/react'\nimport { TopBar } from '../layout/TopBar'\n\n// Mock the UserProfileModal component\njest.mock('../profile/UserProfileModal', () => ({\n  UserProfileModal: ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => \n    isOpen ? <div data-testid=\"user-profile-modal\">Profile Modal</div> : null\n}))\n\nconst mockUserProfile = {\n  name: 'John Doe',\n  email: 'john@example.com',\n  address: '0x1234567890123456789012345678901234567890',\n  kycVerified: true\n}\n\ndescribe('TopBar', () => {\n  it('renders title correctly', () => {\n    render(\n      <TopBar \n        title=\"Test Dashboard\" \n        userProfile={mockUserProfile}\n        notificationCount={0}\n      />\n    )\n    \n    expect(screen.getByText('Test Dashboard')).toBeInTheDocument()\n  })\n\n  it('displays user name', () => {\n    render(\n      <TopBar \n        title=\"Dashboard\" \n        userProfile={mockUserProfile}\n        notificationCount={0}\n      />\n    )\n    \n    expect(screen.getByText('John Doe')).toBeInTheDocument()\n  })\n\n  it('shows notification count when greater than 0', () => {\n    render(\n      <TopBar \n        title=\"Dashboard\" \n        userProfile={mockUserProfile}\n        notificationCount={5}\n      />\n    )\n    \n    expect(screen.getByText('5')).toBeInTheDocument()\n  })\n\n  it('opens profile modal when user avatar is clicked', () => {\n    render(\n      <TopBar \n        title=\"Dashboard\" \n        userProfile={mockUserProfile}\n        notificationCount={0}\n      />\n    )\n    \n    // Find and click the user avatar/button\n    const userButton = screen.getByText('John Doe').closest('button')\n    expect(userButton).toBeInTheDocument()\n    \n    if (userButton) {\n      fireEvent.click(userButton)\n      expect(screen.getByTestId('user-profile-modal')).toBeInTheDocument()\n    }\n  })\n\n  it('shows KYC verified badge when user is verified', () => {\n    render(\n      <TopBar \n        title=\"Dashboard\" \n        userProfile={mockUserProfile}\n        notificationCount={0}\n      />\n    )\n    \n    // Look for KYC verification indicator\n    expect(screen.getByText(/verified/i)).toBeInTheDocument()\n  })\n\n  it('handles mobile menu toggle', () => {\n    const mockOnMenuToggle = jest.fn()\n    \n    render(\n      <TopBar \n        title=\"Dashboard\" \n        userProfile={mockUserProfile}\n        notificationCount={0}\n        onMenuToggle={mockOnMenuToggle}\n      />\n    )\n    \n    // Find mobile menu button\n    const menuButton = screen.getByLabelText(/menu/i) || screen.getByRole('button', { name: /menu/i })\n    \n    if (menuButton) {\n      fireEvent.click(menuButton)\n      expect(mockOnMenuToggle).toHaveBeenCalledTimes(1)\n    }\n  })\n\n  it('truncates long wallet addresses', () => {\n    const longAddress = '0x1234567890123456789012345678901234567890'\n    const userWithLongAddress = {\n      ...mockUserProfile,\n      address: longAddress\n    }\n    \n    render(\n      <TopBar \n        title=\"Dashboard\" \n        userProfile={userWithLongAddress}\n        notificationCount={0}\n      />\n    )\n    \n    // Check that full address is not displayed (should be truncated)\n    expect(screen.queryByText(longAddress)).not.toBeInTheDocument()\n    \n    // Check for truncated format (0x1234...7890)\n    expect(screen.getByText(/0x1234.*7890/)).toBeInTheDocument()\n  })\n\n  it('applies correct styling classes', () => {\n    const { container } = render(\n      <TopBar \n        title=\"Dashboard\" \n        userProfile={mockUserProfile}\n        notificationCount={0}\n      />\n    )\n    \n    const topBar = container.firstChild\n    expect(topBar).toHaveClass('glass-card')\n  })\n})\n"
+import { render, screen, fireEvent } from '@testing-library/react';
+import { TopBar } from '../layout/TopBar';
+
+// Mock the UserProfileModal component
+jest.mock('../profile/UserProfileModal', () => ({
+  UserProfileModal: ({ isOpen }: { isOpen: boolean; onClose: () => void }) => 
+    isOpen ? <div data-testid="user-profile-modal">Profile Modal</div> : null
+}));
+
+const mockUserProfile = {
+  name: 'John Doe',
+  email: 'john@example.com',
+  address: '0x1234567890123456789012345678901234567890',
+  kycVerified: true
+};
+
+describe('TopBar', () => {
+  it('renders title correctly', () => {
+    render(
+      <TopBar 
+        title="Test Dashboard" 
+        userProfile={mockUserProfile}
+        notificationCount={0}
+      />
+    );
+    
+    expect(screen.getByText('Test Dashboard')).toBeInTheDocument();
+  });
+
+  it('displays user name', () => {
+    render(
+      <TopBar 
+        title="Dashboard" 
+        userProfile={mockUserProfile}
+        notificationCount={0}
+      />
+    );
+    
+    expect(screen.getByText('John Doe')).toBeInTheDocument();
+  });
+
+  it('shows notification count when greater than 0', () => {
+    render(
+      <TopBar 
+        title="Dashboard" 
+        userProfile={mockUserProfile}
+        notificationCount={5}
+      />
+    );
+    
+    expect(screen.getByText('5')).toBeInTheDocument();
+  });
+
+  it('opens profile modal when user avatar is clicked', () => {
+    render(
+      <TopBar 
+        title="Dashboard" 
+        userProfile={mockUserProfile}
+        notificationCount={0}
+      />
+    );
+    
+    // Find and click the user avatar/button
+    const userButton = screen.getByText('John Doe').closest('button');
+    expect(userButton).toBeInTheDocument();
+    
+    if (userButton) {
+      fireEvent.click(userButton);
+      expect(screen.getByTestId('user-profile-modal')).toBeInTheDocument();
+    }
+  });
+
+  it('shows KYC verified badge when user is verified', () => {
+    render(
+      <TopBar 
+        title="Dashboard" 
+        userProfile={mockUserProfile}
+        notificationCount={0}
+      />
+    );
+    
+    // Look for KYC verification indicator
+    expect(screen.getByText(/verified/i)).toBeInTheDocument();
+  });
+
+  it('handles mobile menu toggle', () => {
+    const mockOnMenuToggle = jest.fn();
+    
+    render(
+      <TopBar 
+        title="Dashboard" 
+        userProfile={mockUserProfile}
+        notificationCount={0}
+        onMenuToggle={mockOnMenuToggle}
+      />
+    );
+    
+    // Find mobile menu button
+    const menuButton = screen.getByLabelText(/menu/i) || screen.getByRole('button', { name: /menu/i });
+    
+    if (menuButton) {
+      fireEvent.click(menuButton);
+      expect(mockOnMenuToggle).toHaveBeenCalledTimes(1);
+    }
+  });
+
+  it('truncates long wallet addresses', () => {
+    const longAddress = '0x1234567890123456789012345678901234567890';
+    const userWithLongAddress = {
+      ...mockUserProfile,
+      address: longAddress
+    };
+    
+    render(
+      <TopBar 
+        title="Dashboard" 
+        userProfile={userWithLongAddress}
+        notificationCount={0}
+      />
+    );
+    
+    // Check that full address is not displayed (should be truncated)
+    expect(screen.queryByText(longAddress)).not.toBeInTheDocument();
+    
+    // Check for truncated format (0x1234...7890)
+    expect(screen.getByText(/0x1234.*7890/)).toBeInTheDocument();
+  });
+
+  it('applies correct styling classes', () => {
+    const { container } = render(
+      <TopBar 
+        title="Dashboard" 
+        userProfile={mockUserProfile}
+        notificationCount={0}
+      />
+    );
+    
+    const topBar = container.firstChild;
+    expect(topBar).toHaveClass('glass-card');
+  });
+});

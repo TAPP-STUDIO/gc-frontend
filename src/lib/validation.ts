@@ -7,7 +7,7 @@ export interface ValidationRule {
   pattern?: RegExp;
   min?: number;
   max?: number;
-  customValidator?: (value: any) => string | null;
+  customValidator?: (value: unknown) => string | null;
 }
 
 export interface ValidationError {
@@ -59,7 +59,7 @@ export class FormValidator {
   }
 
   // Validate a single field
-  validateField(field: string, value: any): string | null {
+  validateField(field: string, value: unknown): string | null {
     const rule = this.rules[field];
     if (!rule) return null;
 
@@ -105,7 +105,7 @@ export class FormValidator {
   }
 
   // Validate entire form
-  validateForm(data: Record<string, any>): FormValidationResult {
+  validateForm(data: Record<string, unknown>): FormValidationResult {
     const errors: ValidationError[] = [];
 
     for (const field in this.rules) {
@@ -122,7 +122,7 @@ export class FormValidator {
   }
 
   // Get error for specific field
-  getFieldError(field: string, value: any): string | null {
+  getFieldError(field: string, value: unknown): string | null {
     return this.validateField(field, value);
   }
 }
@@ -155,7 +155,7 @@ export const ValidationHelpers = {
   isNumber: (value: string): boolean => ValidationPatterns.number.test(value),
   isInteger: (value: string): boolean => ValidationPatterns.integer.test(value),
   isPositiveNumber: (value: number): boolean => typeof value === 'number' && value > 0,
-  isEmpty: (value: any): boolean => {
+  isEmpty: (value: unknown): boolean => {
     if (value === null || value === undefined) return true;
     if (typeof value === 'string') return value.trim() === '';
     if (Array.isArray(value)) return value.length === 0;
@@ -178,7 +178,7 @@ export const CustomValidators = {
     return value <= max ? null : `Maximální částka je ${max} ${currency}`;
   },
 
-  uniqueValue: (existingValues: any[]) => (value: any): string | null => {
+  uniqueValue: (existingValues: unknown[]) => (value: unknown): string | null => {
     return existingValues.includes(value) ? 'Tato hodnota již existuje' : null;
   },
 
@@ -206,7 +206,7 @@ export const CustomValidators = {
     return null;
   },
 
-  jsonSchema: (schema: any) => (value: any): string | null => {
+  jsonSchema: () => (value: unknown): string | null => {
     // Simplified JSON schema validation - in real app use ajv or similar
     try {
       JSON.stringify(value);
@@ -222,11 +222,11 @@ export function useFormValidation(rules: Record<string, ValidationRule>) {
   const validator = new FormValidator();
   validator.addRules(rules);
 
-  const validateField = (field: string, value: any): string | null => {
+  const validateField = (field: string, value: unknown): string | null => {
     return validator.validateField(field, value);
   };
 
-  const validateForm = (data: Record<string, any>): FormValidationResult => {
+  const validateForm = (data: Record<string, unknown>): FormValidationResult => {
     return validator.validateForm(data);
   };
 

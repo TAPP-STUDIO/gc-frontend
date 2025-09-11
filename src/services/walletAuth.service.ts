@@ -36,7 +36,7 @@ export interface WalletUser {
   totalInvested: number
   totalRewards: number
   totalClaimed: number
-  nftHoldings: any[]
+  nftHoldings: Array<Record<string, unknown>>
   createdAt: string
   updatedAt: string
 }

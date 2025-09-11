@@ -6,7 +6,6 @@ import {
   DashboardButton, 
   DashboardCard, 
   StatCard, 
-  ValueCard,
   ChartCard,
   InfoCard
 } from '@/components/dashboard';

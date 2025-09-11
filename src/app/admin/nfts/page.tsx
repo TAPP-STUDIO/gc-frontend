@@ -48,9 +48,9 @@ export default function NFTsAdminPage() {
         setHealthCheck(healthResponse.data);
       }
 
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Failed to load NFT data:', err);
-      setError(err.message || 'Failed to load NFT data');
+      setError(err instanceof Error ? err.message : 'Failed to load NFT data');
     } finally {
       setLoading(false);
     }
@@ -62,7 +62,7 @@ export default function NFTsAdminPage() {
     setRefreshing(false);
   };
 
-  const handleSaveProject = async (projectId: string, data: any) => {
+  const handleSaveProject = async (projectId: string, data: Record<string, unknown>) => {
     try {
       setModalLoading(true);
       const result = await nftService.updateProject(projectId, data);
@@ -75,9 +75,9 @@ export default function NFTsAdminPage() {
       } else {
         throw new Error(result.error || 'Failed to update project');
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to save project:', error);
-      setError(error.message || 'Failed to save project changes');
+      setError(error instanceof Error ? error.message : 'Failed to save project changes');
       throw error; // Re-throw to let modal handle it
     } finally {
       setModalLoading(false);

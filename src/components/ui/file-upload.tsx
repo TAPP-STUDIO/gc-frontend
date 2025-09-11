@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useRef, useCallback } from 'react';
-import { Upload, X, File, Image, Check, AlertTriangle, Download } from 'lucide-react';
+import { Upload, X, File, Image as ImageIcon, Check, AlertTriangle, Download } from 'lucide-react';
+import Image from 'next/image';
 import { useToast } from '@/components/ui/toast';
 import { DashboardButton } from '@/components/dashboard';
 
@@ -41,7 +42,7 @@ export function FileUpload({
   const [isDragOver, setIsDragOver] = useState(false);
   const { error } = useToast();
 
-  const validateFile = (file: File): string | null => {
+  const validateFile = useCallback((file: File): string | null => {
     if (maxSize && file.size > maxSize * 1024 * 1024) {
       return `Soubor je příliš velký (max. ${maxSize}MB)`;
     }
@@ -61,9 +62,9 @@ export function FileUpload({
     }
     
     return null;
-  };
+  }, [maxSize, accept]);
 
-  const handleFileSelect = (files: FileList) => {
+  const handleFileSelect = useCallback((files: FileList) => {
     const fileArray = Array.from(files);
     
     if (!multiple && fileArray.length > 1) {
@@ -95,7 +96,7 @@ export function FileUpload({
     if (validFiles.length > 0) {
       onFileSelect(validFiles);
     }
-  };
+  }, [multiple, maxFiles, validateFile, error, onFileSelect]);
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -107,7 +108,7 @@ export function FileUpload({
     if (files.length > 0) {
       handleFileSelect(files);
     }
-  }, [disabled]);
+  }, [disabled, handleFileSelect]);
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -224,7 +225,7 @@ export function ImageUpload({
         disabled={disabled}
       >
         <div className="p-6 text-center">
-          <Image className="w-10 h-10 text-white/40 mx-auto mb-3" />
+          <ImageIcon className="w-10 h-10 text-white/40 mx-auto mb-3" />
           <div className="text-white mb-2">Nahrajte obrázky</div>
           <div className="text-white/60 text-sm">
             PNG, JPG, GIF • Max. {maxSize}MB
@@ -239,10 +240,13 @@ export function ImageUpload({
               key={index}
               className={`relative rounded-lg overflow-hidden bg-white/10 ${aspectRatioClasses[aspectRatio]}`}
             >
-              <img
+              <Image
                 src={preview}
                 alt={`Preview ${index + 1}`}
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 50vw, 33vw"
+                unoptimized
               />
               <button
                 onClick={() => removePreview(index)}
@@ -260,7 +264,7 @@ export function ImageUpload({
 
 // File upload with progress tracking
 interface FileUploadWithProgressProps extends FileUploadProps {
-  onUpload: (files: File[]) => Promise<void>;
+  onUpload?: (files: File[]) => Promise<void>;
   uploadEndpoint?: string;
 }
 
@@ -295,7 +299,7 @@ export function FileUploadWithProgress({
       try {
         await uploadFiles(newFiles);
         success('Soubory nahrány', 'Všechny soubory byly úspěšně nahrány');
-      } catch (err) {
+      } catch {
         error('Chyba při nahrávání', 'Některé soubory se nepodařilo nahrát');
       } finally {
         setIsUploading(false);
@@ -315,9 +319,11 @@ export function FileUploadWithProgress({
         if (uploadEndpoint) {
           // Upload via API endpoint
           await uploadFileToEndpoint(uploadedFile);
-        } else {
+        } else if (onUpload) {
           // Use provided upload function
           await onUpload([uploadedFile.file]);
+        } else {
+          throw new Error('No upload method provided');
         }
 
         setUploadedFiles(prev => prev.map(f => 
@@ -325,10 +331,10 @@ export function FileUploadWithProgress({
             ? { ...f, status: 'success', progress: 100 }
             : f
         ));
-      } catch (err) {
+      } catch (uploadError) {
         setUploadedFiles(prev => prev.map(f => 
           f.id === uploadedFile.id 
-            ? { ...f, status: 'error', error: err instanceof Error ? err.message : 'Upload failed' }
+            ? { ...f, status: 'error', error: uploadError instanceof Error ? uploadError.message : 'Upload failed' }
             : f
         ));
       }
@@ -448,11 +454,18 @@ function FileUploadItem({ uploadedFile, onRemove, onRetry }: FileUploadItemProps
         {/* Preview or icon */}
         <div className="flex-shrink-0">
           {preview ? (
-            <img
-              src={preview}
-              alt={file.name}
-              className="w-12 h-12 object-cover rounded"
-            />
+            <>
+              <div className="relative w-12 h-12">
+                <Image
+                  src={preview}
+                  alt={`Preview of ${file.name}`}
+                  fill
+                  className="object-cover rounded"
+                  sizes="48px"
+                  unoptimized
+                />
+              </div>
+            </>
           ) : (
             <div className="w-12 h-12 bg-white/10 rounded flex items-center justify-center">
               <File className="w-6 h-6 text-white/60" />
@@ -568,11 +581,23 @@ export function AvatarUpload({
         `}
         onClick={() => fileInputRef.current?.click()}
       >
-        {preview || currentAvatar ? (
-          <img
-            src={preview || currentAvatar}
-            alt="Avatar"
-            className="w-full h-full object-cover"
+        {preview ? (
+          <Image
+            src={preview}
+            alt="Avatar preview"
+            fill
+            className="object-cover"
+            sizes="(max-width: 640px) 64px, (max-width: 768px) 96px, 128px"
+            unoptimized
+          />
+        ) : currentAvatar ? (
+          <Image
+            src={currentAvatar}
+            alt="User avatar"
+            fill
+            className="object-cover"
+            sizes="(max-width: 640px) 64px, (max-width: 768px) 96px, 128px"
+            unoptimized
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
@@ -586,11 +611,15 @@ export function AvatarUpload({
         </div>
       </div>
       
-      <FileUpload
+      <input
         ref={fileInputRef}
-        onFileSelect={handleFileSelect}
+        type="file"
         accept="image/*"
-        maxSize={2}
+        onChange={(e) => {
+          if (e.target.files && e.target.files[0]) {
+            handleFileSelect([e.target.files[0]]);
+          }
+        }}
         className="hidden"
       />
     </div>

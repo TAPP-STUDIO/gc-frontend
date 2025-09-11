@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Modal } from '@/components/ui/modal';
 import { Badge } from '@/components/ui/badge';
+import { Status } from '@/lib/types';
 import { useNotifications } from '@/hook/useApi';
 import { DashboardButton } from '@/components/dashboard';
 import { 
@@ -17,7 +18,7 @@ import {
   ExternalLink
 } from 'lucide-react';
 
-interface Notification {
+export interface Notification {
   id: string;
   title: string;
   message: string;
@@ -83,6 +84,18 @@ export function NotificationDetailModal({ isOpen, onClose, notification }: Notif
     }
   };
 
+  const getBadgeVariant = (): Status => {
+    switch (notification.type) {
+      case 'success': return 'success';
+      case 'warning': return 'warning';
+      case 'error': return 'error';
+      case 'transaction': 
+      case 'dividend': return 'info';
+      case 'system': return 'default';
+      default: return 'info';
+    }
+  };
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat('cs-CZ', {
@@ -120,7 +133,7 @@ export function NotificationDetailModal({ isOpen, onClose, notification }: Notif
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between mb-2">
-              <Badge variant="outline" className="text-xs">
+              <Badge variant={getBadgeVariant()} className="text-xs">
                 {getTypeLabel()}
               </Badge>
               <div className="flex items-center text-xs text-white/60">

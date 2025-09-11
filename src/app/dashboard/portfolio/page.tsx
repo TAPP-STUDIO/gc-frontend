@@ -146,7 +146,7 @@ export default function PortfolioDashboard() {
   // User profile from wallet context
   const userProfile = {
     name: user?.username || user?.firstName || 'Uživatel',
-    email: user?.email || 'Není nastaveno',
+    email: walletAddress || 'Není nastaveno', // WalletUser doesn't have email, using wallet address instead
     address: walletAddress || 'Není připojeno',
     kycVerified: user?.role === 'user', // Assuming verified users have 'user' role
   };
@@ -226,10 +226,7 @@ export default function PortfolioDashboard() {
               variant="secondary" 
               size="sm"
               className="mt-3"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleViewProject('gc-cards');
-              }}
+              onClick={() => handleViewProject('gc-cards')}
             >
               Zobrazit
             </DashboardButton>
@@ -246,10 +243,7 @@ export default function PortfolioDashboard() {
               variant="secondary" 
               size="sm"
               className="mt-3"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleViewProject('btc-bot');
-              }}
+              onClick={() => handleViewProject('btc-bot')}
             >
               Zobrazit
             </DashboardButton>
@@ -266,10 +260,7 @@ export default function PortfolioDashboard() {
               variant="secondary" 
               size="sm"
               className="mt-3"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleViewProject('algo-trader');
-              }}
+              onClick={() => handleViewProject('algo-trader')}
             >
               Zobrazit
             </DashboardButton>

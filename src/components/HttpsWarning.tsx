@@ -8,7 +8,6 @@ interface HttpsWarningProps {
 
 export function HttpsWarning({ children }: HttpsWarningProps) {
   const [showWarning, setShowWarning] = useState(false)
-  const [isHttps, setIsHttps] = useState(true)
 
   useEffect(() => {
     // Check if we're in the browser and using HTTP on a non-localhost domain
@@ -18,8 +17,6 @@ export function HttpsWarning({ children }: HttpsWarningProps) {
       
       const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1'
       const isHttp = protocol === 'http:'
-      
-      setIsHttps(!isHttp)
       
       // Show warning if using HTTP on IP address (not localhost)
       if (isHttp && !isLocalhost) {

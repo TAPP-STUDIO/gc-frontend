@@ -32,7 +32,12 @@ export const Navbar = () => {
       headings.forEach((heading) => {
         const text = heading.textContent?.toLowerCase();
         if (text?.includes(cleanId.toLowerCase().replace('-', ' '))) {
-          element = heading.closest('section') || heading as Element;
+          const section = heading.closest('section');
+          if (section instanceof HTMLElement) {
+            element = section;
+          } else if (heading instanceof HTMLElement) {
+            element = heading;
+          }
         }
       });
     }

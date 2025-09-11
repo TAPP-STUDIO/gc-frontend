@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card } from '../ui/card';
 import { Button } from '../ui/button';
-import { Loading } from '../ui/loading';
+import { LoadingSpinner } from '../ui/loading';
 import { cn } from '@/lib/utils';
 
 interface Column<T> {
@@ -120,7 +120,9 @@ export default function DataTable<T>({
   if (loading) {
     return (
       <Card className={className}>
-        <Loading size="lg" text="Načítám data..." />
+        <div className="flex justify-center items-center py-8">
+          <LoadingSpinner variant="inline" size="lg" text="Načítám data..." />
+        </div>
       </Card>
     );
   }
