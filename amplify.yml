@@ -1,45 +1,17 @@
 version: 1
-applications:
-  - appRoot: gc-frontend
-    frontend:
-      phases:
-        preBuild:
-          commands:
-            - echo "Installing dependencies..."
-            - npm ci
-        build:
-          commands:
-            - echo "Building Next.js application..."
-            - npm run build
-      artifacts:
-        baseDirectory: .next
-        files:
-          - '**/*'
-      cache:
-        paths:
-          - node_modules/**/*
-          - .next/cache/**/*
-    environment:
-      variables:
-        # AWS Cognito Configuration
-        NEXT_PUBLIC_AWS_REGION: eu-central-1
-        NEXT_PUBLIC_AWS_COGNITO_USER_POOL_ID: eu-central-1_XodzYZ2v6
-        NEXT_PUBLIC_AWS_COGNITO_CLIENT_ID: 5tjmt6olvn619d7bf1p3cbgl3p
-        NEXT_PUBLIC_AWS_COGNITO_DOMAIN: gc-admin
-        
-        # WalletConnect Configuration
-        NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID: ae7a7be419ab2f2f98f6bb3b0910ecb1
-        
-        # Privy Configuration
-        NEXT_PUBLIC_PRIVY_APP_ID: cmfc7d0gg002sjl0bhqvnecer
-        
-        # Environment
-        NODE_ENV: production
-        
-        # Build optimization
-        NEXT_TELEMETRY_DISABLED: 1
-      
-      # Secrets managed by AWS Systems Manager Parameter Store
-      secrets:
-        NEXT_PUBLIC_API_URL: /amplify/gc-frontend/api-url
-        NEXT_PUBLIC_APP_URL: /amplify/gc-frontend/app-url
+appRoot: gc-frontend
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm ci
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    baseDirectory: .next
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
