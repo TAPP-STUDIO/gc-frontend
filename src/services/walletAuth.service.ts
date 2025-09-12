@@ -89,13 +89,13 @@ class WalletAuthService {
    */
   async signAuthMessage(walletAddress: string, nonce: string, signMessageFunction: (message: string) => Promise<string>): Promise<{ signature: string; message: string }> {
     try {
-      const message = `Welcome to Gavlik Capital!
+      const message = `Vítejte v Gavlik Capital!
 
-Please sign this message to authenticate your wallet.
+Podepište tuto zprávu pro ověření vaší identity a přihlášení do portfolia.
 
-Wallet: ${walletAddress}
-Nonce: ${nonce}
-Timestamp: ${new Date().toISOString()}`
+Peněženka: ${walletAddress}
+Kód: ${nonce}
+Čas: ${new Date().toISOString()}`
       
       const signature = await signMessageFunction(message)
 

@@ -18,7 +18,7 @@ export const privyConfig: PrivyClientConfig = {
   defaultChain: mainnet,
   // Disable embedded wallets in development to avoid HTTPS requirement
   embeddedWallets: {
-    createOnLogin: process.env.NODE_ENV === 'production' ? 'users-without-wallets' : 'off',
+    createOnLogin: 'off',
   },
   // Legal pages required for embedded wallets
   legal: {
@@ -29,6 +29,8 @@ export const privyConfig: PrivyClientConfig = {
       ? 'https://gavlikcapital.com/privacy'
       : '#',
   },
+  // Login methods configuration
+  loginMethods: ['wallet'],
 }
 
 // Export chains for wagmi usage

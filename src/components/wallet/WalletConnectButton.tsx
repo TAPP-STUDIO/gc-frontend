@@ -1,7 +1,7 @@
 'use client'
 
 import { useWallet } from '@/contexts/WalletContext'
-import { Wallet, LogOut, User } from 'lucide-react'
+import { Wallet, LogOut, User, Loader2, Check, AlertCircle } from 'lucide-react'
 
 interface WalletConnectButtonProps {
   className?: string
@@ -20,7 +20,8 @@ export function WalletConnectButton({
     isConnected,
     user, 
     isAuthenticated, 
-    isLoading, 
+    isLoading,
+    loadingState, 
     connectWallet, 
     disconnectWallet,
     walletAddress 
@@ -50,8 +51,50 @@ export function WalletConnectButton({
     ${baseClasses[size]} ${variantClasses[variant]} ${className}
   `.trim()
 
-  // If wallet is not connected via Privy, show connect button
-  if (!isConnected) {
+  // Loading state messages based on current step
+  const getLoadingMessage = () => {
+    switch (loadingState) {
+      case 'connecting-wallet':
+        return 'Připojování peněženky...'
+      case 'signing-message':
+        return 'Čekání na podpis...'
+      case 'authenticating':
+        return 'Přihlašování...'
+      case 'redirecting':
+        return 'Přesměrování...'
+      default:
+        return 'Načítání...'
+    }
+  }
+
+  // Loading state icons
+  const getLoadingIcon = () => {
+    switch (loadingState) {
+      case 'connecting-wallet':
+        return <Wallet className="w-4 h-4 mr-2" />
+      case 'signing-message':
+        return <AlertCircle className="w-4 h-4 mr-2 text-yellow-500" />
+      case 'authenticating':
+        return <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+      case 'redirecting':
+        return <Check className="w-4 h-4 mr-2 text-green-500" />
+      default:
+        return <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+    }
+  }
+
+  // Show loading state
+  if (isLoading && loadingState !== 'idle') {
+    return (
+      <button className={buttonClasses} disabled>
+        {getLoadingIcon()}
+        {getLoadingMessage()}
+      </button>
+    )
+  }
+
+  // If not connected at all, show connect button
+  if (!isConnected && !isAuthenticated) {
     return (
       <button
         onClick={connectWallet}
@@ -59,47 +102,43 @@ export function WalletConnectButton({
         disabled={isLoading}
       >
         <Wallet className="w-4 h-4 mr-2" />
-        {isLoading ? 'Connecting...' : 'Connect Wallet'}
-      </button>
-    )
-  }
-
-  // If wallet is connected but not authenticated with our backend, show authenticate button
-  if (!isAuthenticated) {
-    return (
-      <button
-        onClick={connectWallet}
-        className={buttonClasses}
-        disabled={isLoading}
-      >
-        <User className="w-4 h-4 mr-2" />
-        {isLoading ? 'Authenticating...' : 'Sign In'}
+        Connect Wallet
       </button>
     )
   }
 
   // If fully authenticated, show user info and disconnect button
-  return (
-    <div className="flex items-center gap-2">
-      <div className="flex items-center gap-2 px-3 py-2 bg-gray-100 dark:bg-gray-800 rounded-lg">
-        <User className="w-4 h-4 text-green-500" />
-        <span className="text-sm font-medium">
-          {user?.username || user?.firstName || formatAddress(walletAddress || '')}
-        </span>
+  if (isAuthenticated && user) {
+    return (
+      <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 px-3 py-2 bg-gray-100 dark:bg-gray-800 rounded-lg">
+          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+          <span className="text-sm font-medium">
+            {user?.username || user?.firstName || formatAddress(walletAddress || '')}
+          </span>
+        </div>
+        
+        <button
+          onClick={disconnectWallet}
+          className={`
+            inline-flex items-center justify-center p-2 rounded-lg
+            border border-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800
+            transition-colors ${className}
+          `.trim()}
+          title="Odpojit peněženku"
+        >
+          <LogOut className="w-4 h-4" />
+        </button>
       </div>
-      
-      <button
-        onClick={disconnectWallet}
-        className={`
-          inline-flex items-center justify-center p-2 rounded-lg
-          border border-gray-300 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800
-          transition-colors ${className}
-        `.trim()}
-        title="Disconnect Wallet"
-      >
-        <LogOut className="w-4 h-4" />
-      </button>
-    </div>
+    )
+  }
+
+  // Fallback - show loading
+  return (
+    <button className={buttonClasses} disabled>
+      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+      Načítání...
+    </button>
   )
 }
 

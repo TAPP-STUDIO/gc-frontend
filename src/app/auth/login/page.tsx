@@ -6,17 +6,68 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Logo from '@/components/logo/logo'
+import { CheckCircle, AlertCircle, Loader2 } from 'lucide-react'
 
 export default function LoginPage() {
-  const { isAuthenticated, isLoading } = useWallet()
+  const { isAuthenticated, isLoading, loadingState } = useWallet()
   const router = useRouter()
 
   // Redirect if already authenticated
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && loadingState === 'idle') {
       router.push('/dashboard')
     }
-  }, [isAuthenticated, router])
+  }, [isAuthenticated, loadingState, router])
+
+  // Get step status based on loading state
+  const getStepStatus = (step: number) => {
+    if (loadingState === 'idle') return 'pending'
+    if (loadingState === 'error') return 'error'
+    
+    const states = ['connecting-wallet', 'signing-message', 'authenticating', 'redirecting']
+    const currentIndex = states.indexOf(loadingState)
+    
+    if (currentIndex === -1) return 'pending'
+    if (step - 1 < currentIndex) return 'completed'
+    if (step - 1 === currentIndex) return 'active'
+    return 'pending'
+  }
+
+  const StepIndicator = ({ step, text }: { step: number; text: string }) => {
+    const status = getStepStatus(step)
+    
+    return (
+      <div className="flex items-start space-x-3">
+        <div className={`
+          flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center mt-0.5
+          transition-all duration-300
+          ${status === 'completed' ? 'bg-green-500/20' : 
+            status === 'active' ? 'bg-yellow-500/20 animate-pulse' : 
+            status === 'error' ? 'bg-red-500/20' :
+            'bg-[#F9D523]/20'}
+        `}>
+          {status === 'completed' ? (
+            <CheckCircle className="w-4 h-4 text-green-400" />
+          ) : status === 'active' ? (
+            <Loader2 className="w-4 h-4 text-yellow-400 animate-spin" />
+          ) : status === 'error' ? (
+            <AlertCircle className="w-4 h-4 text-red-400" />
+          ) : (
+            <span className="text-[#F9D523] text-xs font-bold">{step}</span>
+          )}
+        </div>
+        <p className={`
+          transition-opacity duration-300
+          ${status === 'active' ? 'text-white' : 
+            status === 'completed' ? 'text-green-400' :
+            status === 'error' ? 'text-red-400' :
+            'text-gray-400'}
+        `}>
+          {text}
+        </p>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800">
@@ -55,15 +106,41 @@ export default function LoginPage() {
               WebkitBackdropFilter: 'blur(20px)',
             }}
           >
-            {/* Loading state */}
-            {isLoading && (
-              <div className="text-center mb-6">
-                <div className="inline-flex items-center px-4 py-2 bg-yellow-500/20 text-yellow-200 rounded-lg">
-                  <svg className="animate-spin -ml-1 mr-3 h-4 w-4 text-yellow-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Připojování...
+            {/* Loading state indicator */}
+            {isLoading && loadingState !== 'idle' && (
+              <div className="mb-6 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+                <div className="flex items-center">
+                  <Loader2 className="w-5 h-5 mr-3 text-yellow-400 animate-spin" />
+                  <div className="flex-1">
+                    <p className="text-yellow-200 text-sm font-medium">
+                      {loadingState === 'connecting-wallet' && 'Připojování k peněžence...'}
+                      {loadingState === 'signing-message' && 'Čekání na podpis zprávy...'}
+                      {loadingState === 'authenticating' && 'Ověřování identity...'}
+                      {loadingState === 'redirecting' && 'Přesměrování na dashboard...'}
+                    </p>
+                    {loadingState === 'signing-message' && (
+                      <p className="text-yellow-100/70 text-xs mt-1">
+                        Zkontrolujte svou peněženku a podepište zprávu
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Error state */}
+            {loadingState === 'error' && (
+              <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
+                <div className="flex items-center">
+                  <AlertCircle className="w-5 h-5 mr-3 text-red-400" />
+                  <div className="flex-1">
+                    <p className="text-red-200 text-sm font-medium">
+                      Přihlášení se nezdařilo
+                    </p>
+                    <p className="text-red-100/70 text-xs mt-1">
+                      Zkuste to prosím znovu nebo kontaktujte podporu
+                    </p>
+                  </div>
                 </div>
               </div>
             )}
@@ -73,28 +150,24 @@ export default function LoginPage() {
               <WalletConnectButton size="lg" className="w-full justify-center" />
             </div>
 
-            {/* Instructions */}
-            <div className="space-y-4 text-sm text-gray-300">
-              <div className="flex items-start space-x-3">
-                <div className="flex-shrink-0 w-6 h-6 bg-[#F9D523]/20 rounded-full flex items-center justify-center mt-0.5">
-                  <span className="text-[#F9D523] text-xs font-bold">1</span>
-                </div>
-                <p>Klikněte na &quot;Connect Wallet&quot; a vyberte svou peněženku</p>
-              </div>
-              
-              <div className="flex items-start space-x-3">
-                <div className="flex-shrink-0 w-6 h-6 bg-[#F9D523]/20 rounded-full flex items-center justify-center mt-0.5">
-                  <span className="text-[#F9D523] text-xs font-bold">2</span>
-                </div>
-                <p>Podepište autentifikační zprávu ve své peněžence</p>
-              </div>
-              
-              <div className="flex items-start space-x-3">
-                <div className="flex-shrink-0 w-6 h-6 bg-[#F9D523]/20 rounded-full flex items-center justify-center mt-0.5">
-                  <span className="text-[#F9D523] text-xs font-bold">3</span>
-                </div>
-                <p>Budete přesměrováni do svého portfolia</p>
-              </div>
+            {/* Instructions with dynamic status */}
+            <div className="space-y-4 text-sm">
+              <StepIndicator 
+                step={1} 
+                text="Klikněte na 'Connect Wallet' a vyberte svou peněženku" 
+              />
+              <StepIndicator 
+                step={2} 
+                text="Podepište autentifikační zprávu ve své peněžence" 
+              />
+              <StepIndicator 
+                step={3} 
+                text="Ověření identity a vytvoření/načtení účtu" 
+              />
+              <StepIndicator 
+                step={4} 
+                text="Přesměrování do vašeho portfolia" 
+              />
             </div>
 
             {/* Divider */}
@@ -120,7 +193,12 @@ export default function LoginPage() {
 
           {/* Support info */}
           <div className="text-center mt-8 text-xs text-gray-500">
-            <p>Potřebujete pomoc? Kontaktujte našu <Link href="/support" className="text-[#F9D523] hover:underline">zákaznickou podporu</Link></p>
+            <p>
+              Potřebujete pomoc? Kontaktujte našu{' '}
+              <Link href="/support" className="text-[#F9D523] hover:underline">
+                zákaznickou podporu
+              </Link>
+            </p>
           </div>
         </div>
       </div>
