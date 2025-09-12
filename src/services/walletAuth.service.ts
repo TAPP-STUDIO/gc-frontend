@@ -50,7 +50,7 @@ export interface WalletAuthTokens {
 class WalletAuthService {
   private readonly WALLET_TOKEN_KEY = 'gc_wallet_tokens'
   private readonly WALLET_USER_KEY = 'gc_wallet_user'
-  private readonly API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api/v1'
+  private readonly API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://dvgjdqq5hh5x6.cloudfront.net/api/v1'
 
   // Create axios instance for wallet auth (separate from admin auth)
   private api = axios.create({

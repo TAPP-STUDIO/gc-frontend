@@ -11,7 +11,7 @@ interface LogEntry {
 }
 
 class LoggerService {
-  private readonly API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api/v1'
+  private readonly API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://dvgjdqq5hh5x6.cloudfront.net/api/v1'
   private queue: LogEntry[] = []
   private isProcessing = false
   private flushInterval: NodeJS.Timeout | null = null
