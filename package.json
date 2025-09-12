@@ -57,7 +57,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@tailwindcss/postcss": "^4.1.4",
+    "autoprefixer": "^10.4.20",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -74,7 +74,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "prettier": "^3.2.0",
     "prettier-plugin-tailwindcss": "^0.5.11",
-    "tailwindcss": "^4.1.4",
+    "tailwindcss": "^3.4.1",
     "typescript": "^5",
     "@testing-library/react": "^16.3.0",
     "@testing-library/jest-dom": "^6.2.0",
