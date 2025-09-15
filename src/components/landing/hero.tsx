@@ -77,8 +77,8 @@ export const Hero = () => {
   const { elementRef: titleRef, isVisible: titleVisible } = useScrollAnimation({ threshold: 0.1 });
   const { elementRef: statsRef, isVisible: statsVisible } = useScrollAnimation({ threshold: 0.3 });
   const stats = [
-    { value: '3 153 750 $', label: 'Total Portfolio Value' },
-    { value: '162 $', label: 'Average Profit per Card' }
+    { value: '3 153 750 $', label: 'Celková hodnota portfolia' },
+    { value: '162 $', label: 'Průměrný zisk na kartu' }
   ];
 
   return (
@@ -107,19 +107,19 @@ export const Hero = () => {
               className={`space-y-4 animate-slide-left ${titleVisible ? 'visible' : ''}`}
             >
               <h1 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-medium text-white leading-tight">
-                Join the lifetime
+                Připojte se k doživotnímu
                 <br />
-                <span className="text-white">membership</span>
+                <span className="text-white">členství</span>
               </h1>
               <p className="text-lg md:text-xl text-white/80 font-medium">
-                with Gavlik Capital NFT Cards
+                s Gavlik Capital NFT kartami
               </p>
             </div>
 
             {/* Premium Verified Badge */}
             <div className={`flex items-start animate-fade-in ${titleVisible ? 'visible animate-stagger-1' : ''}`}>
               <VerifiedBadge size="md">
-                Verified
+                Ověřeno
               </VerifiedBadge>
             </div>
 

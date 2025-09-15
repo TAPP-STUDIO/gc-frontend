@@ -13,33 +13,33 @@ export const FAQ = () => {
   const faqData = [
     {
       id: 1,
-      question: 'What does GC NFT CARD ownership give me?',
-      answer: 'GC NFT CARD ownership provides you with lifetime access to Gavlik Capital\'s investment portfolio, quarterly profit distributions, free mint access to new NFT projects, priority support, and exclusive VIP club membership opportunities. You also gain voting rights on certain portfolio decisions and access to our private Discord community.'
+      question: 'Co mi vlastnictví GC NFT KARTY dává?',
+      answer: 'Vlastnictví GC NFT KARTY vám poskytuje doživotní přístup k investičnímu portfoliu Gavlik Capital, čtvrtletní rozdělování zisků, bezplatný mint přístup k novým NFT projektům, prioritní podporu a exkluzivní možnosti členství ve VIP klubu. Získáte také hlasovací práva na určitá rozhodnutí portfolia a přístup do naší soukromé Discord komunity.'
     },
     {
       id: 2,
-      question: 'What are rewards and when are they paid?',
-      answer: 'Rewards are quarterly profit distributions from our diversified investment portfolio. They are paid automatically to your wallet address every quarter (March, June, September, December). The amount depends on portfolio performance and your NFT tier. Payments are made in USDT or ETH based on your preference.'
+      question: 'Co jsou odměny a kdy se vyplácejí?',
+      answer: 'Odměny jsou čtvrtletní rozdělování zisků z našeho diverzifikovaného investičního portfolia. Vyplácejí se automaticky na vaši adresu peněženky každé čtvrtletí (březen, červen, září, prosinec). Výše závisí na výkonu portfolia a vaší NFT úrovni. Platby se provádějí v USDT nebo ETH na základě vašich preferencí.'
     },
     {
       id: 3,
-      question: 'What determines the value of my GC NFT CARD?',
-      answer: 'The value is determined by multiple factors: portfolio performance, quarterly reward history, rarity tier of your card, market demand on secondary markets like OpenSea, utility features unlocked, and overall ecosystem growth. Limited supply and increasing utility continue to drive long-term value appreciation.'
+      question: 'Co určuje hodnotu mé GC NFT KARTY?',
+      answer: 'Hodnota je určena několika faktory: výkonem portfolia, historií čtvrtletních odměn, vzácnostní úrovní vaší karty, poptávkou na sekundárních trzích, odemčenými funkcemi a celkovým růstem ekosystému. Omezená nabídka a rostoucí užitečnost pokračují v dlouhodobém zhodnocování hodnoty.'
     },
     {
       id: 4,
-      question: 'How many GC NFT CARDs are currently in circulation?',
-      answer: 'There are currently 10,000 GC NFT CARDs in total circulation with the following distribution: 9,900 standard GC Cards, 70 ETH special edition cards, and 30 BTC premium cards. This supply is permanently capped - no additional cards will ever be minted, ensuring scarcity and value preservation.'
+      question: 'Kolik GC NFT KARET je aktuálně v oběhu?',
+      answer: 'V současné době je v celkovém oběhu 10 000 GC NFT KARET s následujícím rozdělením: 9 900 standardních GC karet, 70 ETH speciálních edic a 30 BTC prémiových karet. Tato nabídka je trvale omezena - žádné další karty nebudou nikdy mintovány, což zajišťuje vzácnost a zachování hodnoty.'
     },
     {
       id: 5,
-      question: 'How are profits sold?',
-      answer: 'Profits are generated through our diversified investment strategy including cryptocurrency trading, DeFi protocols, real estate investments, and traditional securities. Our experienced team manages the portfolio actively, and profits are distributed proportionally to NFT holders after operational costs and platform development funds are allocated.'
+      question: 'Jak se generují zisky?',
+      answer: 'Zisky se generují prostřednictvím naší diverzifikované investiční strategie zahrnující obchodování s kryptoměnami, DeFi protokoly, investice do nemovitostí a tradiční cenné papíry. Náš zkušený tým aktivně spravuje portfolio a zisky se rozdělují poměrně držitelům NFT po odečtení provozních nákladů a fondů pro rozvoj platformy.'
     },
     {
       id: 6,
-      question: 'What is the VIP Club and how do I become a member?',
-      answer: 'The VIP Club is an exclusive tier for holders of special edition cards (ETH and BTC cards) or holders of multiple standard cards (5+ cards). VIP members get: direct access to the founder, exclusive investment insights, early access to new projects, physical gold/silver cards, invitations to live events, and higher reward multipliers.'
+      question: 'Co je VIP klub a jak se stanu členem?',
+      answer: 'VIP klub je exkluzivní úroveň pro držitele speciálních edic (ETH a BTC karty) nebo držitele více standardních karet (5+ karet). VIP členové získají: přímý přístup k zakladateli, exkluzivní investiční poznatky, přednostní přístup k novým projektům, fyzické zlaté/stříbrné karty, pozvánky na živé události a vyšší multiplikátory odměn.'
     }
   ];
 
@@ -75,7 +75,7 @@ export const FAQ = () => {
             FAQ
           </div>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-medium text-white">
-            Find Your answers
+            Najděte své odpovědi
           </h2>
         </div>
 
@@ -187,14 +187,14 @@ export const FAQ = () => {
         {/* Call to Action */}
         <div className="text-center mt-16 lg:mt-20">
           <p className="text-white/60 text-lg mb-8 max-w-2xl mx-auto">
-            Still have questions? Join our community or contact our support team.
+            Stále máte otázky? Připojte se k naší komunitě nebo kontaktujte náš tým podpory.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+            <a href="https://discord.gg/tcvTy6y5" target="_blank" rel="noopener noreferrer" className="unified-button unified-button-lg">
+              <span>Připojit se k Discordu</span>
+            </a>
             <button className="unified-button unified-button-lg">
-              <span>Join Discord</span>
-            </button>
-            <button className="unified-button unified-button-lg">
-              <span>Contact Support</span>
+              <span>Kontaktovat podporu</span>
             </button>
           </div>
         </div>

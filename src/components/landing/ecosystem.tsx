@@ -12,12 +12,12 @@ export const Ecosystem = () => {
   const ecosystemItems = [
     {
       id: 1,
-      name: 'GC Cards',
+      name: 'GC Karty',
       image: '/cards/strat.png',
       button: {
         type: 'link',
-        text: 'OpenSea',
-        href: 'https://opensea.io'
+        text: 'Marketplace',
+        href: '/dashboard/marketplace'
       }
     },
     {
@@ -26,8 +26,8 @@ export const Ecosystem = () => {
       image: '/cards/btc.png',
       button: {
         type: 'link',
-        text: 'OpenSea',
-        href: 'https://opensea.io'
+        text: 'Marketplace',
+        href: '/dashboard/marketplace'
       }
     },
     {
@@ -68,10 +68,10 @@ export const Ecosystem = () => {
         >
           <div className="space-y-4">
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-medium text-white mb-6">
-              Ecosystem
+              Ekosystém
             </h2>
             <p className="text-lg md:text-xl text-white/70 max-w-3xl mx-auto leading-relaxed font-medium">
-              Safeguard your digital assets with state-of-the-art security measures. Track your investments in real-time to make informed decisions.
+              Zabezpečte vaše digitální aktiva nejmodernějšími bezpečnostními opatřeními. Sledujte vaše investice v reálném čase a přijímejte informovaná rozhodnutí.
             </p>
           </div>
         </div>
@@ -112,9 +112,9 @@ export const Ecosystem = () => {
               {/* Button */}
               <div className="flex justify-center">
                 {item.button.type === 'link' ? (
-                  <button className="unified-button unified-button-md">
+                  <a href={item.button.href} className="unified-button unified-button-md">
                     <span>{item.button.text}</span>
-                  </button>
+                  </a>
                 ) : (
                   <div className="unified-button unified-button-md cursor-default">
                     <span>{item.button.text}</span>

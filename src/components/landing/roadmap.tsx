@@ -12,44 +12,44 @@ export const Roadmap = () => {
     {
       id: 1,
       number: '01',
-      title: 'NFT Design',
-      description: 'The project was conceived and designed by Ahmed Younes, who as executive producer at Dubai TV has created a number of captivating programmes, election campaigns, and advertisements for television stations in Egypt, Dubai, the UAE, and Europe. His most recent project was EXPO 2020.',
+      title: 'Design NFT',
+      description: 'Projekt byl koncipován a navržen Ahmedem Younesem, který jako výkonný producent Dubai TV vytvořil řadu poutavých pořadů, volebních kampaní a reklam pro televizní stanice v Egyptě, Dubaji, SAE a Evropě. Jeho nejnovějším projektem bylo EXPO 2020.',
     },
     {
       id: 2,
       number: '02',
-      title: 'Smart contract',
-      description: 'The software developers behind the many successes of Apartmania Holding a.s. have engineered a unique smart contract exclusively for Gavlik Capital NFT.',
+      title: 'Chytrý kontrakt',
+      description: 'Vývojáři softwaru, kteří stojí za mnoha úspěchy společnosti Apartmania Holding a.s., vytvořili unikátní chytrý kontrakt výhradně pro Gavlik Capital NFT.',
     },
     {
       id: 3,
       number: '03',
-      title: 'OpenSea Launch',
-      description: 'Gavlik Capital NFT will debut in June 2022 on OpenSea, the world\'s largest NFT marketplace.',
+      title: 'Vlastní Marketplace',
+      description: 'Gavlik Capital NFT debutoval v červnu 2022 na našem vlastním marketplace, který poskytuje bezpečné a uživatelsky přívětivé prostředí pro obchodování s našimi NFT.',
     },
     {
       id: 4,
       number: '04',
-      title: 'Reward Stability',
-      description: 'Each owner of a GC NFT CARD will earn a regular quarterly profit share in the form of a reward paid to their MetaMask wallet. The goal for 2023 is stabilization of the regular rewards and continued growth of the portfolio.',
+      title: 'Stabilita odměn',
+      description: 'Každý vlastník GC NFT KARTY bude vydělávat pravidelný čtvrtletní podíl na zisku ve formě odměny vyplacené do jejich MetaMask peněženky. Cílem pro rok 2023 je stabilizace pravidelných odměn a další růst portfolia.',
     },
     {
       id: 5,
       number: '05',
       title: 'BTC BOT NFT',
-      description: 'Gavlik Capital will soon be launching a new project in its ecosystem. The BTC BOT will generate regular monthly rewards and put a portion of the profits in bitcoin.',
+      description: 'Gavlik Capital brzy spustí nový projekt ve svém ekosystému. BTC BOT bude generovat pravidelné měsíční odměny a část zisků bude ukládat v bitcoinu.',
     },
     {
       id: 6,
       number: '06',
-      title: 'Physical Merch and Lives Events',
-      description: 'The video animation in the MetaMask wallet is only the beginning. We are also preparing physical silver and gold cards that will serve as tickets to Gavlik Capital live events. More info coming soon..',
+      title: 'Fyzické zboží a živé události',
+      description: 'Video animace v MetaMask peněžence je jen začátek. Připravujeme také fyzické stříbrné a zlaté karty, které budou sloužit jako vstupenky na živé události Gavlik Capital. Více informací již brzy.',
     },
     {
       id: 7,
       number: '07',
       title: 'Gaming / Metaverse NFT',
-      description: 'The specialists in the Gavlik Capital ecosystem have yet another exciting project in the pipeline, this time focusing on gaming and the metaverse.',
+      description: 'Specialisté v ekosystému Gavlik Capital mají v přípravě další vzrušující projekt, tentokrát zaměřený na gaming a metaverse.',
     }
   ];
 
@@ -76,9 +76,9 @@ export const Roadmap = () => {
         >
           <div className="space-y-4">
             <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-medium text-white leading-tight max-w-4xl">
-              Secure, Track, and
+              Zabezpečte, sledujte a
               <br />
-              <span className="text-white">Grow Your Crypto</span>
+              <span className="text-white">rozšiřujte vaše krypto</span>
             </h2>
           </div>
         </div>
@@ -161,7 +161,7 @@ export const Roadmap = () => {
                     {isItem02 && (
                       <div className="mb-8 lg:mb-12">
                         <p className="text-white/80 text-lg md:text-xl leading-relaxed font-medium max-w-md">
-                          Experience the future of digital finance with our powerful, user-friendly app designed to keep your investments safe and maximize your gains.
+                          Zažijte budoucnost digitálních financí s naší výkonnou, uživatelsky přívětivou aplikací navrženou tak, aby vaše investice byly v bezpečí a maximalizovaly vaše zisky.
                         </p>
                       </div>
                     )}
@@ -223,14 +223,14 @@ export const Roadmap = () => {
         {/* Call to Action */}
         <div className="text-center mt-16 lg:mt-24">
           <p className="text-white/70 text-lg mb-8 max-w-2xl mx-auto">
-            Experience the future of digital finance with our comprehensive ecosystem designed to secure, track, and grow your crypto investments.
+            Zažijte budoucnost digitálních financí s naším komplexním ekosystémem navrženým k zabezpečení, sledování a růstu vašich krypto investic.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
             <button className="bg-gradient-to-r from-[#B29819] to-[#F9D523] text-white hover:text-black font-medium px-10 py-4 rounded-2xl transition-all duration-500 transform hover:scale-110 hover:shadow-[0_0_30px_rgba(249,213,35,0.4)] hover:bg-gradient-to-r hover:from-white hover:to-[#F9D523] shadow-2xl backdrop-blur-sm border border-white/10 group">
-              <span className="group-hover:text-black transition-colors duration-300">Join Our Ecosystem</span>
+              <span className="group-hover:text-black transition-colors duration-300">Připojte se k našemu ekosystému</span>
             </button>
             <button className="bg-white/10 backdrop-blur-md border-2 border-white/30 text-white font-medium px-10 py-4 rounded-2xl transition-all duration-500 transform hover:scale-110 hover:border-[#F9D523] hover:bg-gradient-to-r hover:from-[#B29819] hover:to-[#F9D523] hover:text-black shadow-xl group">
-              <span className="group-hover:text-black transition-colors duration-300">View Whitepaper</span>
+              <span className="group-hover:text-black transition-colors duration-300">Zobrazit Whitepaper</span>
             </button>
           </div>
         </div>

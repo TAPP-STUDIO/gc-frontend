@@ -11,29 +11,29 @@ export const Team = () => {
   const teamMembers = [
     {
       name: 'Jakub Gavlík',
-      role: 'FOUNDER',
-      description: 'I\'ve spent more than ten years navigating the world of investment and enterprise. My many successes in that time have given me the experience and contacts necessary to take Gavlik Capital far from good to profit. Today, I believe in a future of secure cryptocurrency trading and investing. I created and operate the proprietary algorithms used and maintain all communication with brokers and investment firms. We\'ve all come together to create something extraordinary great and new.',
-      quote: 'The two most important ingredients of success: simplicity and hard work.',
+      role: 'ZAKLADATEL',
+      description: 'Více než deset let se pohybuji ve světě investic a podnikání. Moje mnohé úspěchy mi v té době daly zkušenosti a kontakty potřebné k tomu, abych posunul Gavlik Capital daleko od dobrého k ziskovému. Dnes věřím v budoucnost bezpečného obchodování a investování s kryptoměnami. Vytvořil jsem a provozuji proprietární algoritmy a udržuji veškerou komunikaci s brokery a investičními společnostmi. Všichni jsme se spojili, abychom vytvořili něco mimořádně skvělého a nového.',
+      quote: 'Dvě nejdůležitější složky úspěchu: jednoduchost a tvrdá práce.',
       image: '/team/gavlik.png'
     },
     {
       name: 'Ahmed Younes',
-      role: 'Creative Promoter',
+      role: 'Kreativní promotér',
       image: '/team/younes.png'
     },
     {
       name: 'Patrik Biegun',
-      role: 'Media production and Marketing',
+      role: 'Mediální produkce a marketing',
       image: '/team/biegun.png'
     },
     {
       name: 'Jakub Cáb',
-      role: 'Discord and social media',
+      role: 'Discord a sociální média',
       image: '/team/cab.png'
     },
     {
       name: 'Radomír Trumpeš',
-      role: 'Discord and social media',
+      role: 'Discord a sociální média',
       image: '/team/cab.png'
     }
   ];
@@ -64,10 +64,10 @@ export const Team = () => {
         >
           <div className="space-y-4">
             <div className="text-[#F9D523] text-lg md:text-xl font-semibold mb-4 uppercase tracking-wider">
-              OUR TEAM
+              NÁŠ TÝM
             </div>
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-medium text-white">
-              Meet the team
+              Seznamte se s týmem
             </h2>
           </div>
         </div>

@@ -41,27 +41,27 @@ export const Footer = () => {
   };
 
   const navigationLinks = [
-    { name: 'Cards', href: '#cards' },
-    { name: 'Ecosystem', href: '#ecosystem' },
-    { name: 'Roadmap', href: '#roadmap' },
-    { name: 'VIP Club', href: '#vip-club' },
+    { name: 'Karty', href: '#cards' },
+    { name: 'Ekosystém', href: '#ecosystem' },
+    { name: 'Roadmapa', href: '#roadmap' },
+    { name: 'VIP klub', href: '#vip-club' },
     { name: 'FAQ', href: '#faq' }
   ];
 
   const productLinks = [
-    { name: 'GC Cards', href: '#cards' },
+    { name: 'GC Karty', href: '#cards' },
     { name: 'BTC Bot', href: '#ecosystem' },
     { name: 'Algo Trader', href: '#ecosystem' },
-    { name: 'OpenSea Collection', href: 'https://opensea.io', external: true }
+    { name: 'Náš Marketplace', href: '/dashboard/marketplace', external: false }
   ];
 
   const legalLinks = [
-    { name: 'Terms of Service', href: '/legal/terms' },
-    { name: 'Privacy Policy', href: '/legal/privacy' },
-    { name: 'Cookie Policy', href: '/legal/cookies' },
-    { name: 'Risk Disclaimer', href: '/legal/risk-disclaimer' },
+    { name: 'Podmínky použití', href: '/legal/terms' },
+    { name: 'Zásady ochrany soukromí', href: '/legal/privacy' },
+    { name: 'Cookie zásady', href: '/legal/cookies' },
+    { name: 'Rizikové upozornění', href: '/legal/risk-disclaimer' },
     { name: 'Whitepaper', href: '/whitepaper.pdf', external: true },
-    { name: 'Admin Administrace', href: '/admin', external: false }
+    { name: 'Administrace', href: '/admin', external: false }
   ];
 
   const socialLinks = [
@@ -144,17 +144,17 @@ export const Footer = () => {
                 <Logo />
               </div>
               <p className="text-white/70 text-base leading-relaxed max-w-sm">
-                Secure and smart NFT investment crypto portfolio platform for the future of decentralized finance. 
-                Join thousands of investors building wealth through innovative blockchain technology.
+                Bezpečná a chytrá investiční platforma pro NFT krypto portfolia budoucnosti decentralizovaných financí. 
+                Připojte se k tisícům investorů budujících bohatství prostřednictvím inovativní blockchain technologie.
               </p>
               
               {/* Newsletter Signup */}
               <div className="space-y-4">
-                <h4 className="text-white font-medium text-lg">Stay Updated</h4>
+                <h4 className="text-white font-medium text-lg">Zůstaňte v obraze</h4>
                 <form onSubmit={handleNewsletterSubmit} className="flex gap-3">
                   <input
                     type="email"
-                    placeholder="Enter your email"
+                    placeholder="Zadejte váš email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="flex-1 px-4 py-3 bg-black/20 backdrop-blur-md border border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:border-[#F9D523] transition-colors shadow-xl"
@@ -164,7 +164,7 @@ export const Footer = () => {
                     type="submit"
                     className="unified-button unified-button-md"
                   >
-                    <span>Subscribe</span>
+                    <span>Odebírat</span>
                   </button>
                 </form>
               </div>
@@ -172,7 +172,7 @@ export const Footer = () => {
 
             {/* Navigation Links */}
             <div className="lg:col-span-2">
-              <h4 className="text-white font-medium text-lg mb-6">Navigation</h4>
+              <h4 className="text-white font-medium text-lg mb-6">Navigace</h4>
               <ul className="space-y-3">
                 {navigationLinks.map((link) => (
                   <li key={link.name}>
@@ -189,7 +189,7 @@ export const Footer = () => {
 
             {/* Product Links */}
             <div className="lg:col-span-2">
-              <h4 className="text-white font-medium text-lg mb-6">Products</h4>
+              <h4 className="text-white font-medium text-lg mb-6">Produkty</h4>
               <ul className="space-y-3">
                 {productLinks.map((link) => (
                   <li key={link.name}>
@@ -208,12 +208,12 @@ export const Footer = () => {
                         </svg>
                       </a>
                     ) : (
-                      <button
-                        onClick={() => scrollToSection(link.href)}
-                        className="text-white/70 hover:text-[#F9D523] transition-colors duration-200 text-base text-left"
+                      <Link
+                        href={link.href}
+                        className="text-white/70 hover:text-[#F9D523] transition-colors duration-200 text-base"
                       >
                         {link.name}
-                      </button>
+                      </Link>
                     )}
                   </li>
                 ))}
@@ -222,7 +222,7 @@ export const Footer = () => {
 
             {/* Legal Links */}
             <div className="lg:col-span-2">
-              <h4 className="text-white font-medium text-lg mb-6">Legal & Admin</h4>
+              <h4 className="text-white font-medium text-lg mb-6">Právní & Admin</h4>
               <ul className="space-y-3">
                 {legalLinks.map((link) => (
                   <li key={link.name}>
@@ -255,7 +255,7 @@ export const Footer = () => {
 
             {/* Social Media */}
             <div className="lg:col-span-2">
-              <h4 className="text-white font-medium text-lg mb-6">Follow Us</h4>
+              <h4 className="text-white font-medium text-lg mb-6">Sledujte nás</h4>
               <div className="flex gap-4">
                 {socialLinks.map((social) => (
                   <a
@@ -271,7 +271,7 @@ export const Footer = () => {
                 ))}
               </div>
               <p className="text-white/50 text-sm mt-4">
-                Join our community of 10,000+ investors
+                Připojte se k naší komunitě 10 000+ investorů
               </p>
             </div>
           </div>
@@ -280,7 +280,7 @@ export const Footer = () => {
         {/* Bottom Section */}
         <div className="py-8 border-t border-[#333333]">
           <div className="flex flex-col md:flex-row items-center justify-center gap-4">
-            <p className="text-white/60 text-sm">© 2025 Gavlik Capital. All rights reserved.</p>
+            <p className="text-white/60 text-sm">© 2025 Gavlik Capital. Všechna práva vyhrazena.</p>
           </div>
         </div>
       </div>

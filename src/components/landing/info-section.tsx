@@ -17,10 +17,10 @@ export const InfoSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const benefits = [
-    'Lifetime access to the Gavlik Capital portfolio, news and analysis.',
-    'Quarterly portfolio rewards.',
-    'Free mint of the next NFT projects.',
-    'Fee bonus.'
+    'Doživotní přístup k portfoliu Gavlik Capital, novinkám a analýzám.',
+    'Čtvrtletní odměny z portfolia.',
+    'Bezplatný mint dalších NFT projektů.',
+    'Bonus na poplatky.'
   ];
 
   // Video event handlers
@@ -152,7 +152,7 @@ export const InfoSection = () => {
             >
               <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-medium text-white leading-tight">
                 Gavlik Capital{' '}
-                <span className="text-white/80">cards</span>
+                <span className="text-white/80">karty</span>
               </h2>
             </div>
 
@@ -190,11 +190,11 @@ export const InfoSection = () => {
               ))}
             </div>
 
-            {/* OpenSea Button */}
+            {/* Marketplace Button */}
             <div className={`pt-4 animate-fade-in ${titleVisible ? 'visible animate-stagger-4' : ''}`}>
-              <button className="unified-button unified-button-lg">
-                <span>OpenSea</span>
-              </button>
+              <a href="/dashboard/marketplace" className="unified-button unified-button-lg">
+                <span>Náš Marketplace</span>
+              </a>
             </div>
           </div>
 
