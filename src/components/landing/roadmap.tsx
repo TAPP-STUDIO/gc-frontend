@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
 import { useScrollAnimation, useStaggeredAnimation } from '@/hook';
 
@@ -21,17 +20,18 @@ export const Roadmap = () => {
   return (
     <section id="roadmap" className="relative min-h-screen py-16 lg:py-24 overflow-hidden">
       {/* Background Image - lehčí overlays pro viditelnost */}
-      <div className="absolute inset-0 z-0">
-        <Image
-          src="/backgrounds/4Roadmapa.svg"
-          alt="Roadmap Background"
-          fill
-          className="object-cover"
-          priority={false}
-        />
-        {/* Lehčí overlay pro lepší viditelnost pozadí */}
-        <div className="absolute inset-0 bg-black/40"></div>
-      </div>
+      <div 
+        className="absolute inset-0 z-0"
+        style={{ 
+          backgroundImage: "url('/backgrounds/4roadmapa.svg')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      ></div>
+      
+      {/* Lehčí overlay pro lepší viditelnost pozadí */}
+      <div className="absolute inset-0 bg-black/40 z-10"></div>
 
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
         {/* Header - Left Aligned jak Hero */}
