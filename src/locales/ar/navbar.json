@@ -1,0 +1,18 @@
+{
+  "menuItems": {
+    "cards": "البطاقات",
+    "ecosystem": "النظام البيئي",
+    "roadmap": "خارطة الطريق",
+    "vipClub": "النادي المميز",
+    "faq": "الأسئلة الشائعة",
+    "discord": "ديسكورد"
+  },
+  "languages": {
+    "czech": "Čeština",
+    "english": "English",
+    "arabic": "العربية"
+  },
+  "buttons": {
+    "register": "التسجيل"
+  }
+}

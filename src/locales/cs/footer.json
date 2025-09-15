@@ -1,0 +1,45 @@
+{
+  "brand": {
+    "description": "Bezpečná a chytrá investiční platforma pro NFT krypto portfolia budoucnosti decentralizovaných financí. Připojte se k tisícům investorů budujících bohatství prostřednictvím inovativní blockchain technologie.",
+    "newsletter": {
+      "title": "Zůstaňte v obraze",
+      "placeholder": "Zadejte váš email",
+      "button": "Odebírat"
+    }
+  },
+  "navigation": {
+    "title": "Navigace",
+    "links": {
+      "cards": "Karty",
+      "ecosystem": "Ekosystém",
+      "roadmap": "Roadmapa",
+      "vipClub": "VIP klub",
+      "faq": "FAQ"
+    }
+  },
+  "products": {
+    "title": "Produkty",
+    "links": {
+      "gcCards": "GC Karty",
+      "btcBot": "BTC Bot",
+      "algoTrader": "Algo Trader",
+      "marketplace": "Náš Marketplace"
+    }
+  },
+  "legal": {
+    "title": "Právní & Admin",
+    "links": {
+      "terms": "Podmínky použití",
+      "privacy": "Zásady ochrany soukromí",
+      "cookies": "Cookie zásady",
+      "risk": "Rizikové upozornění",
+      "whitepaper": "Whitepaper",
+      "admin": "Administrace"
+    }
+  },
+  "social": {
+    "title": "Sledujte nás",
+    "community": "Připojte se k naší komunitě 10 000+ investorů"
+  },
+  "copyright": "© 2025 Gavlik Capital. Všechna práva vyhrazena."
+}

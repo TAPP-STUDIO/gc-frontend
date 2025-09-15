@@ -2,37 +2,39 @@
 
 import React, {  } from 'react';
 import Image from 'next/image';
+import { useTranslation } from 'react-i18next';
 import { useScrollAnimation, useStaggeredAnimation } from '@/hook';
 
 export const Ecosystem = () => {
   const { elementRef: titleRef, isVisible: titleVisible } = useScrollAnimation({ threshold: 0.2 });
   const { elementRef: cardsRef, visibleItems } = useStaggeredAnimation(3, 200);
+  const { t } = useTranslation('ecosystem');
  
 
   const ecosystemItems = [
     {
       id: 1,
-      name: 'GC Karty',
+      name: t('products.gcCards'),
       image: '/cards/strat.png',
       button: {
         type: 'link',
-        text: 'Marketplace',
+        text: t('button'),
         href: '/dashboard/marketplace'
       }
     },
     {
       id: 2,
-      name: 'BTC BOT',
+      name: t('products.btcBot'),
       image: '/cards/btc.png',
       button: {
         type: 'link',
-        text: 'Marketplace',
+        text: t('button'),
         href: '/dashboard/marketplace'
       }
     },
     {
       id: 3,
-      name: 'ALGO Trader',
+      name: t('products.algoTrader'),
       image: '/cards/algo.png',
       button: {
         type: 'date',
@@ -68,10 +70,10 @@ export const Ecosystem = () => {
         >
           <div className="space-y-4">
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-medium text-white mb-6">
-              Ekosystém
+              {t('heading')}
             </h2>
             <p className="text-lg md:text-xl text-white/70 max-w-3xl mx-auto leading-relaxed font-medium">
-              Zabezpečte vaše digitální aktiva nejmodernějšími bezpečnostními opatřeními. Sledujte vaše investice v reálném čase a přijímejte informovaná rozhodnutí.
+              {t('description')}
             </p>
           </div>
         </div>

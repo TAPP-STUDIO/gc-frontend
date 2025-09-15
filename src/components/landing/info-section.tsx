@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useScrollAnimation, useStaggeredAnimation } from '@/hook';
 
 
@@ -8,6 +9,8 @@ export const InfoSection = () => {
   const { elementRef: titleRef, isVisible: titleVisible } = useScrollAnimation({ threshold: 0.2 });
   const { elementRef: benefitsRef, visibleItems } = useStaggeredAnimation(4, 100);
   const { elementRef: videoContainerRef, isVisible: videoVisible } = useScrollAnimation({ threshold: 0.3 });
+  const { t } = useTranslation('cards');
+  
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [currentTime, setCurrentTime] = useState(0);
@@ -16,12 +19,7 @@ export const InfoSection = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const benefits = [
-    'Doživotní přístup k portfoliu Gavlik Capital, novinkám a analýzám.',
-    'Čtvrtletní odměny z portfolia.',
-    'Bezplatný mint dalších NFT projektů.',
-    'Bonus na poplatky.'
-  ];
+  const benefits = t('benefits', { returnObjects: true }) as string[];
 
   // Video event handlers
   const toggleVideo = () => {
@@ -151,8 +149,7 @@ export const InfoSection = () => {
               className={`space-y-4 animate-slide-left ${titleVisible ? 'visible' : ''}`}
             >
               <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-medium text-white leading-tight">
-                Gavlik Capital{' '}
-                <span className="text-white/80">karty</span>
+                {t('heading')}
               </h2>
             </div>
 
@@ -193,7 +190,7 @@ export const InfoSection = () => {
             {/* Marketplace Button */}
             <div className={`pt-4 animate-fade-in ${titleVisible ? 'visible animate-stagger-4' : ''}`}>
               <a href="/dashboard/marketplace" className="unified-button unified-button-lg">
-                <span>Náš Marketplace</span>
+                <span>{t('button')}</span>
               </a>
             </div>
           </div>

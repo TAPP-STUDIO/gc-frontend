@@ -2,17 +2,15 @@
 
 import React from 'react';
 import Image from 'next/image';
+import { useTranslation } from 'react-i18next';
 import { useScrollAnimation, useStaggeredAnimation } from '@/hook';
 
 export const VipClub = () => {
   const { elementRef: titleRef, isVisible: titleVisible } = useScrollAnimation({ threshold: 0.1 });
   const { elementRef: featuresRef, visibleItems } = useStaggeredAnimation(4, 150);
-  const vipFeatures = [
-    'Soukromý chat se zakladatelem',
-    'Exkluzivní informace',
-    'Obchodní cesty se zakladatelem',
-    'A mnoho dalšího'
-  ];
+  const { t } = useTranslation('vip');
+  
+  const vipFeatures = t('features', { returnObjects: true }) as string[];
 
   return (
     <section id="vip-club" className="py-16 lg:py-24 bg-black relative overflow-visible">
@@ -41,12 +39,12 @@ export const VipClub = () => {
           >
             <div className="space-y-4">
               <div className="text-white text-lg md:text-xl font-semibold uppercase tracking-wider">
-                VIP KLUB
+                {t('title')}
               </div>
               <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-medium text-white leading-tight">
-                Sesbírejte je všechny a
+                {t('heading.line1')}
                 <br />
-                staňte se součástí <span className="text-[#F9D523]">VIP KLUBU</span>
+                {t('heading.line2')} <span className="text-[#F9D523]">{t('heading.highlight')}</span>
               </h2>
             </div>
           </div>

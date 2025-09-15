@@ -2,41 +2,28 @@
 
 import React from 'react';
 import Image from 'next/image';
+import { useTranslation } from 'react-i18next';
 import { useScrollAnimation, useStaggeredAnimation } from '@/hook';
 
 export const Team = () => {
   const { elementRef: titleRef, isVisible: titleVisible } = useScrollAnimation({ threshold: 0.2 });
   const { elementRef: founderRef, isVisible: founderVisible } = useScrollAnimation({ threshold: 0.3 });
   const { elementRef: teamRef, visibleItems } = useStaggeredAnimation(4, 150);
-  const teamMembers = [
-    {
-      name: 'Jakub Gavlík',
-      role: 'ZAKLADATEL',
-      description: 'Více než deset let se pohybuji ve světě investic a podnikání. Moje mnohé úspěchy mi v té době daly zkušenosti a kontakty potřebné k tomu, abych posunul Gavlik Capital daleko od dobrého k ziskovému. Dnes věřím v budoucnost bezpečného obchodování a investování s kryptoměnami. Vytvořil jsem a provozuji proprietární algoritmy a udržuji veškerou komunikaci s brokery a investičními společnostmi. Všichni jsme se spojili, abychom vytvořili něco mimořádně skvělého a nového.',
-      quote: 'Dvě nejdůležitější složky úspěchu: jednoduchost a tvrdá práce.',
-      image: '/team/gavlik.png'
-    },
-    {
-      name: 'Ahmed Younes',
-      role: 'Kreativní promotér',
-      image: '/team/younes.png'
-    },
-    {
-      name: 'Patrik Biegun',
-      role: 'Mediální produkce a marketing',
-      image: '/team/biegun.png'
-    },
-    {
-      name: 'Jakub Cáb',
-      role: 'Discord a sociální média',
-      image: '/team/cab.png'
-    },
-    {
-      name: 'Radomír Trumpeš',
-      role: 'Discord a sociální média',
-      image: '/team/cab.png'
-    }
-  ];
+  const { t } = useTranslation('team');
+  
+  const founder = t('founder', { returnObjects: true }) as any;
+  const teamMembers = t('members', { returnObjects: true }) as any[];
+  
+  const founderData = {
+    ...founder,
+    image: '/team/gavlik.png'
+  };
+  
+  const teamMembersWithImages = teamMembers.map((member, index) => ({
+    ...member,
+    image: index === 0 ? '/team/younes.png' : 
+           index === 1 ? '/team/biegun.png' : '/team/cab.png'
+  }));
 
   return (
     <section className="py-20 lg:py-32 bg-black relative overflow-visible">
@@ -64,10 +51,10 @@ export const Team = () => {
         >
           <div className="space-y-4">
             <div className="text-[#F9D523] text-lg md:text-xl font-semibold mb-4 uppercase tracking-wider">
-              NÁŠ TÝM
+              {t('title')}
             </div>
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-medium text-white">
-              Seznamte se s týmem
+              {t('heading')}
             </h2>
           </div>
         </div>
@@ -83,8 +70,8 @@ export const Team = () => {
               <div className="relative w-80 h-96 lg:w-96 lg:h-[480px]">
                 <div className="absolute inset-0 bg-gradient-to-br from-[#F9D523]/20 to-transparent rounded-3xl"></div>
                 <Image
-                  src={teamMembers[0].image}
-                  alt={teamMembers[0].name}
+                  src={founderData.image}
+                  alt={founderData.name}
                   fill
                   className="object-cover rounded-3xl shadow-2xl border-2 border-white/20"
                 />
@@ -95,23 +82,23 @@ export const Team = () => {
             <div className={`space-y-6 animate-slide-left ${founderVisible ? 'visible animate-stagger-1' : ''}`}>
               <div className="inline-flex items-center bg-[#F9D523]/20 backdrop-blur-sm px-4 py-2 rounded-full border border-[#F9D523]/30">
                 <span className="text-[#F9D523] font-semibold text-sm uppercase tracking-wider">
-                  {teamMembers[0].role}
+                  {founderData.role}
                 </span>
               </div>
 
               <h3 className="text-3xl md:text-4xl font-medium text-white">
-                {teamMembers[0].name}
+                {founderData.name}
               </h3>
 
               <p className="text-white/80 text-lg leading-relaxed">
-                {teamMembers[0].description}
+                {founderData.description}
               </p>
 
               <div className="bg-white/5 backdrop-blur-sm border border-white/20 rounded-2xl p-6">
                 <div className="flex items-start gap-4">
                   <div className="w-2 h-2 bg-[#F9D523] rounded-full mt-3 flex-shrink-0"></div>
                   <blockquote className="text-white/90 text-lg italic font-medium">
-                    {teamMembers[0].quote}
+                    {founderData.quote}
                   </blockquote>
                 </div>
               </div>
@@ -125,7 +112,7 @@ export const Team = () => {
           className="w-full mx-auto animate-container overflow-visible"
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 px-4 py-8">
-            {teamMembers.slice(1).map((member, index) => (
+            {teamMembersWithImages.map((member, index) => (
               <div
                 key={index}
                 className={`group backdrop-blur-sm border border-white/20 rounded-2xl p-6 group-hover:border-[#F9D523]/50 transition-all duration-300 shadow-xl group-hover:shadow-2xl group-hover:scale-[1.02] animate-scale overflow-visible ${

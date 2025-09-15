@@ -1,0 +1,28 @@
+{
+  "title": "OUR TEAM",
+  "heading": "Meet the team",
+  "founder": {
+    "role": "FOUNDER",
+    "name": "Jakub Gavlík",
+    "description": "I've spent more than ten years navigating the world of investment and enterprise. My many successes in that time have given me the experience and contacts necessary to take Gavlik Capital far from good to profit. Today, I believe in a future of secure cryptocurrency trading and investing. I created and operate the proprietary algorithms used and maintain all communication with brokers and investment firms. We've all come together to create something extraordinary great and new.",
+    "quote": "The two most important ingredients of success: simplicity and hard work."
+  },
+  "members": [
+    {
+      "name": "Ahmed Younes",
+      "role": "Creative Promoter"
+    },
+    {
+      "name": "Patrik Biegun",
+      "role": "Media production and Marketing"
+    },
+    {
+      "name": "Jakub Cáb",
+      "role": "Discord and social media"
+    },
+    {
+      "name": "Radomír Trumpeš",
+      "role": "Discord and social media"
+    }
+  ]
+}

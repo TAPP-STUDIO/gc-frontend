@@ -1,0 +1,45 @@
+{
+  "brand": {
+    "description": "Secure and smart NFT investment crypto portfolio platform for the future of decentralized finance. Join thousands of investors building wealth through innovative blockchain technology.",
+    "newsletter": {
+      "title": "Stay Updated",
+      "placeholder": "Enter your email",
+      "button": "Subscribe"
+    }
+  },
+  "navigation": {
+    "title": "Navigation",
+    "links": {
+      "cards": "Cards",
+      "ecosystem": "Ecosystem",
+      "roadmap": "Roadmap",
+      "vipClub": "VIP Club",
+      "faq": "FAQ"
+    }
+  },
+  "products": {
+    "title": "Products",
+    "links": {
+      "gcCards": "GC Cards",
+      "btcBot": "BTC Bot",
+      "algoTrader": "Algo Trader",
+      "marketplace": "Our Marketplace"
+    }
+  },
+  "legal": {
+    "title": "Legal & Admin",
+    "links": {
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy",
+      "cookies": "Cookie Policy",
+      "risk": "Risk Disclaimer",
+      "whitepaper": "Whitepaper",
+      "admin": "Administration"
+    }
+  },
+  "social": {
+    "title": "Follow Us",
+    "community": "Join our community of 10,000+ investors"
+  },
+  "copyright": "© 2025 Gavlik Capital. All rights reserved."
+}

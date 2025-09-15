@@ -1,0 +1,44 @@
+{
+  "heading": {
+    "line1": "Zabezpečte, sledujte a",
+    "line2": "rozšiřujte vaše krypto"
+  },
+  "description": "Zažijte budoucnost digitálních financí s naší výkonnou, uživatelsky přívětivou aplikací navrženou tak, aby vaše investice byly v bezpečí a maximalizovaly vaše zisky.",
+  "steps": [
+    {
+      "title": "Design NFT",
+      "description": "Projekt byl koncipován a navržen Ahmedem Younesem, který jako výkonný producent Dubai TV vytvořil řadu poutavých pořadů, volebních kampaní a reklam pro televizní stanice v Egyptě, Dubaji, SAE a Evropě. Jeho nejnovějším projektem bylo EXPO 2020."
+    },
+    {
+      "title": "Chytrý kontrakt",
+      "description": "Vývojáři softwaru, kteří stojí za mnoha úspěchy společnosti Apartmania Holding a.s., vytvořili unikátní chytrý kontrakt výhradně pro Gavlik Capital NFT."
+    },
+    {
+      "title": "Vlastní Marketplace",
+      "description": "Gavlik Capital NFT debutoval v červnu 2022 na našem vlastním marketplace, který poskytuje bezpečné a uživatelsky přívětivé prostředí pro obchodování s našimi NFT."
+    },
+    {
+      "title": "Stabilita odměn",
+      "description": "Každý vlastník GC NFT KARTY bude vydělávat pravidelný čtvrtletní podíl na zisku ve formě odměny vyplacené do jejich MetaMask peněženky. Cílem pro rok 2023 je stabilizace pravidelných odměn a další růst portfolia."
+    },
+    {
+      "title": "BTC BOT NFT",
+      "description": "Gavlik Capital brzy spustí nový projekt ve svém ekosystému. BTC BOT bude generovat pravidelné měsíční odměny a část zisků bude ukládat v bitcoinu."
+    },
+    {
+      "title": "Fyzické zboží a živé události",
+      "description": "Video animace v MetaMask peněžence je jen začátek. Připravujeme také fyzické stříbrné a zlaté karty, které budou sloužit jako vstupenky na živé události Gavlik Capital. Více informací již brzy."
+    },
+    {
+      "title": "Gaming / Metaverse NFT",
+      "description": "Specialisté v ekosystému Gavlik Capital mají v přípravě další vzrušující projekt, tentokrát zaměřený na gaming a metaverse."
+    }
+  ],
+  "cta": {
+    "description": "Zažijte budoucnost digitálních financí s naším komplexním ekosystémem navrženým k zabezpečení, sledování a růstu vašich krypto investic.",
+    "buttons": {
+      "join": "Připojte se k našemu ekosystému",
+      "whitepaper": "Zobrazit Whitepaper"
+    }
+  }
+}

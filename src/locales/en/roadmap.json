@@ -1,0 +1,44 @@
+{
+  "heading": {
+    "line1": "Secure, Track, and",
+    "line2": "Grow Your Crypto"
+  },
+  "description": "Experience the future of digital finance with our powerful, user-friendly app designed to keep your investments safe and maximize your gains.",
+  "steps": [
+    {
+      "title": "NFT Design",
+      "description": "The project was conceived and designed by Ahmed Younes, who as executive producer at Dubai TV has created a number of captivating programmes, election campaigns, and advertisements for television stations in Egypt, Dubai, the UAE, and Europe. His most recent project was EXPO 2020."
+    },
+    {
+      "title": "Smart contract",
+      "description": "The software developers behind the many successes of Apartmania Holding a.s. have engineered a unique smart contract exclusively for Gavlik Capital NFT."
+    },
+    {
+      "title": "Our Marketplace",
+      "description": "Gavlik Capital NFT debuted in June 2022 on our own marketplace, which provides a secure and user-friendly environment for trading our NFTs."
+    },
+    {
+      "title": "Reward Stability",
+      "description": "Each owner of a GC NFT CARD will earn a regular quarterly profit share in the form of a reward paid to their MetaMask wallet. The goal for 2023 is stabilization of the regular rewards and continued growth of the portfolio."
+    },
+    {
+      "title": "BTC BOT NFT",
+      "description": "Gavlik Capital will soon be launching a new project in its ecosystem. The BTC BOT will generate regular monthly rewards and put a portion of the profits in bitcoin."
+    },
+    {
+      "title": "Physical Merch and Live Events",
+      "description": "The video animation in the MetaMask wallet is only the beginning. We are also preparing physical silver and gold cards that will serve as tickets to Gavlik Capital live events. More info coming soon."
+    },
+    {
+      "title": "Gaming / Metaverse NFT",
+      "description": "The specialists in the Gavlik Capital ecosystem have yet another exciting project in the pipeline, this time focusing on gaming and the metaverse."
+    }
+  ],
+  "cta": {
+    "description": "Experience the future of digital finance with our comprehensive ecosystem designed to secure, track, and grow your crypto investments.",
+    "buttons": {
+      "join": "Join Our Ecosystem",
+      "whitepaper": "View Whitepaper"
+    }
+  }
+}

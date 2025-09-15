@@ -2,56 +2,21 @@
 
 import React from 'react';
 import Image from 'next/image';
+import { useTranslation } from 'react-i18next';
 import { useScrollAnimation, useStaggeredAnimation } from '@/hook';
 
 export const Roadmap = () => {
   const { elementRef: titleRef, isVisible: titleVisible } = useScrollAnimation({ threshold: 0.2 });
   const { elementRef: leftRef, visibleItems: leftVisible } = useStaggeredAnimation(4, 200);
   const { elementRef: rightRef, visibleItems: rightVisible } = useStaggeredAnimation(3, 200);
-  const roadmapSteps = [
-    {
-      id: 1,
-      number: '01',
-      title: 'Design NFT',
-      description: 'Projekt byl koncipován a navržen Ahmedem Younesem, který jako výkonný producent Dubai TV vytvořil řadu poutavých pořadů, volebních kampaní a reklam pro televizní stanice v Egyptě, Dubaji, SAE a Evropě. Jeho nejnovějším projektem bylo EXPO 2020.',
-    },
-    {
-      id: 2,
-      number: '02',
-      title: 'Chytrý kontrakt',
-      description: 'Vývojáři softwaru, kteří stojí za mnoha úspěchy společnosti Apartmania Holding a.s., vytvořili unikátní chytrý kontrakt výhradně pro Gavlik Capital NFT.',
-    },
-    {
-      id: 3,
-      number: '03',
-      title: 'Vlastní Marketplace',
-      description: 'Gavlik Capital NFT debutoval v červnu 2022 na našem vlastním marketplace, který poskytuje bezpečné a uživatelsky přívětivé prostředí pro obchodování s našimi NFT.',
-    },
-    {
-      id: 4,
-      number: '04',
-      title: 'Stabilita odměn',
-      description: 'Každý vlastník GC NFT KARTY bude vydělávat pravidelný čtvrtletní podíl na zisku ve formě odměny vyplacené do jejich MetaMask peněženky. Cílem pro rok 2023 je stabilizace pravidelných odměn a další růst portfolia.',
-    },
-    {
-      id: 5,
-      number: '05',
-      title: 'BTC BOT NFT',
-      description: 'Gavlik Capital brzy spustí nový projekt ve svém ekosystému. BTC BOT bude generovat pravidelné měsíční odměny a část zisků bude ukládat v bitcoinu.',
-    },
-    {
-      id: 6,
-      number: '06',
-      title: 'Fyzické zboží a živé události',
-      description: 'Video animace v MetaMask peněžence je jen začátek. Připravujeme také fyzické stříbrné a zlaté karty, které budou sloužit jako vstupenky na živé události Gavlik Capital. Více informací již brzy.',
-    },
-    {
-      id: 7,
-      number: '07',
-      title: 'Gaming / Metaverse NFT',
-      description: 'Specialisté v ekosystému Gavlik Capital mají v přípravě další vzrušující projekt, tentokrát zaměřený na gaming a metaverse.',
-    }
-  ];
+  const { t } = useTranslation('roadmap');
+  
+  const roadmapSteps = (t('steps', { returnObjects: true }) as any[]).map((step, index) => ({
+    id: index + 1,
+    number: (index + 1).toString().padStart(2, '0'),
+    title: step.title,
+    description: step.description
+  }));
 
   return (
     <section id="roadmap" className="relative min-h-screen py-16 lg:py-24 overflow-hidden">
@@ -76,9 +41,9 @@ export const Roadmap = () => {
         >
           <div className="space-y-4">
             <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-medium text-white leading-tight max-w-4xl">
-              Zabezpečte, sledujte a
+              {t('heading.line1')}
               <br />
-              <span className="text-white">rozšiřujte vaše krypto</span>
+              <span className="text-white">{t('heading.line2')}</span>
             </h2>
           </div>
         </div>
@@ -161,7 +126,7 @@ export const Roadmap = () => {
                     {isItem02 && (
                       <div className="mb-8 lg:mb-12">
                         <p className="text-white/80 text-lg md:text-xl leading-relaxed font-medium max-w-md">
-                          Zažijte budoucnost digitálních financí s naší výkonnou, uživatelsky přívětivou aplikací navrženou tak, aby vaše investice byly v bezpečí a maximalizovaly vaše zisky.
+                          {t('description')}
                         </p>
                       </div>
                     )}
@@ -223,14 +188,14 @@ export const Roadmap = () => {
         {/* Call to Action */}
         <div className="text-center mt-16 lg:mt-24">
           <p className="text-white/70 text-lg mb-8 max-w-2xl mx-auto">
-            Zažijte budoucnost digitálních financí s naším komplexním ekosystémem navrženým k zabezpečení, sledování a růstu vašich krypto investic.
+            {t('cta.description')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
             <button className="bg-gradient-to-r from-[#B29819] to-[#F9D523] text-white hover:text-black font-medium px-10 py-4 rounded-2xl transition-all duration-500 transform hover:scale-110 hover:shadow-[0_0_30px_rgba(249,213,35,0.4)] hover:bg-gradient-to-r hover:from-white hover:to-[#F9D523] shadow-2xl backdrop-blur-sm border border-white/10 group">
-              <span className="group-hover:text-black transition-colors duration-300">Připojte se k našemu ekosystému</span>
+              <span className="group-hover:text-black transition-colors duration-300">{t('cta.buttons.join')}</span>
             </button>
             <button className="bg-white/10 backdrop-blur-md border-2 border-white/30 text-white font-medium px-10 py-4 rounded-2xl transition-all duration-500 transform hover:scale-110 hover:border-[#F9D523] hover:bg-gradient-to-r hover:from-[#B29819] hover:to-[#F9D523] hover:text-black shadow-xl group">
-              <span className="group-hover:text-black transition-colors duration-300">Zobrazit Whitepaper</span>
+              <span className="group-hover:text-black transition-colors duration-300">{t('cta.buttons.whitepaper')}</span>
             </button>
           </div>
         </div>

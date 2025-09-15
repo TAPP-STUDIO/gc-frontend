@@ -1,0 +1,37 @@
+{
+  "title": "FAQ",
+  "heading": "Find Your answers",
+  "questions": [
+    {
+      "question": "What does GC NFT CARD ownership give me?",
+      "answer": "GC NFT CARD ownership provides you with lifetime access to Gavlik Capital's investment portfolio, quarterly profit distributions, free mint access to new NFT projects, priority support, and exclusive VIP club membership opportunities. You also gain voting rights on certain portfolio decisions and access to our private Discord community."
+    },
+    {
+      "question": "What are rewards and when are they paid?",
+      "answer": "Rewards are quarterly profit distributions from our diversified investment portfolio. They are paid automatically to your wallet address every quarter (March, June, September, December). The amount depends on portfolio performance and your NFT tier. Payments are made in USDT or ETH based on your preference."
+    },
+    {
+      "question": "What determines the value of my GC NFT CARD?",
+      "answer": "The value is determined by multiple factors: portfolio performance, quarterly reward history, rarity tier of your card, market demand on secondary markets, utility features unlocked, and overall ecosystem growth. Limited supply and increasing utility continue to drive long-term value appreciation."
+    },
+    {
+      "question": "How many GC NFT CARDs are currently in circulation?",
+      "answer": "There are currently 10,000 GC NFT CARDs in total circulation with the following distribution: 9,900 standard GC Cards, 70 ETH special edition cards, and 30 BTC premium cards. This supply is permanently capped - no additional cards will ever be minted, ensuring scarcity and value preservation."
+    },
+    {
+      "question": "How are profits generated?",
+      "answer": "Profits are generated through our diversified investment strategy including cryptocurrency trading, DeFi protocols, real estate investments, and traditional securities. Our experienced team manages the portfolio actively, and profits are distributed proportionally to NFT holders after operational costs and platform development funds are allocated."
+    },
+    {
+      "question": "What is the VIP Club and how do I become a member?",
+      "answer": "The VIP Club is an exclusive tier for holders of special edition cards (ETH and BTC cards) or holders of multiple standard cards (5+ cards). VIP members get: direct access to the founder, exclusive investment insights, early access to new projects, physical gold/silver cards, invitations to live events, and higher reward multipliers."
+    }
+  ],
+  "cta": {
+    "description": "Still have questions? Join our community or contact our support team.",
+    "buttons": {
+      "discord": "Join Discord",
+      "support": "Contact Support"
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "title": "FAQ",
+  "heading": "Najděte své odpovědi",
+  "questions": [
+    {
+      "question": "Co mi vlastnictví GC NFT KARTY dává?",
+      "answer": "Vlastnictví GC NFT KARTY vám poskytuje doživotní přístup k investičnímu portfoliu Gavlik Capital, čtvrtletní rozdělování zisků, bezplatný mint přístup k novým NFT projektům, prioritní podporu a exkluzivní možnosti členství ve VIP klubu. Získáte také hlasovací práva na určitá rozhodnutí portfolia a přístup do naší soukromé Discord komunity."
+    },
+    {
+      "question": "Co jsou odměny a kdy se vyplácejí?",
+      "answer": "Odměny jsou čtvrtletní rozdělování zisků z našeho diverzifikovaného investičního portfolia. Vyplácejí se automaticky na vaši adresu peněženky každé čtvrtletí (březen, červen, září, prosinec). Výše závisí na výkonu portfolia a vaší NFT úrovni. Platby se provádějí v USDT nebo ETH na základě vašich preferencí."
+    },
+    {
+      "question": "Co určuje hodnotu mé GC NFT KARTY?",
+      "answer": "Hodnota je určena několika faktory: výkonem portfolia, historií čtvrtletních odměn, vzácnostní úrovní vaší karty, poptávkou na sekundárních trzích, odemčenými funkcemi a celkovým růstem ekosystému. Omezená nabídka a rostoucí užitečnost pokračují v dlouhodobém zhodnocování hodnoty."
+    },
+    {
+      "question": "Kolik GC NFT KARET je aktuálně v oběhu?",
+      "answer": "V současné době je v celkovém oběhu 10 000 GC NFT KARET s následujícím rozdělením: 9 900 standardních GC karet, 70 ETH speciálních edic a 30 BTC prémiových karet. Tato nabídka je trvale omezena - žádné další karty nebudou nikdy mintovány, což zajišťuje vzácnost a zachování hodnoty."
+    },
+    {
+      "question": "Jak se generují zisky?",
+      "answer": "Zisky se generují prostřednictvím naší diverzifikované investiční strategie zahrnující obchodování s kryptoměnami, DeFi protokoly, investice do nemovitostí a tradiční cenné papíry. Náš zkušený tým aktivně spravuje portfolio a zisky se rozdělují poměrně držitelům NFT po odečtení provozních nákladů a fondů pro rozvoj platformy."
+    },
+    {
+      "question": "Co je VIP klub a jak se stanu členem?",
+      "answer": "VIP klub je exkluzivní úroveň pro držitele speciálních edic (ETH a BTC karty) nebo držitele více standardních karet (5+ karet). VIP členové získají: přímý přístup k zakladateli, exkluzivní investiční poznatky, přednostní přístup k novým projektům, fyzické zlaté/stříbrné karty, pozvánky na živé události a vyšší multiplikátory odměn."
+    }
+  ],
+  "cta": {
+    "description": "Stále máte otázky? Připojte se k naší komunitě nebo kontaktujte náš tým podpory.",
+    "buttons": {
+      "discord": "Připojit se k Discordu",
+      "support": "Kontaktovat podporu"
+    }
+  }
+}

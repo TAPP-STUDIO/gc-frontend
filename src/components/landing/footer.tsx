@@ -2,12 +2,14 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 import Logo from '../logo/logo';
 import { useScrollAnimation } from '@/hook';
 
 export const Footer = () => {
   const { elementRef: footerRef, isVisible: footerVisible } = useScrollAnimation({ threshold: 0.1 });
   const [email, setEmail] = useState('');
+  const { t } = useTranslation('footer');
 
   const handleNewsletterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,27 +43,27 @@ export const Footer = () => {
   };
 
   const navigationLinks = [
-    { name: 'Karty', href: '#cards' },
-    { name: 'Ekosystém', href: '#ecosystem' },
-    { name: 'Roadmapa', href: '#roadmap' },
-    { name: 'VIP klub', href: '#vip-club' },
-    { name: 'FAQ', href: '#faq' }
+    { name: t('navigation.links.cards'), href: '#cards' },
+    { name: t('navigation.links.ecosystem'), href: '#ecosystem' },
+    { name: t('navigation.links.roadmap'), href: '#roadmap' },
+    { name: t('navigation.links.vipClub'), href: '#vip-club' },
+    { name: t('navigation.links.faq'), href: '#faq' }
   ];
 
   const productLinks = [
-    { name: 'GC Karty', href: '#cards' },
-    { name: 'BTC Bot', href: '#ecosystem' },
-    { name: 'Algo Trader', href: '#ecosystem' },
-    { name: 'Náš Marketplace', href: '/dashboard/marketplace', external: false }
+    { name: t('products.links.gcCards'), href: '#cards' },
+    { name: t('products.links.btcBot'), href: '#ecosystem' },
+    { name: t('products.links.algoTrader'), href: '#ecosystem' },
+    { name: t('products.links.marketplace'), href: '/dashboard/marketplace', external: false }
   ];
 
   const legalLinks = [
-    { name: 'Podmínky použití', href: '/legal/terms' },
-    { name: 'Zásady ochrany soukromí', href: '/legal/privacy' },
-    { name: 'Cookie zásady', href: '/legal/cookies' },
-    { name: 'Rizikové upozornění', href: '/legal/risk-disclaimer' },
-    { name: 'Whitepaper', href: '/whitepaper.pdf', external: true },
-    { name: 'Administrace', href: '/admin', external: false }
+    { name: t('legal.links.terms'), href: '/legal/terms' },
+    { name: t('legal.links.privacy'), href: '/legal/privacy' },
+    { name: t('legal.links.cookies'), href: '/legal/cookies' },
+    { name: t('legal.links.risk'), href: '/legal/risk-disclaimer' },
+    { name: t('legal.links.whitepaper'), href: '/whitepaper.pdf', external: true },
+    { name: t('legal.links.admin'), href: '/admin', external: false }
   ];
 
   const socialLinks = [
@@ -144,17 +146,16 @@ export const Footer = () => {
                 <Logo />
               </div>
               <p className="text-white/70 text-base leading-relaxed max-w-sm">
-                Bezpečná a chytrá investiční platforma pro NFT krypto portfolia budoucnosti decentralizovaných financí. 
-                Připojte se k tisícům investorů budujících bohatství prostřednictvím inovativní blockchain technologie.
+                {t('brand.description')}
               </p>
               
               {/* Newsletter Signup */}
               <div className="space-y-4">
-                <h4 className="text-white font-medium text-lg">Zůstaňte v obraze</h4>
+                <h4 className="text-white font-medium text-lg">{t('brand.newsletter.title')}</h4>
                 <form onSubmit={handleNewsletterSubmit} className="flex gap-3">
                   <input
                     type="email"
-                    placeholder="Zadejte váš email"
+                    placeholder={t('brand.newsletter.placeholder')}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="flex-1 px-4 py-3 bg-black/20 backdrop-blur-md border border-white/20 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:border-[#F9D523] transition-colors shadow-xl"
@@ -164,7 +165,7 @@ export const Footer = () => {
                     type="submit"
                     className="unified-button unified-button-md"
                   >
-                    <span>Odebírat</span>
+                    <span>{t('brand.newsletter.button')}</span>
                   </button>
                 </form>
               </div>
@@ -172,7 +173,7 @@ export const Footer = () => {
 
             {/* Navigation Links */}
             <div className="lg:col-span-2">
-              <h4 className="text-white font-medium text-lg mb-6">Navigace</h4>
+              <h4 className="text-white font-medium text-lg mb-6">{t('navigation.title')}</h4>
               <ul className="space-y-3">
                 {navigationLinks.map((link) => (
                   <li key={link.name}>
@@ -189,7 +190,7 @@ export const Footer = () => {
 
             {/* Product Links */}
             <div className="lg:col-span-2">
-              <h4 className="text-white font-medium text-lg mb-6">Produkty</h4>
+              <h4 className="text-white font-medium text-lg mb-6">{t('products.title')}</h4>
               <ul className="space-y-3">
                 {productLinks.map((link) => (
                   <li key={link.name}>
@@ -222,7 +223,7 @@ export const Footer = () => {
 
             {/* Legal Links */}
             <div className="lg:col-span-2">
-              <h4 className="text-white font-medium text-lg mb-6">Právní & Admin</h4>
+              <h4 className="text-white font-medium text-lg mb-6">{t('legal.title')}</h4>
               <ul className="space-y-3">
                 {legalLinks.map((link) => (
                   <li key={link.name}>
@@ -255,7 +256,7 @@ export const Footer = () => {
 
             {/* Social Media */}
             <div className="lg:col-span-2">
-              <h4 className="text-white font-medium text-lg mb-6">Sledujte nás</h4>
+              <h4 className="text-white font-medium text-lg mb-6">{t('social.title')}</h4>
               <div className="flex gap-4">
                 {socialLinks.map((social) => (
                   <a
@@ -271,7 +272,7 @@ export const Footer = () => {
                 ))}
               </div>
               <p className="text-white/50 text-sm mt-4">
-                Připojte se k naší komunitě 10 000+ investorů
+                {t('social.community')}
               </p>
             </div>
           </div>
@@ -280,7 +281,7 @@ export const Footer = () => {
         {/* Bottom Section */}
         <div className="py-8 border-t border-[#333333]">
           <div className="flex flex-col md:flex-row items-center justify-center gap-4">
-            <p className="text-white/60 text-sm">© 2025 Gavlik Capital. Všechna práva vyhrazena.</p>
+            <p className="text-white/60 text-sm">{t('copyright')}</p>
           </div>
         </div>
       </div>

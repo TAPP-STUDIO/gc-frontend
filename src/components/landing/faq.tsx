@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import { useTranslation } from 'react-i18next';
 import { useScrollAnimation, useStaggeredAnimation } from '@/hook';
 
 export const FAQ = () => {
@@ -9,39 +10,13 @@ export const FAQ = () => {
   const { elementRef: leftRef, visibleItems: leftVisible } = useStaggeredAnimation(3, 150);
   const { elementRef: rightRef, visibleItems: rightVisible } = useStaggeredAnimation(3, 150);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const { t } = useTranslation('faq');
 
-  const faqData = [
-    {
-      id: 1,
-      question: 'Co mi vlastnictví GC NFT KARTY dává?',
-      answer: 'Vlastnictví GC NFT KARTY vám poskytuje doživotní přístup k investičnímu portfoliu Gavlik Capital, čtvrtletní rozdělování zisků, bezplatný mint přístup k novým NFT projektům, prioritní podporu a exkluzivní možnosti členství ve VIP klubu. Získáte také hlasovací práva na určitá rozhodnutí portfolia a přístup do naší soukromé Discord komunity.'
-    },
-    {
-      id: 2,
-      question: 'Co jsou odměny a kdy se vyplácejí?',
-      answer: 'Odměny jsou čtvrtletní rozdělování zisků z našeho diverzifikovaného investičního portfolia. Vyplácejí se automaticky na vaši adresu peněženky každé čtvrtletí (březen, červen, září, prosinec). Výše závisí na výkonu portfolia a vaší NFT úrovni. Platby se provádějí v USDT nebo ETH na základě vašich preferencí.'
-    },
-    {
-      id: 3,
-      question: 'Co určuje hodnotu mé GC NFT KARTY?',
-      answer: 'Hodnota je určena několika faktory: výkonem portfolia, historií čtvrtletních odměn, vzácnostní úrovní vaší karty, poptávkou na sekundárních trzích, odemčenými funkcemi a celkovým růstem ekosystému. Omezená nabídka a rostoucí užitečnost pokračují v dlouhodobém zhodnocování hodnoty.'
-    },
-    {
-      id: 4,
-      question: 'Kolik GC NFT KARET je aktuálně v oběhu?',
-      answer: 'V současné době je v celkovém oběhu 10 000 GC NFT KARET s následujícím rozdělením: 9 900 standardních GC karet, 70 ETH speciálních edic a 30 BTC prémiových karet. Tato nabídka je trvale omezena - žádné další karty nebudou nikdy mintovány, což zajišťuje vzácnost a zachování hodnoty.'
-    },
-    {
-      id: 5,
-      question: 'Jak se generují zisky?',
-      answer: 'Zisky se generují prostřednictvím naší diverzifikované investiční strategie zahrnující obchodování s kryptoměnami, DeFi protokoly, investice do nemovitostí a tradiční cenné papíry. Náš zkušený tým aktivně spravuje portfolio a zisky se rozdělují poměrně držitelům NFT po odečtení provozních nákladů a fondů pro rozvoj platformy.'
-    },
-    {
-      id: 6,
-      question: 'Co je VIP klub a jak se stanu členem?',
-      answer: 'VIP klub je exkluzivní úroveň pro držitele speciálních edic (ETH a BTC karty) nebo držitele více standardních karet (5+ karet). VIP členové získají: přímý přístup k zakladateli, exkluzivní investiční poznatky, přednostní přístup k novým projektům, fyzické zlaté/stříbrné karty, pozvánky na živé události a vyšší multiplikátory odměn.'
-    }
-  ];
+  const faqData = (t('questions', { returnObjects: true }) as any[]).map((q, index) => ({
+    id: index + 1,
+    question: q.question,
+    answer: q.answer
+  }));
 
   const toggleFaq = (id: number) => {
     setOpenFaq(openFaq === id ? null : id);
@@ -72,10 +47,10 @@ export const FAQ = () => {
           className={`text-center mb-16 lg:mb-20 animate-slide-up ${titleVisible ? 'visible' : ''}`}
         >
           <div className="text-[#F9D523] text-lg md:text-xl font-semibold mb-4 uppercase tracking-wider">
-            FAQ
+            {t('title')}
           </div>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-medium text-white">
-            Najděte své odpovědi
+            {t('heading')}
           </h2>
         </div>
 
@@ -187,14 +162,14 @@ export const FAQ = () => {
         {/* Call to Action */}
         <div className="text-center mt-16 lg:mt-20">
           <p className="text-white/60 text-lg mb-8 max-w-2xl mx-auto">
-            Stále máte otázky? Připojte se k naší komunitě nebo kontaktujte náš tým podpory.
+            {t('cta.description')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
             <a href="https://discord.gg/tcvTy6y5" target="_blank" rel="noopener noreferrer" className="unified-button unified-button-lg">
-              <span>Připojit se k Discordu</span>
+              <span>{t('cta.buttons.discord')}</span>
             </a>
             <button className="unified-button unified-button-lg">
-              <span>Kontaktovat podporu</span>
+              <span>{t('cta.buttons.support')}</span>
             </button>
           </div>
         </div>

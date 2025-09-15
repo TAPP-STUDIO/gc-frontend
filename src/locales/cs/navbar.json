@@ -1,0 +1,18 @@
+{
+  "menuItems": {
+    "cards": "Karty",
+    "ecosystem": "Ekosystém",
+    "roadmap": "Roadmapa",
+    "vipClub": "VIP klub",
+    "faq": "FAQ",
+    "discord": "Discord"
+  },
+  "languages": {
+    "czech": "Čeština",
+    "english": "English",
+    "arabic": "العربية"
+  },
+  "buttons": {
+    "register": "Registrace"
+  }
+}

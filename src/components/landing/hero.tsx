@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import { useTranslation } from 'react-i18next';
 import { VerifiedBadge } from '../ui/premium-button';
 import { useScrollAnimation } from '@/hook';
 
@@ -76,9 +77,11 @@ const Card3DGIF = () => {
 export const Hero = () => {
   const { elementRef: titleRef, isVisible: titleVisible } = useScrollAnimation({ threshold: 0.1 });
   const { elementRef: statsRef, isVisible: statsVisible } = useScrollAnimation({ threshold: 0.3 });
+  const { t } = useTranslation('hero');
+  
   const stats = [
-    { value: '3 153 750 $', label: 'Celková hodnota portfolia' },
-    { value: '162 $', label: 'Průměrný zisk na kartu' }
+    { value: '3 153 750 $', label: t('stats.totalValue') },
+    { value: '162 $', label: t('stats.averageProfit') }
   ];
 
   return (
@@ -107,19 +110,19 @@ export const Hero = () => {
               className={`space-y-4 animate-slide-left ${titleVisible ? 'visible' : ''}`}
             >
               <h1 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-medium text-white leading-tight">
-                Připojte se k doživotnímu
+                {t('heading.line1')}
                 <br />
-                <span className="text-white">členství</span>
+                <span className="text-white">{t('heading.line2')}</span>
               </h1>
               <p className="text-lg md:text-xl text-white/80 font-medium">
-                s Gavlik Capital NFT kartami
+                {t('subheading')}
               </p>
             </div>
 
             {/* Premium Verified Badge */}
             <div className={`flex items-start animate-fade-in ${titleVisible ? 'visible animate-stagger-1' : ''}`}>
               <VerifiedBadge size="md">
-                Ověřeno
+                {t('badge')}
               </VerifiedBadge>
             </div>
 

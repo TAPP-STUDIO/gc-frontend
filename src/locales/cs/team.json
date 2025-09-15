@@ -1,0 +1,28 @@
+{
+  "title": "NÁŠ TÝM",
+  "heading": "Seznamte se s týmem",
+  "founder": {
+    "role": "ZAKLADATEL",
+    "name": "Jakub Gavlík",
+    "description": "Více než deset let se pohybuji ve světě investic a podnikání. Moje mnohé úspěchy mi v té době daly zkušenosti a kontakty potřebné k tomu, abych posunul Gavlik Capital daleko od dobrého k ziskovému. Dnes věřím v budoucnost bezpečného obchodování a investování s kryptoměnami. Vytvořil jsem a provozuji proprietární algoritmy a udržuji veškerou komunikaci s brokery a investičními společnostmi. Všichni jsme se spojili, abychom vytvořili něco mimořádně skvělého a nového.",
+    "quote": "Dvě nejdůležitější složky úspěchu: jednoduchost a tvrdá práce."
+  },
+  "members": [
+    {
+      "name": "Ahmed Younes",
+      "role": "Kreativní promotér"
+    },
+    {
+      "name": "Patrik Biegun",
+      "role": "Mediální produkce a marketing"
+    },
+    {
+      "name": "Jakub Cáb",
+      "role": "Discord a sociální média"
+    },
+    {
+      "name": "Radomír Trumpeš",
+      "role": "Discord a sociální média"
+    }
+  ]
+}

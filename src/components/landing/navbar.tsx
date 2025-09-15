@@ -2,12 +2,15 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
+import { useLanguage } from '@/contexts/LanguageContext';
 import Logo from '../logo/logo';
 import { PremiumCTA, GlassCTA } from '../ui/premium-button';
 
 export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState('cs');
+  const { t } = useTranslation('navbar');
+  const { currentLanguage, changeLanguage, languages } = useLanguage();
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -58,19 +61,13 @@ export const Navbar = () => {
     }
   };
 
-  const languages = [
-    { code: 'cs', name: 'Čeština', flag: '🇨🇿' },
-    { code: 'en', name: 'English', flag: '🇬🇧' },
-    { code: 'ar', name: 'العربية', flag: '🇸🇦' }
-  ];
-
   const menuItems = [
-    { name: 'Karty', href: '#cards' },
-    { name: 'Ekosystém', href: '#ecosystem' },
-    { name: 'Roadmapa', href: '#roadmap' },
-    { name: 'VIP klub', href: '#vip-club' },
-    { name: 'FAQ', href: '#faq' },
-    { name: 'Discord', href: 'https://discord.gg/tcvTy6y5', external: true }
+    { name: t('menuItems.cards'), href: '#cards' },
+    { name: t('menuItems.ecosystem'), href: '#ecosystem' },
+    { name: t('menuItems.roadmap'), href: '#roadmap' },
+    { name: t('menuItems.vipClub'), href: '#vip-club' },
+    { name: t('menuItems.faq'), href: '#faq' },
+    { name: t('menuItems.discord'), href: 'https://discord.gg/tcvTy6y5', external: true }
   ];
 
   return (
@@ -116,8 +113,8 @@ export const Navbar = () => {
             {/* Language Selector */}
             <div className="relative group">
               <button className="unified-button unified-button-sm inline-flex items-center justify-center font-medium transition-all duration-400 focus:outline-none focus:ring-4 focus:ring-teal-400/40 space-x-2">
-                <span>{languages.find(lang => lang.code === selectedLanguage)?.flag}</span>
-                <span className="hidden sm:inline">{languages.find(lang => lang.code === selectedLanguage)?.name}</span>
+                <span>{languages.find(lang => lang.code === currentLanguage)?.flag}</span>
+                <span className="hidden sm:inline">{languages.find(lang => lang.code === currentLanguage)?.name}</span>
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
@@ -128,9 +125,9 @@ export const Navbar = () => {
                 {languages.map((lang) => (
                   <button
                     key={lang.code}
-                    onClick={() => setSelectedLanguage(lang.code)}
+                    onClick={() => changeLanguage(lang.code)}
                     className={`w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-white/10 transition-colors duration-200 first:rounded-t-xl last:rounded-b-xl ${
-                      selectedLanguage === lang.code ? 'text-[#F9D523] bg-white/5' : 'text-white/80'
+                      currentLanguage === lang.code ? 'text-[#F9D523] bg-white/5' : 'text-white/80'
                     }`}
                   >
                     <span>{lang.flag}</span>
@@ -146,7 +143,7 @@ export const Navbar = () => {
               size="sm"
               className="ml-2"
             >
-              Registrace
+              {t('buttons.register')}
             </PremiumCTA>
           </div>
 
@@ -219,11 +216,11 @@ export const Navbar = () => {
                     <button
                       key={lang.code}
                       onClick={() => {
-                        setSelectedLanguage(lang.code);
+                        changeLanguage(lang.code);
                         setIsMobileMenuOpen(false);
                       }}
                       className={`w-full flex items-center space-x-3 px-3 py-2 text-left hover:bg-white/10 rounded-xl transition-all duration-300 text-base font-medium ${
-                        selectedLanguage === lang.code ? 'text-[#F9D523] bg-white/5' : 'text-white/80'
+                        currentLanguage === lang.code ? 'text-[#F9D523] bg-white/5' : 'text-white/80'
                       }`}
                     >
                       <span>{lang.flag}</span>
@@ -240,7 +237,7 @@ export const Navbar = () => {
                   className="w-full text-center"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Registrace
+                  {t('buttons.register')}
                 </GlassCTA>
               </div>
             </div>
