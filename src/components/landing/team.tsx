@@ -5,14 +5,21 @@ import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
 import { useScrollAnimation, useStaggeredAnimation } from '@/hook';
 
+interface TeamMember {
+  name: string;
+  role: string;
+  description?: string;
+  quote?: string;
+}
+
 export const Team = () => {
   const { elementRef: titleRef, isVisible: titleVisible } = useScrollAnimation({ threshold: 0.2 });
   const { elementRef: founderRef, isVisible: founderVisible } = useScrollAnimation({ threshold: 0.3 });
   const { elementRef: teamRef, visibleItems } = useStaggeredAnimation(4, 150);
   const { t } = useTranslation('team');
   
-  const founder = t('founder', { returnObjects: true }) as any;
-  const teamMembers = t('members', { returnObjects: true }) as any[];
+  const founder = t('founder', { returnObjects: true }) as TeamMember;
+  const teamMembers = t('members', { returnObjects: true }) as TeamMember[];
   
   const founderData = {
     ...founder,

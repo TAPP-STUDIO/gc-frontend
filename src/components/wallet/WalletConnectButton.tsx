@@ -1,7 +1,7 @@
 'use client'
 
 import { useWallet } from '@/contexts/WalletContext'
-import { Wallet, LogOut, User, Loader2, Check, AlertCircle } from 'lucide-react'
+import { Wallet, LogOut, Loader2, Check, AlertCircle } from 'lucide-react'
 
 interface WalletConnectButtonProps {
   className?: string

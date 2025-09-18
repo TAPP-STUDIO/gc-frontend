@@ -4,13 +4,18 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useScrollAnimation, useStaggeredAnimation } from '@/hook';
 
+interface RoadmapStep {
+  title: string;
+  description: string;
+}
+
 export const Roadmap = () => {
   const { elementRef: titleRef, isVisible: titleVisible } = useScrollAnimation({ threshold: 0.2 });
   const { elementRef: leftRef, visibleItems: leftVisible } = useStaggeredAnimation(4, 200);
   const { elementRef: rightRef, visibleItems: rightVisible } = useStaggeredAnimation(3, 200);
   const { t } = useTranslation('roadmap');
   
-  const roadmapSteps = (t('steps', { returnObjects: true }) as any[]).map((step, index) => ({
+  const roadmapSteps = (t('steps', { returnObjects: true }) as RoadmapStep[]).map((step, index) => ({
     id: index + 1,
     number: (index + 1).toString().padStart(2, '0'),
     title: step.title,

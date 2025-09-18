@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { useWallet } from '@/contexts/WalletContext';
+//import { useWallet } from '@/contexts/WalletContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { 
   DashboardCard,
@@ -18,7 +18,7 @@ import {
   RefreshCw,
   Download,
   Plus,
-  Edit,
+  //Edit,
   MoreVertical,
   Bitcoin
 } from 'lucide-react';
@@ -375,7 +375,7 @@ const CryptoCard: React.FC<{
 export default function ProjectDetailPage() {
   const router = useRouter();
   const params = useParams();
-  const { user, walletAddress } = useWallet();
+  //const { user, walletAddress } = useWallet();
   const { isInAdminGroup } = useAuth();
   const projectId = params?.projectId as string;
   

@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useWallet } from '@/contexts/WalletContext';
-import { useAuth } from '@/contexts/AuthContext';
+//import { useWallet } from '@/contexts/WalletContext';
+//import { useAuth } from '@/contexts/AuthContext';
 import { 
   DashboardCard,
   ValueCard,
@@ -172,8 +172,8 @@ const ProjectCard: React.FC<{
 
 export default function PortfolioDashboard() {
   const router = useRouter();
-  const { user, walletAddress } = useWallet();
-  const { isInAdminGroup } = useAuth();
+  //const { user, walletAddress } = useWallet();
+  //const { isInAdminGroup } = useAuth();
   const [projects, setProjects] = useState<Project[]>(DUMMY_PROJECTS);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastUpdate, setLastUpdate] = useState(new Date());

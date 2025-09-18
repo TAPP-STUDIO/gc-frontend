@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { useWallet } from '@/contexts/WalletContext';
+//import { useWallet } from '@/contexts/WalletContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { 
   DashboardCard,
@@ -18,110 +18,12 @@ import {
   Edit2,
   Trash2,
   Download,
-  Calendar,
+  //Calendar,
   DollarSign,
   Hash,
   FileText,
   X
 } from 'lucide-react';
-
-// Dummy data pro transakce
-const DUMMY_TRANSACTIONS = {
-  'btc-gc': [
-    {
-      id: '1',
-      type: 'buy',
-      amount: 0.5,
-      price: 28000,
-      totalValue: 14000,
-      date: '2024-01-15T10:30:00',
-      note: 'První nákup BTC pro projekt',
-      fee: 35
-    },
-    {
-      id: '2',
-      type: 'buy',
-      amount: 1,
-      price: 31000,
-      totalValue: 31000,
-      date: '2024-02-20T14:15:00',
-      note: 'DCA strategie',
-      fee: 77.50
-    },
-    {
-      id: '3',
-      type: 'buy',
-      amount: 0.8,
-      price: 35000,
-      totalValue: 28000,
-      date: '2024-03-10T09:45:00',
-      note: 'Dokoupení při poklesu',
-      fee: 70
-    },
-    {
-      id: '4',
-      type: 'sell',
-      amount: 0.3,
-      price: 38000,
-      totalValue: 11400,
-      date: '2024-04-05T16:20:00',
-      note: 'Částečná realizace zisku',
-      fee: 28.50
-    },
-    {
-      id: '5',
-      type: 'buy',
-      amount: 0.5,
-      price: 33000,
-      totalValue: 16500,
-      date: '2024-05-12T11:00:00',
-      note: 'Nákup po korekci',
-      fee: 41.25
-    }
-  ],
-  'eth-gc': [
-    {
-      id: '1',
-      type: 'buy',
-      amount: 5,
-      price: 1500,
-      totalValue: 7500,
-      date: '2024-01-10T08:00:00',
-      note: 'První pozice ETH',
-      fee: 18.75
-    },
-    {
-      id: '2',
-      type: 'buy',
-      amount: 3,
-      price: 1700,
-      totalValue: 5100,
-      date: '2024-02-01T12:30:00',
-      note: 'Navýšení pozice',
-      fee: 12.75
-    },
-    {
-      id: '3',
-      type: 'buy',
-      amount: 4,
-      price: 1900,
-      totalValue: 7600,
-      date: '2024-02-28T15:45:00',
-      note: 'DCA',
-      fee: 19
-    },
-    {
-      id: '4',
-      type: 'buy',
-      amount: 3,
-      price: 2100,
-      totalValue: 6300,
-      date: '2024-03-15T10:20:00',
-      note: 'Poslední nákup',
-      fee: 15.75
-    }
-  ]
-};
 
 // Typ pro transakci
 interface Transaction {
@@ -134,6 +36,104 @@ interface Transaction {
   note: string;
   fee: number;
 }
+
+// Dummy data pro transakce
+const DUMMY_TRANSACTIONS: Record<string, Transaction[]> = {
+  'btc-gc': [
+    {
+      id: '1',
+      type: 'buy' as const,
+      amount: 0.5,
+      price: 28000,
+      totalValue: 14000,
+      date: '2024-01-15T10:30:00',
+      note: 'První nákup BTC pro projekt',
+      fee: 35
+    },
+    {
+      id: '2',
+      type: 'buy' as const,
+      amount: 1,
+      price: 31000,
+      totalValue: 31000,
+      date: '2024-02-20T14:15:00',
+      note: 'DCA strategie',
+      fee: 77.50
+    },
+    {
+      id: '3',
+      type: 'buy' as const,
+      amount: 0.8,
+      price: 35000,
+      totalValue: 28000,
+      date: '2024-03-10T09:45:00',
+      note: 'Dokoupení při poklesu',
+      fee: 70
+    },
+    {
+      id: '4',
+      type: 'sell' as const,
+      amount: 0.3,
+      price: 38000,
+      totalValue: 11400,
+      date: '2024-04-05T16:20:00',
+      note: 'Částečná realizace zisku',
+      fee: 28.50
+    },
+    {
+      id: '5',
+      type: 'buy' as const,
+      amount: 0.5,
+      price: 33000,
+      totalValue: 16500,
+      date: '2024-05-12T11:00:00',
+      note: 'Nákup po korekci',
+      fee: 41.25
+    }
+  ],
+  'eth-gc': [
+    {
+      id: '1',
+      type: 'buy' as const,
+      amount: 5,
+      price: 1500,
+      totalValue: 7500,
+      date: '2024-01-10T08:00:00',
+      note: 'První pozice ETH',
+      fee: 18.75
+    },
+    {
+      id: '2',
+      type: 'buy' as const,
+      amount: 3,
+      price: 1700,
+      totalValue: 5100,
+      date: '2024-02-01T12:30:00',
+      note: 'Navýšení pozice',
+      fee: 12.75
+    },
+    {
+      id: '3',
+      type: 'buy' as const,
+      amount: 4,
+      price: 1900,
+      totalValue: 7600,
+      date: '2024-02-28T15:45:00',
+      note: 'DCA',
+      fee: 19
+    },
+    {
+      id: '4',
+      type: 'buy' as const,
+      amount: 3,
+      price: 2100,
+      totalValue: 6300,
+      date: '2024-03-15T10:20:00',
+      note: 'Poslední nákup',
+      fee: 15.75
+    }
+  ]
+};
 
 // Modal pro přidání/editaci transakce
 const TransactionModal: React.FC<{
@@ -357,7 +357,7 @@ const TransactionModal: React.FC<{
 export default function CryptoDetailPage() {
   const router = useRouter();
   const params = useParams();
-  const { user, walletAddress } = useWallet();
+  //const { user, walletAddress } = useWallet();
   const { isInAdminGroup } = useAuth();
   const projectId = params?.projectId as string;
   const cryptoId = params?.cryptoId as string;
@@ -404,7 +404,7 @@ export default function CryptoDetailPage() {
         setTransactions([
           {
             id: '1',
-            type: 'buy',
+            type: 'buy' as const,
             amount: crypto.totalAmount * 0.5,
             price: crypto.avgBuyPrice * 0.9,
             totalValue: crypto.totalAmount * 0.5 * crypto.avgBuyPrice * 0.9,
@@ -414,7 +414,7 @@ export default function CryptoDetailPage() {
           },
           {
             id: '2',
-            type: 'buy',
+            type: 'buy' as const,
             amount: crypto.totalAmount * 0.5,
             price: crypto.avgBuyPrice * 1.1,
             totalValue: crypto.totalAmount * 0.5 * crypto.avgBuyPrice * 1.1,

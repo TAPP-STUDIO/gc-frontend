@@ -4,7 +4,7 @@ interface LogEntry {
   level: 'info' | 'warn' | 'error' | 'debug'
   message: string
   context?: string
-  data?: any
+  data?: unknown
   timestamp: string
   userId?: string
   walletAddress?: string
@@ -86,7 +86,7 @@ class LoggerService {
     level: LogEntry['level'],
     message: string,
     context?: string,
-    data?: any
+    data?: unknown
   ): LogEntry {
     const userContext = this.getUserContext()
     return {
@@ -99,19 +99,19 @@ class LoggerService {
     }
   }
 
-  info(message: string, context?: string, data?: any) {
+  info(message: string, context?: string, data?: unknown) {
     const entry = this.createLogEntry('info', message, context, data)
     this.queue.push(entry)
     console.log(`[${context || 'INFO'}]`, message, data)
   }
 
-  warn(message: string, context?: string, data?: any) {
+  warn(message: string, context?: string, data?: unknown) {
     const entry = this.createLogEntry('warn', message, context, data)
     this.queue.push(entry)
     console.warn(`[${context || 'WARN'}]`, message, data)
   }
 
-  error(message: string, context?: string, data?: any) {
+  error(message: string, context?: string, data?: unknown) {
     const entry = this.createLogEntry('error', message, context, data)
     this.queue.push(entry)
     console.error(`[${context || 'ERROR'}]`, message, data)
@@ -120,7 +120,7 @@ class LoggerService {
     this.flush()
   }
 
-  debug(message: string, context?: string, data?: any) {
+  debug(message: string, context?: string, data?: unknown) {
     if (process.env.NODE_ENV === 'development') {
       const entry = this.createLogEntry('debug', message, context, data)
       this.queue.push(entry)
@@ -155,15 +155,15 @@ export const logger = new LoggerService()
 
 // Wallet auth specific logger
 export const walletAuthLogger = {
-  info: (message: string, data?: any) => 
+  info: (message: string, data?: unknown) => 
     logger.info(message, 'WalletAuth', data),
   
-  warn: (message: string, data?: any) => 
+  warn: (message: string, data?: unknown) => 
     logger.warn(message, 'WalletAuth', data),
   
-  error: (message: string, data?: any) => 
+  error: (message: string, data?: unknown) => 
     logger.error(message, 'WalletAuth', data),
   
-  debug: (message: string, data?: any) => 
+  debug: (message: string, data?: unknown) => 
     logger.debug(message, 'WalletAuth', data)
 }

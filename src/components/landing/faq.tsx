@@ -5,6 +5,11 @@ import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
 import { useScrollAnimation, useStaggeredAnimation } from '@/hook';
 
+interface FaqItem {
+  question: string;
+  answer: string;
+}
+
 export const FAQ = () => {
   const { elementRef: titleRef, isVisible: titleVisible } = useScrollAnimation({ threshold: 0.2 });
   const { elementRef: leftRef, visibleItems: leftVisible } = useStaggeredAnimation(3, 150);
@@ -12,7 +17,7 @@ export const FAQ = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const { t } = useTranslation('faq');
 
-  const faqData = (t('questions', { returnObjects: true }) as any[]).map((q, index) => ({
+  const faqData = (t('questions', { returnObjects: true }) as FaqItem[]).map((q, index) => ({
     id: index + 1,
     question: q.question,
     answer: q.answer
