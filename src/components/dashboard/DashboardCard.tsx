@@ -9,6 +9,7 @@ interface DashboardCardProps {
   variant?: 'default' | 'highlighted' | 'glass';
   padding?: 'none' | 'sm' | 'md' | 'lg';
   hover?: boolean;
+  onClick?: () => void;
 }
 
 export const DashboardCard: React.FC<DashboardCardProps> = ({
@@ -16,7 +17,8 @@ export const DashboardCard: React.FC<DashboardCardProps> = ({
   className,
   variant = 'default',
   padding = 'md',
-  hover = false
+  hover = false,
+  onClick
 }) => {
   const baseStyles = 'relative rounded-2xl transition-all duration-300 overflow-hidden';
   
@@ -68,6 +70,7 @@ export const DashboardCard: React.FC<DashboardCardProps> = ({
         hoverStyles,
         className
       )}
+      onClick={onClick}
     >
       {/* Glass overlay effect */}
       <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
